@@ -24,7 +24,11 @@
 
 	<body>
 
-		{% include data.page %}
+		{% if data.page %}
+			{% include data.page %}
+		{% else %}
+			{% include "home.twig" %}
+		{% endif %}
 
 	</body>
 

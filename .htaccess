@@ -10,14 +10,10 @@ RewriteRule ^(css|uploads|styles|scripts|px|twig|templates)($|/) - [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}.php -f
-RewriteRule ^([^/]+)$ index.php?value1=$1 [L,QSA]
-RewriteRule ^([^/]+)/$ index.php?value1=$1 [L,QSA]
-RewriteRule ^([^/]+)/([^/]+)$ index.php?value1=$1&value2=$2 [L,QSA]
-RewriteRule ^([^/]+)/([^/]+)/$ index.php?value1=$1&value2=$2 [L,QSA]
-RewriteRule ^([^/]+)/([^/]+)/([^/]+)?$ index.php?value1=$1&value2=$2&value3=$3 [L,QSA]
-RewriteRule ^([^/]+)/([^/]+)/([^/]+)/?$ index.php?value1=$1&value2=$2&value3=$3 [L,QSA]
-#RewriteRule ^([^/]+)/([^/]+)/([^/]+)/([^/]+)?$ index.php?value1=$1&value2=$2&value3=$3&value4=$4 [L,QSA]
-#RewriteRule ^([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$ index.php?value1=$1&value2=$2&value3=$3&value4=$4 [L,QSA]
+RewriteRule ^([^/]+)$ index.php?class=$1 [L,QSA]
+RewriteRule ^([^/]+)/$ index.php?class=$1 [L,QSA]
+RewriteRule ^([^/]+)/([^/]+)$ index.php?class=$1&method=$2 [L,QSA]
+RewriteRule ^([^/]+)/([^/]+)/$ index.php?class=$1&method=$2 [L,QSA]
 
 # Use UTF-8 encoding for anything served text/plain or text/html
 AddDefaultCharset utf-8
