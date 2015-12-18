@@ -1,5 +1,4 @@
  <?php
-
     // läs in klasser
     require_once('classes/db.class.php');
     require_once('classes/twig.class.php');
