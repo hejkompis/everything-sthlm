@@ -1,5 +1,5 @@
 <?php
-	require_once('classes/db.class.php');
+	require_once('classes/db.static.class.php');
 
 	class Login {
 		private static $instance, $query, $username, $password;
