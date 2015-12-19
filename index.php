@@ -1,10 +1,10 @@
  <?php
 
     // läs in klasser
-    require_once('classes/db.class.php');
+    require_once('classes/db.static.class.php');
     require_once('classes/twig.class.php');
     require_once('Twig/lib/Twig/Autoloader.php');
-    require_once('classes/login.class.php');
+    require_once('classes/login.static.class.php');
 
     session_start();
     // skapa en tom array
