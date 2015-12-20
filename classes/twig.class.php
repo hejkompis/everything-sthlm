@@ -1,5 +1,7 @@
 <?php 
 
+require_once('Twig/lib/Twig/Autoloader.php');
+
 class Twig {
 
     private $data, $twig;

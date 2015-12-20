@@ -1,10 +1,10 @@
  <?php
 
     // läs in klasser
-    require_once('classes/db.static.class.php');
-    require_once('classes/twig.class.php');
-    require_once('Twig/lib/Twig/Autoloader.php');
-    require_once('classes/login.static.class.php');
+
+    function __autoload($class_name) {
+        require_once('classes/'.strtolower($class_name).'.class.php');
+    }
 
     session_start();
     // skapa en tom array
@@ -49,7 +49,6 @@
 
     }
 
-    require_once("classes/".$class.".class.php");
     $class = ucfirst($class);
     $twig_input = $class::$method($data);
 
