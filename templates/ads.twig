@@ -1,0 +1,38 @@
+<div class="container">
+	
+	<div class="row">
+	
+		<div class="col-xs-12">
+	
+			<h1>ADS</h1>
+	
+		</div>
+	
+	</div>
+
+	<div class="row">
+
+		<div class="col-xs-12">
+
+			<div class="row">
+
+				{% for ad in ads %}
+
+					<div class="col-xs-12">
+
+						<h3><a href="/ads/show/?id={{ad.id}}">{{ad.title}}</a></h3>
+
+
+						<hr />
+
+					</div>
+
+				{% endfor %}
+
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
