@@ -1,7 +1,7 @@
 {% include 'header.twig' %}
 
-		{% if data.page %}
-			{% include data.page %}
+		{% if page %}
+			{% include page %}
 		{% else %}
 			{% include "home.twig" %}
 		{% endif %}

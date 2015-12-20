@@ -1,14 +1,16 @@
  <?php
 
     // läs in klasser
-    require_once('classes/db.static.class.php');
-    require_once('classes/twig.class.php');
-    require_once('Twig/lib/Twig/Autoloader.php');
-    require_once('classes/login.static.class.php');
+
+    function __autoload($class_name) {
+        require_once('classes/'.strtolower($class_name).'.class.php');
+    }
 
     session_start();
     // skapa en tom array
     $twig_input = [];
+    // och en tom data att skicka in om ingen data finns att skicka
+    $data = false;
 
     // om en klass är satt everythingsthlm.se/klassnamn/
     if(isset($_GET['class'])) {
@@ -47,12 +49,11 @@
 
     }
 
-    require_once("classes/".$class.".class.php");
     $class = ucfirst($class);
-    $twig_input = $class::$method($data = false);
+    $twig_input = $class::$method($data);
 
     // skapa Twig-objekt med datan vi just hämtat
-    $page = new Twig(['data' => $twig_input]);
+    $page = new Twig($twig_input);
 
     // och rita ut sidan
     echo $page->render('index.twig');

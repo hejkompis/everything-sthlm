@@ -4,7 +4,7 @@
 
 		private static $instance = null, $prev_results = [], $mysqli;
 		public static $con;
-		private $db = ['url' => 'localhost', 'user' => 'root', 'password' => '', 'database' => 'phlogger'];
+		private $db = ['url' => 'localhost', 'user' => 'root', 'password' => 'root', 'database' => 'everythingSthlm'];
 
 		private function __construct() {
 
