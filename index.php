@@ -49,6 +49,16 @@
 
     }
 
+
+    if (isset($_POST['username']) && isset($_POST['password'])) {
+            $username = $_POST['username'];
+            $password = $_POST['password'];
+
+            Login::authenticateUser($username, $password);
+            Login::initUserInstanceToSession();
+    }
+
+
     $class = ucfirst($class);
     $twig_input = $class::$method($data);
 
