@@ -1,7 +1,6 @@
  <?php
 
     // läs in klasser
-
     function __autoload($class_name) {
         require_once('classes/'.strtolower($class_name).'.class.php');
     }
