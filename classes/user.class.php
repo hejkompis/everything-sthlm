@@ -1,6 +1,6 @@
 <?php
   
-  abstract class AbstractUser {
+  abstract class User {
     private $username, $id, $firstname, $lastname;
    
     public function __construct ($id) {

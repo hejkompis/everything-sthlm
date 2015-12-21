@@ -1,4 +1,4 @@
 <?php
-	class PremiumUser extends AbstractUser {
+	class PremiumUser extends User {
 		
 	}

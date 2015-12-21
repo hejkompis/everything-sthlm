@@ -1,2 +1,4 @@
 <?php
-	class 
+	class AdminUser extends User {
+		
+	}
