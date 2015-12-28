@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		<!-- 
+
+		här ställer vi vår första fråga till twig
+		om det finns en variabel som heter "title", då ska vi skriva ut den, och strecket innan 
+		"title" skapas i metoden vi anropar
+
+		-->
+		<title>Demo{% if title %} - {{title}}{% endif %}</title>
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="//everythingsthlm.local/styles/bootstrap-3.3.6-dist/css/bootstrap.min.css">
+		<!-- Fontawesone -->
+		<link rel="stylesheet" href="//everythingsthlm.local/styles/font-awesome-4.5.0/css/font-awesome.css">
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="//everythingsthlm.local/styles/bootstrap-3.3.6-dist/js/bootstrap.min.js"></script>
+
+	</head>
+
+	<body>
+
+		<!-- 
+
+			nästa twig-fråga:
+			finns det en "page"-variabel skickad med från metoden.
+			om det gör det utgår vi från att det är en läsbar html-fil och försöker hämta den
+			vi säger också åt index.twig, att om det inte finns med nån "page" så ska den hämta
+			home.twig, så att den alltid åtminstone ritar ut startsidan. den här kan vi sen ersätta med
+			en sida som innehåller ett felmeddelande, det är mer logiskt än att komma till startsidan.
+
+		-->
+
+		{% if page %}
+			{% include page %}
+		{% else %}
+			{% include "home.twig" %}
+		{% endif %}
+
+		<!--
+
+			variabeln "info" som vi frågar efter nedan gör egentligen inget, 
+			men om vi i vår metod skapar en sådan, kan man lättare förstå 
+			vilken variabel och metod som används, 
+			framför allt om man gör varje "info"-meddelande unikt för varje metod.
+
+		-->
+
+		{% if info %}
+			<div class="container">
+				<div class="row">
+					<div class="col-xs-12 well well-sm">
+						{{info}}
+					</div>
+				</div>
+			</div>
+		{% endif %}
+
+	</body>
+
+</html>
