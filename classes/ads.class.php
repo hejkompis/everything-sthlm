@@ -47,7 +47,7 @@ class Ads {
 			FROM ads, user 
 			WHERE user.id = ads.user_id".$sqlSearch 
 		);
-
+		$ads = []; 
 		foreach ($data_array as $data) {
 			$ads[] = new Ads($data); 
 		}
