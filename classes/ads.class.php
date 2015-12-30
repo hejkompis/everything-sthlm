@@ -3,37 +3,74 @@
 class Ads {
 
 	private $id, $title, $content, $dateCreated, $userId, $imageName, $tags;
-	static private $query; 
 
-	function __construct() {
+	function __construct($input) { //$input kommer från getAllAds eller getSpecificAd
+		$this->id = $input['id'];
+		$this->title = $input['title'];
+		$this->content = $input['content'];
+		$this->dateCreated = $input['creation_date'];
+		$this->userId = $input['user_id'];
+	}
 
+	function __get($var) {
+		if ($this->$var) {
+			return $this->$var;
+		}
+	}
+
+	function __isset($var) { //behövs för att Twig ska kunna använda magisk get.
+		if ($this->$var) {
+			return TRUE; 
+		}
+		return FALSE; 
+	}
+
+	static public function fallback($input) {
+		if (isset($input['id'])){ //annonsid
+			return self::getSpecificAd($input['id']);
+		} else { 
+			return self::getAllAds();
+		}
 	}
 
 	static public function getAllAds() {
 		
-		self::$query = DB::query(
-			"SELECT ads.title, ads.text, ads.date_created, ads.user_id, user.address_zip
+		$data_array = DB::query(
+			"SELECT ads.id as id, ads.title as title, ads.content as content, ads.date_created as creation_date, ads.user_id as user_id, user.address_zip as zipcode
 			FROM ads, user 
 			WHERE user.id = ads.user_id" 
 		);
 
+		foreach ($data_array as $data) {
+			$ads[] = new Ads($data); 
+		}
+
 		$output = [
-		'ads' => self::$query,
-		'page' => 'ads.twig',
+		'ads' => $ads,
+		'page' => 'ads.getallads.twig',
 		'title' => 'Alla annonser'
 		];
 
 		return $output;
-
 	}
 
 	static public function getSpecificAd($id){
-		self::$query = DB::query (
-			"SELECT title, text, date_created, firstname, address
+		$data = DB::query (
+			"SELECT ads.id as id, ads.title as title, ads.content as content, ads.date_created as creation_date, user.id as user_id,  user.firstname as firstname, user.address_zip as zipcode
 			FROM ads, user
 			WHERE user.id = ads.user_id AND ads.id = $id", 
 			TRUE
 		);
+
+		$ad = new Ads($data);
+
+		$output = [
+		'ad' => $ad,
+		'page' => 'ads.getspecificad.twig',
+		'title' => $ad->title
+		];
+
+		return $output;
 	}
 
 	function createAd() {
