@@ -10,11 +10,21 @@ class Ads {
 	}
 
 	static public function getAllAds() {
+		
 		self::$query = DB::query(
-			"SELECT title, text, date_created, user_id, address 
+			"SELECT ads.title, ads.text, ads.date_created, ads.user_id, user.address_zip
 			FROM ads, user 
 			WHERE user.id = ads.user_id" 
 		);
+
+		$output = [
+		'ads' => self::$query,
+		'page' => 'ads.twig',
+		'title' => 'Alla annonser'
+		];
+
+		return $output;
+
 	}
 
 	static public function getSpecificAd($id){

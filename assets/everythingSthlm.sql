@@ -53,9 +53,9 @@ CREATE TABLE `uploads` (
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `adress_city` varchar(50) COLLATE utf8_bin NOT NULL,
-  `adress_street` varchar(100) COLLATE utf8_bin NOT NULL,
-  `adress_zip` int(10) unsigned NOT NULL,
+  `address_city` varchar(50) COLLATE utf8_bin NOT NULL,
+  `address_street` varchar(100) COLLATE utf8_bin NOT NULL,
+  `address_zip` int(10) unsigned NOT NULL,
   `email` varchar(50) COLLATE utf8_bin NOT NULL,
   `phone` int(15) unsigned NOT NULL,
   `username` varchar(30) COLLATE utf8_bin NOT NULL,
@@ -63,5 +63,8 @@ CREATE TABLE `user` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+INSERT INTO `user` (`id`, `address_city`, `address_street`, `address_zip`, `email`, `phone`, `username`, `password`) VALUES
+(1, '', '', 68432,  '', 0,  'test@test.se', ''),
+(2, '', '', 12147,  '', 0,  'test2@test.se',  '');
 
--- 2015-12-20 08:45:21
+-- 2015-12-30 09:56:39
