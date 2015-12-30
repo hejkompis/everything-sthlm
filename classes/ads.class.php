@@ -8,7 +8,7 @@ class Ads {
 		$this->id = $input['id'];
 		$this->title = $input['title'];
 		$this->content = $input['content'];
-		$this->dateCreated = $input['creation_date'];
+		$this->dateCreated = $input['date_created'];
 		$this->userId = $input['user_id'];
 	}
 
@@ -36,7 +36,7 @@ class Ads {
 	static public function getAllAds() {
 		
 		$data_array = DB::query(
-			"SELECT ads.id as id, ads.title as title, ads.content as content, ads.date_created as creation_date, ads.user_id as user_id, user.address_zip as zipcode
+			"SELECT ads.id as id, ads.title as title, ads.content as content, ads.date_created as date_created, ads.user_id as user_id, user.address_zip as zipcode
 			FROM ads, user 
 			WHERE user.id = ads.user_id" 
 		);
@@ -56,7 +56,7 @@ class Ads {
 
 	static public function getSpecificAd($id){
 		$data = DB::query (
-			"SELECT ads.id as id, ads.title as title, ads.content as content, ads.date_created as creation_date, user.id as user_id,  user.firstname as firstname, user.address_zip as zipcode
+			"SELECT ads.id as id, ads.title as title, ads.content as content, ads.date_created as date_created, user.id as user_id,  user.firstname as firstname, user.address_zip as zipcode
 			FROM ads, user
 			WHERE user.id = ads.user_id AND ads.id = $id", 
 			TRUE
