@@ -9,7 +9,7 @@ DROP TABLE IF EXISTS `ads`;
 CREATE TABLE `ads` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(100) COLLATE utf8_bin NOT NULL,
-  `text` text COLLATE utf8_bin NOT NULL,
+  `content` text COLLATE utf8_bin NOT NULL,
   `location_lat` varchar(25) COLLATE utf8_bin NOT NULL,
   `location_long` varchar(25) COLLATE utf8_bin NOT NULL,
   `date_created` int(10) unsigned NOT NULL,
@@ -19,10 +19,10 @@ CREATE TABLE `ads` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
-INSERT INTO `ads` (`id`, `title`, `text`, `location_lat`, `location_long`, `date_created`, `date_updated`, `date_expire`, `user_id`) VALUES
-(1, 'Test ad 1',  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ornare lacinia sapien sed congue. Suspendisse dignissim eros non nisl rhoncus convallis. Sed consequat venenatis lobortis. Sed luctus auctor nisl ut posuere. Mauris tincidunt maximus risus, ac dignissim ipsum dignissim eu. Integer pharetra leo nec luctus cursus. Nunc ut lobortis nulla, ac pulvinar massa. Phasellus sit amet arcu a metus accumsan egestas id non ante. Aenean at massa dapibus, convallis quam in, cursus metus. Nunc venenatis ante eu congue porta. Praesent ac velit a massa viverra sollicitudin. Sed accumsan dolor sed turpis tincidunt facilisis. Phasellus ut rutrum tortor, quis volutpat odio. Donec porta purus nunc, in faucibus sem hendrerit eu.',  '', '', 0,  0,  0,  1),
-(2, 'Test ad 2',  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ornare lacinia sapien sed congue. Suspendisse dignissim eros non nisl rhoncus convallis. Sed consequat venenatis lobortis. Sed luctus auctor nisl ut posuere. Mauris tincidunt maximus risus, ac dignissim ipsum dignissim eu. Integer pharetra leo nec luctus cursus. Nunc ut lobortis nulla, ac pulvinar massa. Phasellus sit amet arcu a metus accumsan egestas id non ante. Aenean at massa dapibus, convallis quam in, cursus metus. Nunc venenatis ante eu congue porta. Praesent ac velit a massa viverra sollicitudin. Sed accumsan dolor sed turpis tincidunt facilisis. Phasellus ut rutrum tortor, quis volutpat odio. Donec porta purus nunc, in faucibus sem hendrerit eu.',  '', '', 0,  0,  0,  1),
-(3, 'Test ad 3',  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ornare lacinia sapien sed congue. Suspendisse dignissim eros non nisl rhoncus convallis. Sed consequat venenatis lobortis. Sed luctus auctor nisl ut posuere. Mauris tincidunt maximus risus, ac dignissim ipsum dignissim eu. Integer pharetra leo nec luctus cursus. Nunc ut lobortis nulla, ac pulvinar massa. Phasellus sit amet arcu a metus accumsan egestas id non ante. Aenean at massa dapibus, convallis quam in, cursus metus. Nunc venenatis ante eu congue porta. Praesent ac velit a massa viverra sollicitudin. Sed accumsan dolor sed turpis tincidunt facilisis. Phasellus ut rutrum tortor, quis volutpat odio. Donec porta purus nunc, in faucibus sem hendrerit eu.',  '', '', 0,  0,  0,  2);
+INSERT INTO `ads` (`id`, `title`, `content`, `location_lat`, `location_long`, `date_created`, `date_updated`, `date_expire`, `user_id`) VALUES
+(1,	'Test ad 1',	'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ornare lacinia sapien sed congue. Suspendisse dignissim eros non nisl rhoncus convallis. Sed consequat venenatis lobortis. Sed luctus auctor nisl ut posuere. Mauris tincidunt maximus risus, ac dignissim ipsum dignissim eu. Integer pharetra leo nec luctus cursus. Nunc ut lobortis nulla, ac pulvinar massa. Phasellus sit amet arcu a metus accumsan egestas id non ante. Aenean at massa dapibus, convallis quam in, cursus metus. Nunc venenatis ante eu congue porta. Praesent ac velit a massa viverra sollicitudin. Sed accumsan dolor sed turpis tincidunt facilisis. Phasellus ut rutrum tortor, quis volutpat odio. Donec porta purus nunc, in faucibus sem hendrerit eu.',	'',	'',	0,	0,	0,	1),
+(2,	'Test ad 2',	'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ornare lacinia sapien sed congue. Suspendisse dignissim eros non nisl rhoncus convallis. Sed consequat venenatis lobortis. Sed luctus auctor nisl ut posuere. Mauris tincidunt maximus risus, ac dignissim ipsum dignissim eu. Integer pharetra leo nec luctus cursus. Nunc ut lobortis nulla, ac pulvinar massa. Phasellus sit amet arcu a metus accumsan egestas id non ante. Aenean at massa dapibus, convallis quam in, cursus metus. Nunc venenatis ante eu congue porta. Praesent ac velit a massa viverra sollicitudin. Sed accumsan dolor sed turpis tincidunt facilisis. Phasellus ut rutrum tortor, quis volutpat odio. Donec porta purus nunc, in faucibus sem hendrerit eu.',	'',	'',	0,	0,	0,	1),
+(3,	'Test ad 3',	'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ornare lacinia sapien sed congue. Suspendisse dignissim eros non nisl rhoncus convallis. Sed consequat venenatis lobortis. Sed luctus auctor nisl ut posuere. Mauris tincidunt maximus risus, ac dignissim ipsum dignissim eu. Integer pharetra leo nec luctus cursus. Nunc ut lobortis nulla, ac pulvinar massa. Phasellus sit amet arcu a metus accumsan egestas id non ante. Aenean at massa dapibus, convallis quam in, cursus metus. Nunc venenatis ante eu congue porta. Praesent ac velit a massa viverra sollicitudin. Sed accumsan dolor sed turpis tincidunt facilisis. Phasellus ut rutrum tortor, quis volutpat odio. Donec porta purus nunc, in faucibus sem hendrerit eu.',	'',	'',	0,	0,	0,	2);
 
 DROP TABLE IF EXISTS `ad_has_tag`;
 CREATE TABLE `ad_has_tag` (
@@ -53,6 +53,8 @@ CREATE TABLE `uploads` (
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `firstname` varchar(100) COLLATE utf8_bin NOT NULL,
+  `lastname` varchar(100) COLLATE utf8_bin NOT NULL,
   `address_city` varchar(50) COLLATE utf8_bin NOT NULL,
   `address_street` varchar(100) COLLATE utf8_bin NOT NULL,
   `address_zip` int(10) unsigned NOT NULL,
@@ -63,8 +65,8 @@ CREATE TABLE `user` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
-INSERT INTO `user` (`id`, `address_city`, `address_street`, `address_zip`, `email`, `phone`, `username`, `password`) VALUES
-(1, '', '', 68432,  '', 0,  'test@test.se', ''),
-(2, '', '', 12147,  '', 0,  'test2@test.se',  '');
+INSERT INTO `user` (`id`, `firstname`, `lastname`, `address_city`, `address_street`, `address_zip`, `email`, `phone`, `username`, `password`) VALUES
+(1,	'',	'',	'',	'',	68432,	'',	0,	'test@test.se',	''),
+(2,	'',	'',	'',	'',	12147,	'',	0,	'test2@test.se',	'');
 
--- 2015-12-30 09:56:39
+-- 2015-12-30 11:31:51
