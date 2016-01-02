@@ -23,7 +23,7 @@
 		}
 
 		// funktion för att tvätta det som skickas från ett formulär med POST, används inte utanför klassen
-		public function clean($input) {
+		public static function clean($input) {
 
 			self::getInstance();
 

@@ -10,7 +10,7 @@ class User {
 		$sql = "SELECT firstname, lastname, email, phone, address_street, address_zip, address_city
 				FROM user
 				WHERE id = ".$cleanId;
-				
+
 		$data = DB::query($sql, TRUE);
 		$this->id 				= $cleanId;
 		$this->firstName 		= $data["firstname"];
@@ -22,6 +22,10 @@ class User {
 		$this->address_city 	= $data["address_city"];
 
 	}
+
+	public static function fallback() {
+		return self::dashboard();		
+ 	}
 
 	function __get($var) {
 		if ($this->$var) {
@@ -37,7 +41,7 @@ class User {
 	}
 
 
-	function login($input){
+	public static function login($input){
 		$cleanInput = DB::clean($input);
 		$scrambledPassword = hash_hmac("sha1", $cleanInput["password"], "dont put baby in the corner");
 		$sql = "SELECT id
@@ -47,15 +51,52 @@ class User {
 				";
 		$data = DB::query($sql, TRUE); //TRUE gör att man bara får tillbaka en rad
 
+		ech;
+
 		if($data){
 			$_SESSION["everythingSthlm"]["userId"] = $data["id"];
 			self::$user = new User($data["id"]);
+		}
+		
+		header('Location: //'.ROOT.'/user'); //Detta görs för att när vi har loggat in måste vi ta vägen någonstans.
+	}
 
+	public static function isLoggedIn() {
+		if(!$_SESSION["everythingSthlm"]["userId"]) {
+			header('Location: //'.ROOT.'/user/loginform');
+		} else {
+			$id = $_SESSION["everythingSthlm"]["userId"];
+			self::$user = new User($id);
+
+			return self::$user;
 		}
 	}
 
+	public static function loginForm() {
+		$output = ['title' => 'Logga in', 'page' => 'user.loginform.twig'];
 
+		return $output;
+ 	}
 
+ 	public static function dashboard() { 
+		$user = self::isLoggedIn(); 
+		$output = [
+		'title' => 'Hej och välkommen '.$user->firstName.'!', 
+		'page' => 'user.dashboard.twig',
+		'user' => $user
+		];
+
+		return $output;
+ 	}
+
+ 	public static function logOut() {
+
+ 		$_SESSION['everythingSthlm']['userId'] = FALSE;
+ 		self::$user = FALSE;
+
+ 		self::isLoggedIn();
+
+ 	}
 
 
 
