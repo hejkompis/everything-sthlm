@@ -34,7 +34,7 @@ class Ads {
 	}
 
 	static public function getAllAds($input = FALSE) {
-		if($input['search']) {
+		if(isset($input['search'])) {
 			$searchString = $input['search'];
 			$sqlSearch = " AND ads.title LIKE '%".$searchString."%' OR ads.content LIKE '%".$searchString."%' ";	
 		} else {
