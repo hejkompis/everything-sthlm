@@ -3,7 +3,7 @@
 class User {
 
 	private $id, $firstName, $lastName, $email, $phone, $address_street, $address_zip, $address_city;
-	private static $user;
+	private static $user = FALSE;
 
 	function __construct($id){
 		$cleanId = DB::clean($id);
@@ -66,7 +66,9 @@ class User {
 			header('Location: //'.ROOT.'/user/loginform');
 		} else {
 			$id = $_SESSION["everythingSthlm"]["userId"];
-			self::$user = new User($id);
+			if(!self::$user) {
+				self::$user = new User($id);
+			}
 
 			return self::$user;
 		}
@@ -83,7 +85,8 @@ class User {
 		$output = [
 		'title' => 'Hej och välkommen '.$user->firstName.'!', 
 		'page' => 'user.dashboard.twig',
-		'user' => $user
+		'user' => $user,
+		'ads' => Ads::getUserAds()
 		];
 
 		return $output;
