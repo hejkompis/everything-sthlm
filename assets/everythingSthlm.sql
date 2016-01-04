@@ -60,13 +60,12 @@ CREATE TABLE `user` (
   `address_zip` int(10) unsigned NOT NULL,
   `email` varchar(50) COLLATE utf8_bin NOT NULL,
   `phone` int(15) unsigned NOT NULL,
-  `username` varchar(30) COLLATE utf8_bin NOT NULL,
-  `password` varchar(20) COLLATE utf8_bin NOT NULL,
+  `password` varchar(200) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
-INSERT INTO `user` (`id`, `firstname`, `lastname`, `address_city`, `address_street`, `address_zip`, `email`, `phone`, `username`, `password`) VALUES
-(1,	'',	'',	'',	'',	68432,	'',	0,	'test@test.se',	''),
-(2,	'',	'',	'',	'',	12147,	'',	0,	'test2@test.se',	'');
+INSERT INTO `user` (`id`, `firstname`, `lastname`, `address_city`, `address_street`, `address_zip`, `email`, `phone`, `password`) VALUES
+(1,	'Per',	'i Hagen',	'',	'',	68432,	'nacho@taco.com',	0,	'58ecff21ea6428c821b117958339a14fcfe63320'),
+(2,	'',	'',	'',	'',	12147,	'',	0,	'');
 
--- 2015-12-30 11:31:51
+-- 2016-01-02 15:50:02
