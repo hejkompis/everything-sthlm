@@ -28,7 +28,7 @@ class Ads {
 
 	static public function fallback($input) {
 		if (isset($input['id'])){ //annonsid
-			return self::getSpecificAd($input['id']);
+			return self::getSpecificAd($input);
 		} else { 
 			return self::getAllAds($input);
 		}
@@ -63,22 +63,24 @@ class Ads {
 		return $output;
 	}
 
-	static public function getSpecificAd($id){
-		$data = DB::query (
-			"SELECT ads.id as id, ads.title as title, ads.content as content, ads.date_created as date_created, ads.date_expire as date_expire, user.id as user_id,  user.firstname as firstname, user.address_zip as zipcode
+	static public function getSpecificAd($input){
+		$id = DB::clean($input['id']);
+
+		$sql = "SELECT ads.id as id, ads.title as title, ads.content as content, ads.date_created as date_created, ads.date_expire as date_expire, user.id as user_id,  user.firstname as firstname, user.address_zip as zipcode
 			FROM ads, user
-			WHERE user.id = ads.user_id AND ads.id = $id", 
-			TRUE
-		);
+			WHERE user.id = ads.user_id AND ads.id = $id
+		";
+		
+		$data = DB::query($sql, TRUE);
 
 		$ad = new Ads($data);
-
+			
 		$output = [
 		'ad' => $ad,
 		'page' => 'ads.getspecificad.twig',
 		'title' => $ad->title
 		];
-
+		
 		return $output;
 	}
 

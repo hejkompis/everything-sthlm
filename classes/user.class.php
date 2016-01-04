@@ -40,6 +40,38 @@ class User {
 		return FALSE; 
 	}
 
+	public static function newUserForm() {
+		$output = ['title' => 'Skapa användare', 'page' => 'user.newuserform.twig'];
+
+		return $output;
+	}
+
+	public static function saveNewUser($input) {
+		$cleanData = DB::clean($input);
+
+		$firstname 		= $cleanData['firstname'];
+		$lastname 		= $cleanData['lastname'];
+		$address_street = $cleanData['address_street'];
+		$address_zip 	= $cleanData['address_zip'];
+		$address_city 	= $cleanData['address_city'];
+		$email 			= $cleanData['email'];
+		$scrambledPassword = hash_hmac("sha1", $cleanData["password"], "dont put baby in the corner");
+		
+		$sql = "INSERT INTO user 
+				(firstname, lastname, address_city, address_zip, address_street, email, password)
+				VALUES
+				('$firstname', '$lastname', '$address_city', '$address_zip', '$address_street', '$email', '$scrambledPassword')
+		";
+
+		$data = DB::$con->query($sql);
+
+		if($data) {
+			header('Location: //'.ROOT.'/user');	
+		} else {
+			echo DB::$con->error; 
+			die();
+		}
+	}
 
 	public static function login($input){
 		$cleanInput = DB::clean($input);
@@ -50,8 +82,6 @@ class User {
 				AND password = '".$scrambledPassword."'
 				";
 		$data = DB::query($sql, TRUE); //TRUE gör att man bara får tillbaka en rad
-
-		ech;
 
 		if($data){
 			$_SESSION["everythingSthlm"]["userId"] = $data["id"];
