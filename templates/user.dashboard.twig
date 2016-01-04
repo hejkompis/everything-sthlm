@@ -1,7 +1,21 @@
 <div class="container">
 	<div class="row">
-	<div class="col-xs-12">
-		Hej {{user.firstName}}
+		<div class="col-xs-12">
+			Hej {{user.firstName}} 
+			<br>
+			<a href="/ads/newadform">Ny annons</a>
+		</div>
 	</div>
+
+	<div class="row">
+		<div class="col-xs-12">
+		
+			{% if ads %}
+				{% include "user.ads.twig" %}
+			{% else %}
+				Du har inga annonser... <a href="/ads/newadform">Skapa ny annons</a>
+			{% endif %}	
+
+		</div>
 	</div>
 </div>
