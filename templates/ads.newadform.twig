@@ -3,12 +3,28 @@
 	<div class="col-xs-12">
 		<form action="/ads/savead/" method="post">
 			<div class="form-group">
-				<label for="title"></label>
-				<input type="text" id="title" name="title" class="form-control">
+				<label for="title">Titel</label>
+				<input type="text" id="title" name="title" class="form-control" >
 			</div>
 			<div class="form-group">
-				<label for="content"></label>
-				<input type="text" id="content" name="content" class="form-control">
+				<label for="content">Annonstext</label>
+				<textarea id="content" name="content" class="form-control"></textarea> 
+			</div>
+			<div class="form-group">
+				<label for="address_street">Gata</label>
+				<input type="text" id="address_street" name="address_street" class="form-control" value="{{user.address_street}}"> 
+			</div>
+			<div class="form-group">
+				<label for="address_zip">Postnummer</label>
+				<input type="text" id="address_zip" name="address_zip" class="form-control" value="{{user.address_zip}}"> 
+			</div>
+			<div class="form-group">
+				<label for="address_street">Ort</label>
+				<input type="text" id="address_city" name="address_city" class="form-control" value="{{user.address_city}}"> 
+			</div>
+			<div class="form-group">
+				<label for="date_expire">Annonsen tas ner</label>
+				<input type="text" name="date_expire" value="{{date_expire}}" id="date_expire" class="form-control">				
 			</div>
 			<div class="form-group">
 				<button type="submit" class="btn btn-primary">Skapa annons</button>

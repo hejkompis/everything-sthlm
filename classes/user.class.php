@@ -47,15 +47,15 @@ class User {
 	}
 
 	public static function saveNewUser($input) {
-		$cleanData = DB::clean($input);
+		$cleanInput = DB::clean($input);
 
-		$firstname 		= $cleanData['firstname'];
-		$lastname 		= $cleanData['lastname'];
-		$address_street = $cleanData['address_street'];
-		$address_zip 	= $cleanData['address_zip'];
-		$address_city 	= $cleanData['address_city'];
-		$email 			= $cleanData['email'];
-		$scrambledPassword = hash_hmac("sha1", $cleanData["password"], "dont put baby in the corner");
+		$firstname 		= $cleanInput['firstname'];
+		$lastname 		= $cleanInput['lastname'];
+		$address_street = $cleanInput['address_street'];
+		$address_zip 	= preg_replace("/[^0-9]/", "", $cleanInput['address_zip']);
+		$address_city 	= $cleanInput['address_city'];
+		$email 			= $cleanInput['email'];
+		$scrambledPassword = hash_hmac("sha1", $cleanInput["password"], "dont put baby in the corner");
 		
 		$sql = "INSERT INTO user 
 				(firstname, lastname, address_city, address_zip, address_street, email, password)
