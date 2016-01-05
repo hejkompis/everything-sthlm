@@ -2,15 +2,16 @@
 
 class Ads {
 
-	private $id, $title, $content, $dateCreated, $dateExpire, $userId, $imageName, $tags;
+	private $id, $title, $content, $dateCreated, $dateExpire, $userId, $imageName, $tags, $type;
 
 	function __construct($input) { //$input kommer från getAllAds eller getSpecificAd
 		$this->id = $input['id'];
 		$this->title = $input['title'];
 		$this->content = $input['content'];
-		$this->dateCreated = $input['date_created'];
+		$this->dateCreated = date('Y-m-d', $input['date_created']);
 		$this->dateExpire = $input['date_expire'];
 		$this->userId = $input['user_id'];
+		$this->type = $input['ad_type'];
 	}
 
 	function __get($var) {
@@ -44,7 +45,7 @@ class Ads {
 		}
 
 		$data_array = DB::query(
-			"SELECT ads.id as id, ads.title as title, ads.content as content, ads.date_created as date_created, ads.date_expire as date_expire, ads.user_id as user_id, user.address_zip as zipcode
+			"SELECT ads.id as id, ads.title as title, ads.content as content, ads.date_created as date_created, ads.date_expire as date_expire, ads.user_id as user_id, user.address_zip as zipcode, ads.ad_type as ad_type
 			FROM ads, user 
 			WHERE user.id = ads.user_id".$sqlSearch. " AND date_expire >= ".time(). "
 			ORDER BY date_created DESC"
@@ -67,7 +68,7 @@ class Ads {
 	static public function getSpecificAd($input){
 		$id = DB::clean($input['id']);
 
-		$sql = "SELECT ads.id as id, ads.title as title, ads.content as content, ads.date_created as date_created, ads.date_expire as date_expire, user.id as user_id,  user.firstname as firstname, user.address_zip as zipcode
+		$sql = "SELECT ads.id as id, ads.title as title, ads.content as content, ads.date_created as date_created, ads.date_expire as date_expire, user.id as user_id,  user.firstname as firstname, user.address_zip as zipcode, ads.ad_type as ad_type 
 			FROM ads, user
 			WHERE user.id = ads.user_id AND ads.id = $id
 		";
@@ -89,7 +90,7 @@ class Ads {
 		$user = User::isLoggedIn(); 
 
 		$data_array = DB::query(
-			"SELECT id, title, content, date_created, date_expire, user_id
+			"SELECT id, title, content, date_created, date_expire, user_id, ad_type
 			FROM ads
 			WHERE user_id = ".$user->id
 			);
@@ -107,10 +108,10 @@ class Ads {
 		$dateExpire = date('Y-m-d', time()+(60*60*24*7));
 
 		$output = [
-		'title' => 'Skapa ny annons', 
-		'page' => 'ads.newadform.twig',
-		'user' => $user,
-		'date_expire' => $dateExpire
+		'title' 		=> 'Skapa ny annons', 
+		'page' 			=> 'ads.newadform.twig',
+		'user' 			=> $user,
+		'date_expire' 	=> $dateExpire
 		];
 
 		return $output;
@@ -128,11 +129,13 @@ class Ads {
 		$address_city 	= $cleanInput['address_city'];
 		$date_expire 	= strtotime($cleanInput['date_expire']);
 		$userId 		= $user->id;
+		$ad_type		= $cleanInput['ad_type'];
+		$date_created	= time();
 
 		$sql = "INSERT INTO ads 
-				(title, content, user_id, address_street, address_zip, address_city, date_expire, date_created)
+				(title, content, user_id, address_street, address_zip, address_city, date_expire, date_created, ad_type)
 				VALUES
-				('$title', '$content', '$userId', '$address_street', '$address_zip', '$address_city', '$date_expire', time())
+				('$title', '$content', '$userId', '$address_street', '$address_zip', '$address_city', '$date_expire', '$date_created', '$ad_type')
 		";
 
 		$data = DB::$con->query($sql);
