@@ -5,13 +5,13 @@ class Ads {
 	private $id, $title, $content, $dateCreated, $dateExpire, $userId, $imageName, $tags, $type;
 
 	function __construct($input) { //$input kommer från getAllAds eller getSpecificAd
-		$this->id = $input['id'];
-		$this->title = $input['title'];
-		$this->content = $input['content'];
-		$this->dateCreated = date('Y-m-d', $input['date_created']);
-		$this->dateExpire = $input['date_expire'];
-		$this->userId = $input['user_id'];
-		$this->type = $input['ad_type'];
+		$this->id 			= $input['id'];
+		$this->title 		= $input['title'];
+		$this->content 		= $input['content'];
+		$this->dateCreated 	= date('Y-m-d', $input['date_created']);
+		$this->dateExpire 	= $input['date_expire'];
+		$this->userId 		= $input['user_id'];
+		$this->type 		= $input['ad_type'];
 	}
 
 	function __get($var) {
@@ -44,22 +44,23 @@ class Ads {
 			$sqlSearch = "";
 		}
 
-		$data_array = DB::query(
-			"SELECT ads.id as id, ads.title as title, ads.content as content, ads.date_created as date_created, ads.date_expire as date_expire, ads.user_id as user_id, user.address_zip as zipcode, ads.ad_type as ad_type
+		$sql = "SELECT ads.id as id, ads.title as title, ads.content as content, ads.date_created as date_created, ads.date_expire as date_expire, ads.user_id as user_id, user.address_zip as zipcode, ads.ad_type as ad_type
 			FROM ads, user 
 			WHERE user.id = ads.user_id".$sqlSearch. " AND date_expire >= ".time(). "
-			ORDER BY date_created DESC"
-		);
+			ORDER BY date_created DESC";
+
+		$data_array = DB::query($sql);
+		
 		$ads = []; 
 		foreach ($data_array as $data) {
 			$ads[] = new Ads($data); 
 		}
 
 		$output = [
-		'ads' => $ads,
-		'page' => 'ads.getallads.twig',
-		'title' => 'Alla annonser',
-		'search' => $searchString
+		'ads' 		=> $ads,
+		'page' 		=> 'ads.getallads.twig',
+		'title' 	=> 'Alla annonser',
+		'search' 	=> $searchString
 		];
 
 		return $output;
@@ -78,8 +79,8 @@ class Ads {
 		$ad = new Ads($data);
 			
 		$output = [
-		'ad' => $ad,
-		'page' => 'ads.getspecificad.twig',
+		'ad' 	=> $ad,
+		'page' 	=> 'ads.getspecificad.twig',
 		'title' => $ad->title
 		];
 		
@@ -89,11 +90,11 @@ class Ads {
 	static public function getUserAds($input = FALSE) {
 		$user = User::isLoggedIn(); 
 
-		$data_array = DB::query(
-			"SELECT id, title, content, date_created, date_expire, user_id, ad_type
+		$sql = "SELECT id, title, content, date_created, date_expire, user_id, ad_type
 			FROM ads
-			WHERE user_id = ".$user->id
-			);
+			WHERE user_id = ".$user->id;
+
+		$data_array = DB::query($sql);
 
 		$ads = []; 
 		foreach ($data_array as $data) {

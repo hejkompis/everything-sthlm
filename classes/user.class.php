@@ -12,6 +12,7 @@ class User {
 				WHERE id = ".$cleanId;
 
 		$data = DB::query($sql, TRUE);
+		
 		$this->id 				= $cleanId;
 		$this->firstName 		= $data["firstname"];
 		$this->lastName 		= $data["lastname"];
@@ -112,11 +113,12 @@ class User {
 
  	public static function dashboard() { 
 		$user = self::isLoggedIn(); 
+		
 		$output = [
 		'title' => 'Hej och välkommen '.$user->firstName.'!', 
-		'page' => 'user.dashboard.twig',
-		'user' => $user,
-		'ads' => Ads::getUserAds()
+		'page' 	=> 'user.dashboard.twig',
+		'user' 	=> $user,
+		'ads' 	=> Ads::getUserAds()
 		];
 
 		return $output;
