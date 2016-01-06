@@ -145,6 +145,18 @@
     // vi utgår från att vår metod returnerar någon form av innehåll, så vi lägger in det i variabeln $twig_data som sen läses in i Twig
     $twig_data = $class::$method($data);
 
+    # 9.1
+
+    if(isset($twig_data['redirect_url'])) { 
+        header('Location: '.$twig_data['redirect_url']); 
+    }
+
+    # 9.2
+
+    if(isset($twig_data['error'])) { 
+        echo $twig_data['error']; 
+    }
+
     # -- 10
 
     // vi skapar ett nytt twig-objekt. det här behövs egentligen inte. Tops lade allt som hade med Twig att göra direkt i index.php, men jag tycker det blir

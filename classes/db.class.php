@@ -34,13 +34,49 @@
 
 				// loopa igenom $_POST
 				foreach($input as $key => $value) {
-					$clean_data[$key] = self::$mysqli->real_escape_string($value);
+
+					if(is_array($value)) {
+
+						foreach($value as $subkey => $subvalue) {
+
+							$clean_data[$key][$subkey] = self::$mysqli->real_escape_string($subvalue);
+
+						}
+
+					}
+
+					else {
+
+						$clean_data[$key] = self::$mysqli->real_escape_string($value);
+
+					}
+					
 				}
-			} 
-			else {
-				$clean_data = self::$mysqli->real_escape_string($input);
+
 			}
+
+			else {
+
+				if(is_array($input)) {
+
+						foreach($input as $key => $value) {
+
+							$clean_data[$key] = self::$mysqli->real_escape_string($value);
+
+						}
+
+					}
+
+				else {
+
+					$clean_data = self::$mysqli->real_escape_string($input);
+
+				}
+
+			}
+		
 			return $clean_data;
+
 		}
 
 		public static function query($query, $single = false) {

@@ -2,16 +2,33 @@
 
 class Ads {
 
-	private $id, $title, $content, $dateCreated, $dateExpire, $userId, $imageName, $tags, $type;
+	private 	$id, 
+				$title, 
+				$content, 
+				$dateCreated, 
+				$dateExpire, 
+				$userId, 
+				$imageName, 
+				$tags, 
+				$type,
+				$address_street,
+				$address_zip,
+				$address_city;
 
 	function __construct($input) { //$input kommer från getAllAds eller getSpecificAd
-		$this->id 			= $input['id'];
-		$this->title 		= $input['title'];
-		$this->content 		= $input['content'];
-		$this->dateCreated 	= date('Y-m-d', $input['date_created']);
-		$this->dateExpire 	= $input['date_expire'];
-		$this->userId 		= $input['user_id'];
-		$this->type 		= $input['ad_type'];
+		
+		$this->id 				= $input['id'];
+		$this->title 			= $input['title'];
+		$this->content 			= $input['content'];
+		$this->dateCreated 		= date('Y-m-d', $input['date_created']);
+		$this->dateExpire 		= $input['date_expire'];
+		$this->userId 			= $input['user_id'];
+		$this->type 			= $input['ad_type'];
+		$this->address_street 	= $input['address_street'];
+		$this->address_zip 		= $input['address_zip'];
+		$this->address_city 	= $input['address_city'];
+		$this->tags 			= self::getSpecificTags($this->id);
+
 	}
 
 	function __get($var) {
@@ -29,7 +46,7 @@ class Ads {
 
 	static public function fallback($input) {
 		if (isset($input['id'])){ //annonsid
-			return self::getSpecificAd($input);
+			return self::showSpecificAd($input);
 		} else { 
 			return self::getAllAds($input);
 		}
@@ -45,7 +62,7 @@ class Ads {
 			$sqlSearch = "";
 		}
 
-		$sql = "SELECT ads.id as id, ads.title as title, ads.content as content, ads.date_created as date_created, ads.date_expire as date_expire, ads.user_id as user_id, user.address_zip as zipcode, ads.ad_type as ad_type
+		$sql = "SELECT ads.id as id, ads.title as title, ads.content as content, ads.date_created as date_created, ads.date_expire as date_expire, ads.user_id as user_id, ads.address_street as address_street, ads.address_zip as address_zip, ads.address_city as address_city, ads.ad_type as ad_type
 			FROM ads, user 
 			WHERE user.id = ads.user_id ".$sqlSearch. " AND date_expire >= ".time()."
 			ORDER BY date_created DESC";
@@ -68,30 +85,40 @@ class Ads {
 	}
 
 	static public function getSpecificAd($input){
+		
 		$id = DB::clean($input['id']);
 
-		$sql = "SELECT ads.id as id, ads.title as title, ads.content as content, ads.date_created as date_created, ads.date_expire as date_expire, user.id as user_id,  user.firstname as firstname, user.address_zip as zipcode, ads.ad_type as ad_type 
-			FROM ads, user
-			WHERE user.id = ads.user_id AND ads.id = $id
-		";
+		$sql = 	"SELECT ads.id as id, ads.title as title, ads.content as content, ads.date_created as date_created, ads.date_expire as date_expire, user.id as user_id,  user.firstname as firstname, ads.address_street as address_street, ads.address_zip as address_zip, ads.address_city as address_city, ads.ad_type as ad_type 
+				FROM ads, user
+				WHERE user.id = ads.user_id AND ads.id = $id
+				";
 		
 		$data = DB::query($sql, TRUE);
 
-		$ad = new Ads($data);
-			
+		$output = new Ads($data);
+		
+		return $output;
+	}
+
+	public static function showSpecificAd($input) {
+
+		$ad = self::getSpecificAd($input);
+
 		$output = [
 		'ad' 	=> $ad,
 		'page' 	=> 'ads.getspecificad.twig',
-		'title' => $ad->title
+		'title' => $ad->title,
+		'tags'	=> self::getAllTags()
 		];
 		
 		return $output;
+
 	}
 
 	static public function getUserAds($input = FALSE) {
 		$user = User::isLoggedIn(); 
 
-		$sql = "SELECT id, title, content, date_created, date_expire, user_id, ad_type
+		$sql = "SELECT id, title, content, date_created, date_expire, user_id, address_street, address_zip, address_city, ad_type
 			FROM ads
 			WHERE user_id = ".$user->id;
 
@@ -114,7 +141,24 @@ class Ads {
 		'title' 		=> 'Skapa ny annons', 
 		'page' 			=> 'ads.newadform.twig',
 		'user' 			=> $user,
-		'date_expire' 	=> $dateExpire
+		'date_expire' 	=> $dateExpire,
+		'tags'			=> self::getAllTags()
+		];
+
+		return $output;
+	}
+
+	public static function editAdForm($input) {
+		
+		$user = User::isLoggedIn();
+		$ad = self::getSpecificAd($input);
+
+		$output = [
+		'title' 		=> 'Redigera annons', 
+		'page' 			=> 'ads.editadform.twig',
+		'user' 			=> $user,
+		'ad' 			=> $ad,
+		'tags'			=> self::getAllTags()
 		];
 
 		return $output;
@@ -136,6 +180,15 @@ class Ads {
 		$ad_type		= $cleanInput['ad_type'];
 		$date_created	= time();
 
+		if(!isset($cleanInput['tags'])) {
+			$tags = [];
+		} else {
+			$tags = $cleanInput['tags'];
+		}
+
+		// samma som ovan
+		// $tags = isset($cleanInput['tags']) ? $cleanInput['tags'] : [];
+
 		$sql = "INSERT INTO ads 
 				(title, content, user_id, address_street, address_zip, address_city, date_expire, date_created, ad_type)
 				VALUES
@@ -145,11 +198,55 @@ class Ads {
 		$data = DB::$con->query($sql);
 
 		if($data) {
-			header('Location: //'.ROOT.'/user');	
+
+			// $con->insert_id är en inbyggd funktion som hämtar det senast sparade ID:t
+			$ad_id = DB::$con->insert_id;
+			
+			foreach($tags as $tag_id) {
+				$sql = "INSERT INTO ad_has_tag 
+						(ad_id, tag_id) 
+						VALUES 
+						($ad_id, $tag_id)
+						";
+
+				DB::$con->query($sql);
+			}
+
+			$output = ['redirect_url' => '//'.ROOT.'/user'];
+				
 		} else {
-			echo DB::$con->error; 
-			die();
+			
+			$output = ['error' => DB::$con->error];
+
 		}
+
+		return $output;
+
+	}
+
+	public static function getAllTags() {
+
+		$sql = "SELECT id, name FROM tags ORDER BY name";
+		$output = DB::query($sql);
+
+		return $output;
+
+	}
+
+	private static function getSpecificTags($ad_id) {
+
+		$clean_ad_id = DB::clean($ad_id);
+
+		$output = [];
+
+		$array = DB::query("SELECT tag_id FROM ad_has_tag WHERE ad_id = ".$clean_ad_id);
+		
+		foreach($array as $data) {
+			$output[] = $data['tag_id'];
+		}
+
+		return $output;
+
 	}
 
 }
