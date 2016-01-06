@@ -46,7 +46,8 @@ class Ads {
 		$data_array = DB::query(
 			"SELECT ads.id as id, ads.title as title, ads.content as content, ads.date_created as date_created, ads.date_expire as date_expire, ads.user_id as user_id, user.address_zip as zipcode
 			FROM ads, user 
-			WHERE user.id = ads.user_id".$sqlSearch 
+			WHERE user.id = ads.user_id".$sqlSearch. " AND date_expire >= ".time(). "
+			ORDER BY date_created DESC"
 		);
 		$ads = []; 
 		foreach ($data_array as $data) {
@@ -103,10 +104,13 @@ class Ads {
 
 	public static function newAdForm() {
 		$user = User::isLoggedIn();
+		$dateExpire = date('Y-m-d', time()+(60*60*24*7));
 
 		$output = [
 		'title' => 'Skapa ny annons', 
-		'page' => 'ads.newadform.twig'
+		'page' => 'ads.newadform.twig',
+		'user' => $user,
+		'date_expire' => $dateExpire
 		];
 
 		return $output;
@@ -115,16 +119,20 @@ class Ads {
 	public static function saveAd($input) {
 		$user = User::isLoggedIn();
 
-		$cleanData = DB::clean($input);
+		$cleanInput = DB::clean($input);
 
-		$title = $cleanData['title'];
-		$content = $cleanData['content'];
-		$userId = $user->id;
+		$title 			= $cleanInput['title'];
+		$content 		= $cleanInput['content'];
+		$address_street = $cleanInput['address_street'];
+		$address_zip 	= preg_replace("/[^0-9]/", "", $cleanInput['address_zip']);
+		$address_city 	= $cleanInput['address_city'];
+		$date_expire 	= strtotime($cleanInput['date_expire']);
+		$userId 		= $user->id;
 
 		$sql = "INSERT INTO ads 
-				(title, content, user_id)
+				(title, content, user_id, address_street, address_zip, address_city, date_expire, date_created)
 				VALUES
-				('$title', '$content', '$userId')
+				('$title', '$content', '$userId', '$address_street', '$address_zip', '$address_city', '$date_expire', time())
 		";
 
 		$data = DB::$con->query($sql);
