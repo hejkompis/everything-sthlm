@@ -28,7 +28,6 @@ class Ads {
 		$this->address_zip 		= $input['address_zip'];
 		$this->address_city 	= $input['address_city'];
 		$this->tags 			= self::getSpecificTags($this->id);
-
 	}
 
 	function __get($var) {
@@ -221,14 +220,14 @@ class Ads {
 		}
 
 		return $output;
-
+		
 	}
-
+	
 	public static function updateAd($input) {
 		$user = User::isLoggedIn();
-
+		
 		$cleanInput = DB::clean($input);
-
+		
 		$ad_id 			= $cleanInput['id'];
 		$title 			= $cleanInput['title'];
 		$content 		= $cleanInput['content'];
@@ -237,7 +236,6 @@ class Ads {
 		$address_city 	= $cleanInput['address_city'];
 		$date_expire 	= strtotime($cleanInput['date_expire']);
 		$userId 		= $user->id;
-
 		$ad_type		= $cleanInput['ad_type'];
 
 		if(!isset($cleanInput['tags'])) {
@@ -311,7 +309,17 @@ class Ads {
 		}
 
 		return $output;
-
 	}
 
+	public static function deleteAd($input) {
+		$cleanId = DB::clean($input['id']);
+
+		$sql = "DELETE FROM ads WHERE id = $cleanId";
+
+		DB::$con->query($sql);
+
+		$output = ['redirect_url' => '/user/'];
+
+		return $output;
+	}	
 }
