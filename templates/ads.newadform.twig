@@ -23,6 +23,14 @@
 				<input type="text" id="address_city" name="address_city" class="form-control" value="{{user.address_city}}"> 
 			</div>
 			<div class="form-group">
+				<label for="ad_type">Typ av annons</label>
+				<select class="form-control" name="ad_type">
+					<option id="1">Jag efterlyser</option>
+					<option id="2">Jag lånar ut</option>
+					<option id="3">Byte</option>
+				</select>
+			</div>
+			<div class="form-group">
 				<label for="date_expire">Annonsen tas ner</label>
 				<input type="text" name="date_expire" value="{{date_expire}}" id="date_expire" class="form-control">				
 			</div>

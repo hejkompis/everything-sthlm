@@ -20,16 +20,18 @@
 			//
 			// jag har lagt till en variabel som heter "info". där kan man skriva ett valfritt meddelande som sedan hämtas in i index.twig
 			// med hjälp av den kan man se vilken klass och variabel som anropas. Där kan man skriva vad som helst egentligen...
-			$output = [
-			'title'	=> 'Välkommen',
-			'page'	=> 'home.twig',
-			'info'	=> 'Jag kom från metoden "fallback" i klassen Home'
-			];
+			// $output = [
+			// 'title'	=> 'Välkommen',
+			// 'page'	=> 'home.twig',
+			// 'info'	=> 'Jag kom från metoden "fallback" i klassen Home'
+			// ];
 
 			// vi använder return så att vi kan lägga datan vi genererat i en variabel
 			// i vår index.php-fil heter den variabeln $twig_data
 			// return gör alltså att $twig_data "ärver" det som genereras i av den anropade metoden
-			return $output;
+			// return $output;
+
+			return Ads::getAllAds();
 
 		}
 
