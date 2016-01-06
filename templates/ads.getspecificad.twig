@@ -5,8 +5,8 @@
 					<h2>{{ad.title}}</h2>
 					{% if ad.tags %}
 
-						{% for tag in ad.tags %}
-							<h4>{{tag.name}}</h4>
+						{% for tag in tags %}
+							{% if tag.id in ad.tags %}<h4>{{tag.name}}{% endif %}</h4>
 						{% endfor %}
 
 					{% endif %}
