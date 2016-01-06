@@ -21,7 +21,7 @@ class Ads {
 		$this->title 			= $input['title'];
 		$this->content 			= $input['content'];
 		$this->dateCreated 		= date('Y-m-d', $input['date_created']);
-		$this->dateExpire 		= $input['date_expire'];
+		$this->dateExpire 		= date('Y-m-d', $input['date_expire']);
 		$this->userId 			= $input['user_id'];
 		$this->type 			= $input['ad_type'];
 		$this->address_street 	= $input['address_street'];
@@ -106,7 +106,7 @@ class Ads {
 
 		$output = [
 		'ad' 	=> $ad,
-		'page' 	=> 'ads.getspecificad.twig',
+		'page' 	=> 'ads.showspecificad.twig',
 		'title' => $ad->title,
 		'tags'	=> self::getAllTags()
 		];
@@ -224,6 +224,70 @@ class Ads {
 
 	}
 
+	public static function updateAd($input) {
+		$user = User::isLoggedIn();
+
+		$cleanInput = DB::clean($input);
+
+		$ad_id 			= $cleanInput['id'];
+		$title 			= $cleanInput['title'];
+		$content 		= $cleanInput['content'];
+		$address_street = $cleanInput['address_street'];
+		$address_zip 	= preg_replace("/[^0-9]/", "", $cleanInput['address_zip']);
+		$address_city 	= $cleanInput['address_city'];
+		$date_expire 	= strtotime($cleanInput['date_expire']);
+		$userId 		= $user->id;
+
+		$ad_type		= $cleanInput['ad_type'];
+
+		if(!isset($cleanInput['tags'])) {
+			$tags = [];
+		} else {
+			$tags = $cleanInput['tags'];
+		}
+
+		// samma som ovan
+		// $tags = isset($cleanInput['tags']) ? $cleanInput['tags'] : [];
+
+		$sql = 	"UPDATE ads SET
+				title = '$title', 
+				content = '$content',
+				address_street = '$address_street',
+				address_zip = '$address_zip',
+				address_city = '$address_city',
+				date_expire = '$date_expire',
+				ad_type = '$ad_type'
+				WHERE id = ".$ad_id;
+
+		$data = DB::$con->query($sql);
+
+		if($data) {
+
+			$sql = "DELETE FROM ad_has_tag WHERE ad_id = ".$ad_id;
+			DB::$con->query($sql);
+			
+			foreach($tags as $tag_id) {
+				$sql = "INSERT INTO ad_has_tag 
+						(ad_id, tag_id) 
+						VALUES 
+						($ad_id, $tag_id)
+						";
+
+				DB::$con->query($sql);
+			}
+
+			$output = ['redirect_url' => '//'.ROOT.'/user'];
+				
+		} else {
+			
+			$output = ['error' => DB::$con->error];
+
+		}
+
+		return $output;
+
+	}
+
 	public static function getAllTags() {
 
 		$sql = "SELECT id, name FROM tags ORDER BY name";
@@ -239,7 +303,8 @@ class Ads {
 
 		$output = [];
 
-		$array = DB::query("SELECT tag_id FROM ad_has_tag WHERE ad_id = ".$clean_ad_id);
+		$sql = "SELECT tag_id FROM ad_has_tag WHERE ad_id = ".$clean_ad_id;
+		$array = DB::query($sql);
 		
 		foreach($array as $data) {
 			$output[] = $data['tag_id'];
