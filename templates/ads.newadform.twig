@@ -11,14 +11,22 @@
 					<label for="content">Annonstext</label>
 					<textarea id="content" name="content" class="form-control"></textarea> 
 				</div>
+
+				<div class="form-group">
+					<label for="payment">Ersättning/Bytes mot</label>
+					<input type="text" id="payment" name="payment" class="form-control">
+				</div>
+
 				<div class="form-group">
 					<label for="address_street">Gata</label>
 					<input type="text" id="address_street" name="address_street" class="form-control" value="{{user.address_street}}"> 
 				</div>
+				
 				<div class="form-group">
 					<label for="address_zip">Postnummer</label>
 					<input type="text" id="address_zip" name="address_zip" class="form-control" value="{{user.address_zip}}"> 
 				</div>
+				
 				<div class="form-group">
 					<label for="address_city">Ort</label>
 					<input type="text" id="address_city" name="address_city" class="form-control" value="{{user.address_city}}"> 
@@ -27,9 +35,9 @@
 				<div class="form-group">
 					<label for="ad_type">Typ av annons</label>
 					<select class="form-control" name="ad_type">
-						<option value="1">Jag efterlyser</option>
-						<option value="2">Jag lånar ut</option>
-						<option value="3">Byte</option>
+						{% for ad_type in ad_types %}
+						<option value="{{ad_type.id}}">{{ad_type.name}}</option>
+						{% endfor %}
 					</select>
 				</div>
 				<div class="form-group">

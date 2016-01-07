@@ -12,6 +12,11 @@
 					<label for="content">Annonstext</label>
 					<textarea id="content" name="content" class="form-control">{{ad.content}}</textarea> 
 				</div>
+
+				<div class="form-group">
+					<label for="payment">Ersättning/Bytes mot</label>
+					<input type="text" id="payment" name="payment" class="form-control" value="{{ad.payment}}">
+				</div>
 				
 				<div class="form-group">
 					<label for="address_street">Gata</label>
@@ -31,9 +36,15 @@
 				<div class="form-group">
 					<label for="ad_type">Typ av annons</label>
 					<select class="form-control" name="ad_type">
-						<option value="1" {% if ad.type == 1 %} selected="selected" {% endif %}>Jag efterlyser</option>
-						<option value="2" {% if ad.type == 2 %} selected="selected" {% endif %}>Jag lånar ut</option>
-						<option value="3" {% if ad.type == 3 %} selected="selected" {% endif %}>Byte</option>
+
+						{% for ad_type in ad_types %}
+							<option value="{{ad_type.id}}"
+							{% if ad_type.id == ad.typeId %} 
+								selected="selected"
+							{% endif %}> 
+							{{ad_type.name}}</option>
+						{% endfor %}
+
 					</select>
 				</div>
 				<div class="form-group">
@@ -57,6 +68,8 @@
 					{% endfor %}
 
 				</div>
+
+
 				<div class="form-group">
 					<label for="date_expire">Annonsen tas ner</label>
 					<input type="text" name="date_expire" value="{{ad.dateExpire}}" id="date_expire" class="form-control">				

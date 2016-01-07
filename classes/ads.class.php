@@ -5,15 +5,18 @@ class Ads {
 	private 	$id, 
 				$title, 
 				$content, 
-				$dateCreated, 
+				$dateCreated,
+				$createdDaysAgo, 
 				$dateExpire, 
 				$userId, 
 				$imageName, 
 				$tags, 
-				$type,
+				$typeName,
+				$typeId,
 				$address_street,
 				$address_zip,
-				$address_city;
+				$address_city,
+				$payment;
 
 	function __construct($input) { //$input kommer från getAllAds eller getSpecificAd
 		
@@ -23,11 +26,14 @@ class Ads {
 		$this->dateCreated 		= date('Y-m-d', $input['date_created']);
 		$this->dateExpire 		= date('Y-m-d', $input['date_expire']);
 		$this->userId 			= $input['user_id'];
-		$this->type 			= $input['ad_type'];
+		$this->typeId 			= $input['ad_type'];
+		$this->typeName			= self::getSpecificAdType($this->id);
 		$this->address_street 	= $input['address_street'];
 		$this->address_zip 		= $input['address_zip'];
 		$this->address_city 	= $input['address_city'];
 		$this->tags 			= self::getSpecificTags($this->id);
+		$this->createdDaysAgo	= round((time()-$input['date_created'])/60/60/24);
+		$this->payment			= $input['payment'];
 	}
 
 	function __get($var) {
@@ -43,7 +49,7 @@ class Ads {
 		return FALSE; 
 	}
 
-	static public function fallback($input) {
+	static public function fallback($input) { 
 		if (isset($input['id'])){ //annonsid
 			return self::showSpecificAd($input);
 		} else { 
@@ -54,16 +60,46 @@ class Ads {
 	static public function getAllAds($input = FALSE) {
 	
 		if(isset($input['search'])) {
-			$searchString = $input['search'];
-			$sqlSearch = " AND ads.title LIKE '%".$searchString."%' OR ads.content LIKE '%".$searchString."%' ";	
+			$searchString = DB::clean($input['search']);
+			$searchString = strtolower($searchString);
+			$sqlSearch = " AND (LOWER(ads.title) LIKE '%".$searchString."%' OR LOWER(ads.content) LIKE '%".$searchString."%') ";	
 		} else {
 			$searchString = FALSE;
 			$sqlSearch = "";
 		}
 
-		$sql = "SELECT ads.id as id, ads.title as title, ads.content as content, ads.date_created as date_created, ads.date_expire as date_expire, ads.user_id as user_id, ads.address_street as address_street, ads.address_zip as address_zip, ads.address_city as address_city, ads.ad_type as ad_type
+		if(isset($input['tags'])) {
+			$searchTags = DB::clean($input['tags']);
+			$sqlTags = " AND ads.id IN ( 
+						SELECT DISTINCT(ad_id)
+						FROM ad_has_tag
+						WHERE ";
+			foreach($searchTags as $searchTag) {
+				$sqlTags .= "tag_id = $searchTag OR "; 
+			}  
+
+			$sqlTags = trim($sqlTags, "OR ");
+
+			$sqlTags .= ")";
+
+		} else {
+			$searchTags = FALSE;
+			$sqlTags = "";
+		}
+
+		$sql = "SELECT ads.id 		as id, 
+				ads.title 			as title, 
+				ads.content 		as content, 
+				ads.date_created 	as date_created, 
+				ads.date_expire 	as date_expire, 
+				ads.user_id 		as user_id, 
+				ads.address_street 	as address_street, 
+				ads.address_zip 	as address_zip, 
+				ads.address_city 	as address_city, 
+				ads.ad_type 		as ad_type,
+				ads.payment 		as payment
 			FROM ads, user 
-			WHERE user.id = ads.user_id ".$sqlSearch. " AND date_expire >= ".time()."
+			WHERE user.id = ads.user_id ".$sqlSearch.$sqlTags. " AND date_expire >= ".time()."
 			ORDER BY date_created DESC";
 		
 		$data_array = DB::query($sql);
@@ -74,10 +110,12 @@ class Ads {
 		}
 
 		$output = [
-		'ads' 		=> $ads,
-		'page' 		=> 'ads.getallads.twig',
-		'title' 	=> 'Alla annonser',
-		'search' 	=> $searchString
+		'ads' 			=> $ads,
+		'page' 			=> 'ads.getallads.twig',
+		'title' 		=> 'Alla annonser',
+		'search' 		=> $searchString,
+		'tags'			=> self::getAllTags(),
+		'searchTags'	=> $searchTags
 		];
 
 		return $output;
@@ -87,7 +125,18 @@ class Ads {
 		
 		$id = DB::clean($input['id']);
 
-		$sql = 	"SELECT ads.id as id, ads.title as title, ads.content as content, ads.date_created as date_created, ads.date_expire as date_expire, user.id as user_id,  user.firstname as firstname, ads.address_street as address_street, ads.address_zip as address_zip, ads.address_city as address_city, ads.ad_type as ad_type 
+		$sql = 	"SELECT ads.id 		as id, 
+				ads.title 			as title, 
+				ads.content 		as content, 
+				ads.date_created 	as date_created, 
+				ads.date_expire 	as date_expire, 
+				user.id 			as user_id,
+				user.firstname 		as firstname, 
+				ads.address_street 	as address_street, 
+				ads.address_zip 	as address_zip, 
+				ads.address_city 	as address_city, 
+				ads.ad_type 		as ad_type, 
+				ads.payment 		as payment 
 				FROM ads, user
 				WHERE user.id = ads.user_id AND ads.id = $id
 				";
@@ -117,9 +166,9 @@ class Ads {
 	static public function getUserAds($input = FALSE) {
 		$user = User::isLoggedIn(); 
 
-		$sql = "SELECT id, title, content, date_created, date_expire, user_id, address_street, address_zip, address_city, ad_type
-			FROM ads
-			WHERE user_id = ".$user->id;
+		$sql = "SELECT id, title, content, date_created, date_expire, user_id, address_street, address_zip, address_city, ad_type, payment
+				FROM ads
+				WHERE user_id = ".$user->id;
 
 		$data_array = DB::query($sql);
 
@@ -141,7 +190,8 @@ class Ads {
 		'page' 			=> 'ads.newadform.twig',
 		'user' 			=> $user,
 		'date_expire' 	=> $dateExpire,
-		'tags'			=> self::getAllTags()
+		'tags'			=> self::getAllTags(),
+		'ad_types'		=> self::getAllAdTypes()
 		];
 
 		return $output;
@@ -157,7 +207,8 @@ class Ads {
 		'page' 			=> 'ads.editadform.twig',
 		'user' 			=> $user,
 		'ad' 			=> $ad,
-		'tags'			=> self::getAllTags()
+		'tags'			=> self::getAllTags(),
+		'ad_types'		=> self::getAllAdTypes()
 		];
 
 		return $output;
@@ -175,9 +226,9 @@ class Ads {
 		$address_city 	= $cleanInput['address_city'];
 		$date_expire 	= strtotime($cleanInput['date_expire']);
 		$userId 		= $user->id;
-
 		$ad_type		= $cleanInput['ad_type'];
 		$date_created	= time();
+		$payment		= $cleanInput['payment'];
 
 		if(!isset($cleanInput['tags'])) {
 			$tags = [];
@@ -189,9 +240,9 @@ class Ads {
 		// $tags = isset($cleanInput['tags']) ? $cleanInput['tags'] : [];
 
 		$sql = "INSERT INTO ads 
-				(title, content, user_id, address_street, address_zip, address_city, date_expire, date_created, ad_type)
+				(title, content, user_id, address_street, address_zip, address_city, date_expire, date_created, ad_type, payment)
 				VALUES
-				('$title', '$content', '$userId', '$address_street', '$address_zip', '$address_city', '$date_expire', '$date_created', '$ad_type')
+				('$title', '$content', '$userId', '$address_street', '$address_zip', '$address_city', '$date_expire', '$date_created', '$ad_type', '$payment')
 		";
 
 		$data = DB::$con->query($sql);
@@ -223,8 +274,8 @@ class Ads {
 		
 	}
 	
-	public static function updateAd($input) {
-		$user = User::isLoggedIn();
+	public static function updateAd($input) { //Id för den annons som ska redigeras.
+		$user = User::isLoggedIn();		//Kollar först om användaren är inloggad.
 		
 		$cleanInput = DB::clean($input);
 		
@@ -237,6 +288,7 @@ class Ads {
 		$date_expire 	= strtotime($cleanInput['date_expire']);
 		$userId 		= $user->id;
 		$ad_type		= $cleanInput['ad_type'];
+		$payment		= $cleanInput['payment'];
 
 		if(!isset($cleanInput['tags'])) {
 			$tags = [];
@@ -248,13 +300,14 @@ class Ads {
 		// $tags = isset($cleanInput['tags']) ? $cleanInput['tags'] : [];
 
 		$sql = 	"UPDATE ads SET
-				title = '$title', 
-				content = '$content',
-				address_street = '$address_street',
-				address_zip = '$address_zip',
-				address_city = '$address_city',
-				date_expire = '$date_expire',
-				ad_type = '$ad_type'
+				title 			= '$title', 
+				content 		= '$content',
+				address_street 	= '$address_street',
+				address_zip 	= '$address_zip',
+				address_city 	= '$address_city',
+				date_expire 	= '$date_expire',
+				ad_type 		= '$ad_type',
+				payment			= '$payment'
 				WHERE id = ".$ad_id;
 
 		$data = DB::$con->query($sql);
@@ -318,8 +371,30 @@ class Ads {
 
 		DB::$con->query($sql);
 
-		$output = ['redirect_url' => '/user/'];
-
+		$output = ['redirect_url' => '/user/']; //Gör att man skickas vidare till den adressen som står efter =>
+												//redirect_url finns i index.php-filen
 		return $output;
 	}	
+
+	private static function getAllAdTypes() {
+		$sql = "SELECT id, name FROM ad_types";
+		$output = DB::query($sql);
+
+		return $output;
+	} 
+
+	private static function getSpecificAdType($id) {
+		$cleanId = DB::clean($id);
+		
+		$sql = "SELECT ad_types.name as name 
+				FROM ad_types, ads 
+				WHERE ads.ad_type = ad_types.id 
+				AND ads.id = $cleanId";
+		
+		$data = DB::query($sql, TRUE);
+		$output = $data['name'];
+
+		return $output;
+	}
+
 }

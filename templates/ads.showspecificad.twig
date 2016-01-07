@@ -11,8 +11,19 @@
 
 					{% endif %}
 					<p>{{ad.content}}</p>
-					<p>Publicerad {{ad.dateCreated}}</p>
-					<p>Typ av annons {{ad.type}}</p>
+					<h4>Ersättning/Bytes mot:</h4>
+					<p>{{ad.payment}}</p>
+					<p>Annonsen publicerades 
+						{% if ad.createdDaysAgo == 0 %}
+							idag.
+						{% elseif ad.createdDaysAgo == 1 %}
+							för {{ad.createdDaysAgo}} dag sedan.
+						{% else %}
+							för {{ad.createdDaysAgo}} dagar sedan.
+						{% endif %}
+					</p>
+
+					<p>Typ av annons {{ad.typeName}}</p>
 				</div>
 		</div>
 	</div>
