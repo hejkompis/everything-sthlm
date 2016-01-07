@@ -18,7 +18,8 @@ class Ads {
 				$address_city,
 				$payment;
 
-	function __construct($input) { //$input kommer från getAllAds eller getSpecificAd
+	//$input kommer från getAllAds, getSpecificAd eller getUserAds
+	function __construct($input) { 
 		
 		$this->id 				= $input['id'];
 		$this->title 			= $input['title'];
@@ -42,13 +43,15 @@ class Ads {
 		}
 	}
 
-	function __isset($var) { //behövs för att Twig ska kunna använda magisk get.
+	//Behövs för att Twig ska kunna använda magisk get.
+	function __isset($var) { 
 		if ($this->$var) {
 			return TRUE; 
 		}
 		return FALSE; 
 	}
 
+	//Körs om man inte angett en specifik metod.
 	static public function fallback($input) { 
 		if (isset($input['id'])){ //annonsid
 			return self::showSpecificAd($input);
@@ -57,7 +60,8 @@ class Ads {
 		}
 	}
 
-	static public function getAllAds($input = FALSE) {
+	//FALSE eftersom $input är valfri
+	static public function getAllAds($input = FALSE) { 
 	
 		if(isset($input['search'])) {
 			$searchString = DB::clean($input['search']);
@@ -87,6 +91,15 @@ class Ads {
 			$sqlTags = "";
 		}
 
+		if(isset($input['adtype'])) {
+			$searchAdType = DB::clean($input['adtype']);
+			$sqlAdType = " AND ad_type = $searchAdType "; 
+
+		} else {
+			$searchAdType = FALSE;
+			$sqlAdType = "";
+		}
+
 		$sql = "SELECT ads.id 		as id, 
 				ads.title 			as title, 
 				ads.content 		as content, 
@@ -99,7 +112,7 @@ class Ads {
 				ads.ad_type 		as ad_type,
 				ads.payment 		as payment
 			FROM ads, user 
-			WHERE user.id = ads.user_id ".$sqlSearch.$sqlTags. " AND date_expire >= ".time()."
+			WHERE user.id = ads.user_id ".$sqlSearch.$sqlTags.$sqlAdType. " AND date_expire >= ".time()."
 			ORDER BY date_created DESC";
 		
 		$data_array = DB::query($sql);
@@ -115,13 +128,15 @@ class Ads {
 		'title' 		=> 'Alla annonser',
 		'search' 		=> $searchString,
 		'tags'			=> self::getAllTags(),
-		'searchTags'	=> $searchTags
+		'searchTags'	=> $searchTags,
+		'adTypes'		=> self::getAllAdTypes(),
+		'user'			=> User::isLoggedIn(FALSE)
 		];
 
 		return $output;
 	}
 
-	static public function getSpecificAd($input){
+	static public function getSpecificAd($input){ // 
 		
 		$id = DB::clean($input['id']);
 
@@ -156,11 +171,11 @@ class Ads {
 		'ad' 	=> $ad,
 		'page' 	=> 'ads.showspecificad.twig',
 		'title' => $ad->title,
-		'tags'	=> self::getAllTags()
+		'tags'	=> self::getAllTags(),
+		'user'	=> User::isLoggedIn(FALSE)
 		];
 		
 		return $output;
-
 	}
 
 	static public function getUserAds($input = FALSE) {
@@ -265,17 +280,16 @@ class Ads {
 			$output = ['redirect_url' => '//'.ROOT.'/user'];
 				
 		} else {
-			
 			$output = ['error' => DB::$con->error];
-
 		}
 
 		return $output;
-		
 	}
 	
-	public static function updateAd($input) { //Id för den annons som ska redigeras.
-		$user = User::isLoggedIn();		//Kollar först om användaren är inloggad.
+	//$input = id för den annons som ska redigeras.
+	public static function updateAd($input) { 
+		//Kollar först om användaren är inloggad.
+		$user = User::isLoggedIn();	
 		
 		$cleanInput = DB::clean($input);
 		
@@ -326,17 +340,13 @@ class Ads {
 
 				DB::$con->query($sql);
 			}
-
 			$output = ['redirect_url' => '//'.ROOT.'/user'];
 				
-		} else {
-			
+		} else {	
 			$output = ['error' => DB::$con->error];
 
 		}
-
 		return $output;
-
 	}
 
 	public static function getAllTags() {
@@ -345,7 +355,6 @@ class Ads {
 		$output = DB::query($sql);
 
 		return $output;
-
 	}
 
 	private static function getSpecificTags($ad_id) {
@@ -371,8 +380,10 @@ class Ads {
 
 		DB::$con->query($sql);
 
-		$output = ['redirect_url' => '/user/']; //Gör att man skickas vidare till den adressen som står efter =>
-												//redirect_url finns i index.php-filen
+		//Gör att man skickas vidare till den adressen som står efter =>
+		//redirect_url finns i index.php-filen
+		$output = ['redirect_url' => '/user/'];
+
 		return $output;
 	}	
 

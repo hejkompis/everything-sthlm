@@ -2,22 +2,34 @@
 	<div class="row">
 		<div class="col-xs-12">
 			<form action="" method="get">
-				<div class="form-group"><input type="text" class="form-control" name="search"></div>
 				<div class="form-group">
-
-					<label>Taggar</label><br />
-
-					{% for tag in tags %}
-
-						<div class="checkbox">
-
-							<label><input type="checkbox" name="tags[]" value="{{tag.id}}"{% if tag.id in searchTags %} checked="checked" {% endif %}> {{tag.name}}</label>
-
-						</div>
-
-					{% endfor %}
-
+					<label for="search">Sök på fritext</label>
+					<input type="text" id="search" class="form-control" name="search">
 				</div>
+				
+				<div class="form-group">
+					<label>Taggar</label><br />
+					{% for tag in tags %}
+						<div class="checkbox-inline">
+							<label class="checkbox-inline"><input type="checkbox" name="tags[]" value="{{tag.id}}"{% if tag.id in searchTags %} checked="checked" {% endif %}> {{tag.name}}</label>
+						</div>
+					{% endfor %}
+				</div>
+
+				<div class="form-group">
+					<label>Annonstyp</label><br />
+					<div class="">
+						<select name="adtype" class="form-control">
+							{% for adType in adTypes %}
+
+							<option value="{{adType.id}}" {% if adType.id in searchAdTypes %} selected="selected" {% endif %}> {{adType.name}}
+							</option>
+
+							{% endfor %}
+						</select>
+					</div>
+				</div>
+
 				<div class="form-group"><button type="submit" class="btn btn-default">Sök</button></div>
 			</form>
 		</div>

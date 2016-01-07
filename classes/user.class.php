@@ -2,7 +2,15 @@
 
 class User {
 
-	private $id, $firstName, $lastName, $email, $phone, $address_street, $address_zip, $address_city;
+	private $id, 
+			$firstName, 
+			$lastName, 
+			$email, 
+			$phone, 
+			$address_street, 
+			$address_zip, 
+			$address_city;
+
 	private static $user = FALSE;
 
 	function __construct($id){
@@ -21,11 +29,10 @@ class User {
 		$this->address_street 	= $data["address_street"];
 		$this->address_zip 		= $data["address_zip"];
 		$this->address_city 	= $data["address_city"];
-
 	}
 
-
-	public static function fallback() {
+	//om man inte angett en metod körs fallback.
+	public static function fallback() { 
 		return self::dashboard();		
  	}
 
@@ -35,7 +42,8 @@ class User {
 		}
 	}
 
-	function __isset($var) { //behövs för att Twig ska kunna använda magisk get.
+	//behövs för att Twig ska kunna använda magisk get.
+	function __isset($var) { 
 		if ($this->$var) {
 			return TRUE; 
 		}
@@ -84,27 +92,32 @@ class User {
 				WHERE email = '".$cleanInput["email"]."'
 				AND password = '".$scrambledPassword."'
 				";
-		$data = DB::query($sql, TRUE); //TRUE gör att man bara får tillbaka en rad
+		//TRUE gör att man bara får tillbaka en rad
+		$data = DB::query($sql, TRUE); 
 
 		if($data){
 			$_SESSION["everythingSthlm"]["userId"] = $data["id"];
 			self::$user = new User($data["id"]);
 		}
-		
-		header('Location: //'.ROOT.'/user'); //Detta görs för att när vi har loggat in måste vi ta vägen någonstans.
+
+		//Detta görs för att vi måste ta vägen någonstans när vi har loggat in.
+		header('Location: //'.ROOT.'/user'); 
 	}
 
-	public static function isLoggedIn() {
-		if(!$_SESSION["everythingSthlm"]["userId"]) {
-			header('Location: //'.ROOT.'/user/loginform');
+	public static function isLoggedIn($sendToLogin = TRUE) {
+		if(!$_SESSION["everythingSthlm"]["userId"] && $sendToLogin) {
+			header('Location: //'.ROOT.'/user/loginform'); exit;
+		} elseif(!$_SESSION["everythingSthlm"]["userId"] && !$sendToLogin) {
+			$output = FALSE;
 		} else {
 			$id = $_SESSION["everythingSthlm"]["userId"];
 			if(!self::$user) {
 				self::$user = new User($id);
 			}
 
-			return self::$user;
+			$output = self::$user;
 		}
+		return $output;
 	}
 
 	public static function loginForm() {
@@ -132,8 +145,6 @@ class User {
  		self::$user = FALSE;
 
  		self::isLoggedIn();
-
  	}
-
 }
 
