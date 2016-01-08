@@ -38,9 +38,7 @@
 					if(is_array($value)) {
 
 						foreach($value as $subkey => $subvalue) {
-
 							$clean_data[$key][$subkey] = self::$mysqli->real_escape_string($subvalue);
-
 						}
 
 					}

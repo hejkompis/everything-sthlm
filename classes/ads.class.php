@@ -51,7 +51,7 @@ class Ads {
 		return FALSE; 
 	}
 
-	//Körs om man inte angett en specifik metod.
+	//Körs om man inte har angett en specifik metod i URL.
 	static public function fallback($input) { 
 		if (isset($input['id'])){ //annonsid
 			return self::showSpecificAd($input);

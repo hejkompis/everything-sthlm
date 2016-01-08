@@ -14,11 +14,15 @@ class User {
 	private static $user = FALSE;
 
 	function __construct($id){
+		//$cleadId tvättas via clean() i DB-klassen. 
 		$cleanId = DB::clean($id);
 		$sql = "SELECT firstname, lastname, email, phone, address_street, address_zip, address_city
 				FROM user
 				WHERE id = ".$cleanId;
 
+		//sql-frågan skickas iväg till databasen via DB-klassens query-metod.
+		//TRUE skickas med för att vi bara får tillbaka en rad.
+		//$data är en array som innehåller raden från databasen. 
 		$data = DB::query($sql, TRUE);
 		
 		$this->id 				= $cleanId;
@@ -31,18 +35,19 @@ class User {
 		$this->address_city 	= $data["address_city"];
 	}
 
-	//om man inte angett en metod körs fallback.
+	//Om man inte har angett en metod i URL körs fallback-metoden.
 	public static function fallback() { 
 		return self::dashboard();		
  	}
 
+ 	//Magisk get för att Twig ska kunna komma åt privata properties i klassen.
 	function __get($var) {
 		if ($this->$var) {
 			return $this->$var;
 		}
 	}
 
-	//behövs för att Twig ska kunna använda magisk get.
+	//Magisk isset behövs för att Twig ska kunna använda magisk get.
 	function __isset($var) { 
 		if ($this->$var) {
 			return TRUE; 
@@ -50,12 +55,14 @@ class User {
 		return FALSE; 
 	}
 
+	//Skriver ut formulär för att skapa ny användare
 	public static function newUserForm() {
 		$output = ['title' => 'Skapa användare', 'page' => 'user.newuserform.twig'];
 
 		return $output;
 	}
 
+	//$input kommer från POST-fälten i user.newuserform.twig.
 	public static function saveNewUser($input) {
 		$cleanInput = DB::clean($input);
 
@@ -73,8 +80,12 @@ class User {
 				('$firstname', '$lastname', '$address_city', '$address_zip', '$address_street', '$email', '$scrambledPassword')
 		";
 
+		//$con innehåller uppkopplingen till databasen. 
+		//När man gör en INSERT/UPDATE används detta.  
 		$data = DB::$con->query($sql);
 
+		//Om vi har lyckats skapa en användare (lägga in denna i databasen) returneras $data som TRUE och 
+		//användaren skickas till /user annars visas databaserror. 
 		if($data) {
 			header('Location: //'.ROOT.'/user');	
 		} else {
@@ -97,6 +108,7 @@ class User {
 
 		if($data){
 			$_SESSION["everythingSthlm"]["userId"] = $data["id"];
+			//Skapa en instans av User-klassen. Constructorn körs och hämtar info om användaren. 
 			self::$user = new User($data["id"]);
 		}
 
@@ -104,9 +116,14 @@ class User {
 		header('Location: //'.ROOT.'/user'); 
 	}
 
+	//Kollar om användaren är inloggad eller inte. Om man är inloggad finns möjlighet att plocka ut 
+	//användarobjektet annars skickas man t inloggningsformuläret. Elseif ska bara säga nej du är inte 
+	//inloggad = får ej gå vidare i koden. 
 	public static function isLoggedIn($sendToLogin = TRUE) {
+		//Finns ingen användare och vi vill skicka anv. till login-form:
 		if(!$_SESSION["everythingSthlm"]["userId"] && $sendToLogin) {
 			header('Location: //'.ROOT.'/user/loginform'); exit;
+		//Finns ingen anv. och $sendToLogin är FALSE	
 		} elseif(!$_SESSION["everythingSthlm"]["userId"] && !$sendToLogin) {
 			$output = FALSE;
 		} else {
@@ -120,12 +137,14 @@ class User {
 		return $output;
 	}
 
+	//Skickar info så vi kan skriva ut loginformuläret.
 	public static function loginForm() {
 		$output = ['title' => 'Logga in', 'page' => 'user.loginform.twig'];
 
 		return $output;
  	}
 
+ 	//Dashboard visas på /user. Här skickar vi med user-objekt och användarens annonser. 
  	public static function dashboard() { 
 		$user = self::isLoggedIn(); 
 		
@@ -139,6 +158,7 @@ class User {
 		return $output;
  	}
 
+ 	//Loggar ut användaren.
  	public static function logOut() {
 
  		$_SESSION['everythingSthlm']['userId'] = FALSE;
