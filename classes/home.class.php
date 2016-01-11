@@ -4,7 +4,11 @@
 
 		static public function fallback() {
 
-			return Ads::getAllAds();
+			$output = [
+				'page' => 'home.twig'
+			];
+
+			return $output;
 
 		}
 
