@@ -60,9 +60,10 @@ class Ads {
 		}
 	}
 
-	//FALSE eftersom $input är valfri
+	//FALSE eftersom $input är valfri. Har ingen sökning skett visas alla Ads
 	static public function getAllAds($input = FALSE) { 
 	
+		//Gör det möjligt att söka på Ads med fritext
 		if(isset($input['search'])) {
 			$searchString = DB::clean($input['search']);
 			$searchString = strtolower($searchString);
@@ -72,6 +73,7 @@ class Ads {
 			$sqlSearch = "";
 		}
 
+		//Gör det möjligt att söka på Ads med taggar
 		if(isset($input['tags'])) {
 			$searchTags = DB::clean($input['tags']);
 			$sqlTags = " AND ads.id IN ( 
@@ -91,6 +93,7 @@ class Ads {
 			$sqlTags = "";
 		}
 
+		//Gör det möjligt att söka på Adtype 
 		if(isset($input['adtype'])) {
 			$searchAdType = DB::clean($input['adtype']);
 			$sqlAdType = " AND ad_type = $searchAdType "; 
@@ -136,6 +139,7 @@ class Ads {
 		return $output;
 	}
 
+	//$input kommer utsprungligen från $GET 
 	static public function getSpecificAd($input){ // 
 		
 		$id = DB::clean($input['id']);
@@ -155,7 +159,8 @@ class Ads {
 				FROM ads, user
 				WHERE user.id = ads.user_id AND ads.id = $id
 				";
-		
+
+		//TRUE för att hämta en rad från DB
 		$data = DB::query($sql, TRUE);
 
 		$output = new Ads($data);
@@ -163,6 +168,7 @@ class Ads {
 		return $output;
 	}
 
+	//Skickar getSpecificAd return till Twig 
 	public static function showSpecificAd($input) {
 
 		$ad = self::getSpecificAd($input);
@@ -178,6 +184,8 @@ class Ads {
 		return $output;
 	}
 
+	//Kollar först om man är inloggad, ifall inloggning är TRUE 
+	//visas de anonnser som är skapade av den inloggade användaren
 	static public function getUserAds($input = FALSE) {
 		$user = User::isLoggedIn(); 
 
@@ -195,6 +203,7 @@ class Ads {
 		return $ads;
 	}
 
+	//Om man är inloggad får man möjlighet att skapa ny annons 
 	public static function newAdForm() {
 		
 		$user = User::isLoggedIn();
@@ -212,6 +221,8 @@ class Ads {
 		return $output;
 	}
 
+	//Är man inloggad kan man redigera en annons. getSpecificAd() hämtar vald anonns och skriver ut dess
+	//information i ett formulär i Twig
 	public static function editAdForm($input) {
 		
 		$user = User::isLoggedIn();
@@ -229,6 +240,7 @@ class Ads {
 		return $output;
 	}
 
+	//Metod för att skapa ny annons
 	public static function saveAd($input) {
 		$user = User::isLoggedIn();
 
@@ -251,21 +263,17 @@ class Ads {
 			$tags = $cleanInput['tags'];
 		}
 
-		// samma som ovan
-		// $tags = isset($cleanInput['tags']) ? $cleanInput['tags'] : [];
-
 		$sql = "INSERT INTO ads 
 				(title, content, user_id, address_street, address_zip, address_city, date_expire, date_created, ad_type, payment)
 				VALUES
 				('$title', '$content', '$userId', '$address_street', '$address_zip', '$address_city', '$date_expire', '$date_created', '$ad_type', '$payment')
 		";
 
-		$data = DB::$con->query($sql);
+		$data = DB::query($sql);
 
 		if($data) {
 
-			// $con->insert_id är en inbyggd funktion som hämtar det senast sparade ID:t
-			$ad_id = DB::$con->insert_id;
+			$ad_id = $data;
 			
 			foreach($tags as $tag_id) {
 				$sql = "INSERT INTO ad_has_tag 
@@ -274,19 +282,18 @@ class Ads {
 						($ad_id, $tag_id)
 						";
 
-				DB::$con->query($sql);
+				DB::query($sql);
 			}
 
 			$output = ['redirect_url' => '//'.ROOT.'/user'];
 				
-		} else {
-			$output = ['error' => DB::$con->error];
-		}
+		} 
 
 		return $output;
 	}
 	
-	//$input = id för den annons som ska redigeras.
+	//$input = id för den annons som ska redigeras. 
+	//Körs för för att spara den redigerade versionen av en anonns som har skpats i editAdForm()
 	public static function updateAd($input) { 
 		//Kollar först om användaren är inloggad.
 		$user = User::isLoggedIn();	
@@ -324,12 +331,12 @@ class Ads {
 				payment			= '$payment'
 				WHERE id = ".$ad_id;
 
-		$data = DB::$con->query($sql);
+		$data = DB::query($sql);
 
 		if($data) {
 
 			$sql = "DELETE FROM ad_has_tag WHERE ad_id = ".$ad_id;
-			DB::$con->query($sql);
+			DB::query($sql);
 			
 			foreach($tags as $tag_id) {
 				$sql = "INSERT INTO ad_has_tag 
@@ -338,17 +345,16 @@ class Ads {
 						($ad_id, $tag_id)
 						";
 
-				DB::$con->query($sql);
+				DB::query($sql);
 			}
 			$output = ['redirect_url' => '//'.ROOT.'/user'];
 				
-		} else {	
-			$output = ['error' => DB::$con->error];
+		} 
 
-		}
 		return $output;
 	}
 
+	//Hämtar alla taggar från DB
 	public static function getAllTags() {
 
 		$sql = "SELECT id, name FROM tags ORDER BY name";
@@ -357,6 +363,7 @@ class Ads {
 		return $output;
 	}
 
+	//Hämtar taggar som är kopplade till en specifik annons
 	private static function getSpecificTags($ad_id) {
 
 		$clean_ad_id = DB::clean($ad_id);
@@ -373,12 +380,14 @@ class Ads {
 		return $output;
 	}
 
+	//Är man inloggad kan 
 	public static function deleteAd($input) {
+		$user = User::isLoggedIn();
 		$cleanId = DB::clean($input['id']);
 
-		$sql = "DELETE FROM ads WHERE id = $cleanId";
+		$sql = "DELETE FROM ads WHERE id = $cleanId AND user_id = ".$user->id;
 
-		DB::$con->query($sql);
+		DB::query($sql);
 
 		//Gör att man skickas vidare till den adressen som står efter =>
 		//redirect_url finns i index.php-filen
@@ -387,6 +396,7 @@ class Ads {
 		return $output;
 	}	
 
+	//Hämtar alla annonstyper
 	private static function getAllAdTypes() {
 		$sql = "SELECT id, name FROM ad_types";
 		$output = DB::query($sql);
@@ -394,6 +404,7 @@ class Ads {
 		return $output;
 	} 
 
+	//Hämtar specifik adtype kopplad till vald annons
 	private static function getSpecificAdType($id) {
 		$cleanId = DB::clean($id);
 		

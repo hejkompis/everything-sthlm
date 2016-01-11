@@ -51,30 +51,18 @@
 					
 				}
 
-			}
-
-			else {
+			} else {
 
 				if(is_array($input)) {
-
-						foreach($input as $key => $value) {
-
-							$clean_data[$key] = self::$mysqli->real_escape_string($value);
-
-						}
-
+					foreach($input as $key => $value) {
+						$clean_data[$key] = self::$mysqli->real_escape_string($value);
 					}
-
-				else {
-
+				} else {
 					$clean_data = self::$mysqli->real_escape_string($input);
-
 				}
-
 			}
-		
-			return $clean_data;
 
+			return $clean_data;
 		}
 
 		public static function query($query, $single = false) {
@@ -88,18 +76,29 @@
 			}
 			else {
 				if($res = self::$mysqli->query($query)) {
-					if($single) {
-						$data = $res->fetch_assoc();
-						$output = $data;
-					}
-					else {
-						$output = [];
-						while($data = $res->fetch_assoc()) {
-							$output[] = $data;
+					if($res === TRUE){
+						if(self::$mysqli->insert_id != 0){
+							$output = self::$mysqli->insert_id;
+						}
+						else {
+							$output = TRUE;	
 						}
 					}
-					self::$prev_results[$hash_query] = $output;
+					else{
+						if($single) {
+							$data = $res->fetch_assoc();
+							$output = $data;
+						}
+						else {
+							$output = [];
+							while($data = $res->fetch_assoc()) {
+								$output[] = $data;
+							}
+						}
+						self::$prev_results[$hash_query] = $output;
+					}
 				}
+
 				if(!$res) {
 					echo self::$mysqli->error; die();
 				}
