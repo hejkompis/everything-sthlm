@@ -174,11 +174,12 @@ class Ads {
 		$ad = self::getSpecificAd($input);
 
 		$output = [
-		'ad' 	=> $ad,
-		'page' 	=> 'ads.showspecificad.twig',
-		'title' => $ad->title,
-		'tags'	=> self::getAllTags(),
-		'user'	=> User::isLoggedIn(FALSE)
+		'ad' 			=> $ad,
+		'page' 			=> 'ads.showspecificad.twig',
+		'title' 		=> $ad->title,
+		'tags'			=> self::getAllTags(),
+		'user'			=> User::isLoggedIn(FALSE),
+		'userInterest' 	=> self::checkInterest($ad->id, FALSE)
 		];
 		
 		return $output;
@@ -335,7 +336,9 @@ class Ads {
 
 		if($data) {
 
-			$sql = "DELETE FROM ad_has_tag WHERE ad_id = ".$ad_id;
+			$sql = "DELETE FROM ad_has_tag 
+					WHERE ad_id = ".$ad_id;
+			
 			DB::query($sql);
 			
 			foreach($tags as $tag_id) {
@@ -357,7 +360,10 @@ class Ads {
 	//Hämtar alla taggar från DB
 	public static function getAllTags() {
 
-		$sql = "SELECT id, name FROM tags ORDER BY name";
+		$sql = "SELECT id, name 
+				FROM tags 
+				ORDER BY name";
+
 		$output = DB::query($sql);
 
 		return $output;
@@ -370,7 +376,10 @@ class Ads {
 
 		$output = [];
 
-		$sql = "SELECT tag_id FROM ad_has_tag WHERE ad_id = ".$clean_ad_id;
+		$sql = "SELECT tag_id 
+				FROM ad_has_tag 
+				WHERE ad_id = ".$clean_ad_id;
+
 		$array = DB::query($sql);
 		
 		foreach($array as $data) {
@@ -385,7 +394,9 @@ class Ads {
 		$user = User::isLoggedIn();
 		$cleanId = DB::clean($input['id']);
 
-		$sql = "DELETE FROM ads WHERE id = $cleanId AND user_id = ".$user->id;
+		$sql = "DELETE FROM ads 
+				WHERE id = $cleanId 
+				AND user_id = ".$user->id;
 
 		DB::query($sql);
 
@@ -398,7 +409,9 @@ class Ads {
 
 	//Hämtar alla annonstyper
 	private static function getAllAdTypes() {
-		$sql = "SELECT id, name FROM ad_types";
+		$sql = "SELECT id, name 
+				FROM ad_types";
+
 		$output = DB::query($sql);
 
 		return $output;
@@ -417,6 +430,88 @@ class Ads {
 		$output = $data['name'];
 
 		return $output;
+	}
+
+	// Metod för att kolla om en användare redan har intresse i en annons
+	// För att en förändring inte ska ske i databasen utan att vi bara ska få tillbaka ett ja/nej
+	// måste man ange FALSE-värde inom parenteserna, checkInterest($input, FALSE) annars kommer
+	// metoden automatiskt att lägga till eller ta bort i databasen
+	public static function checkInterest($input, $toggle = TRUE){
+
+		$user 			= User::isLoggedIn(FALSE);
+
+		if ($user) {
+
+			if (is_array($input)) {
+				$cleanAdId = DB::clean($input['id']);
+				
+			}
+			else {
+				$cleanAdId 	= DB::clean($input);
+			}
+
+			$userId 		= $user->id;
+			$date 			= time();
+
+			$sql = "
+			SELECT * 
+			FROM user_interested_in_ad
+			WHERE ad_id = $cleanAdId
+			AND user_id = $userId";
+
+			$data = DB::query($sql, TRUE);
+
+			// Om vi får tillbaka en rad från databasen (vilket gör $data till TRUE)
+			if ($data) {
+
+				// Om vi en rad från databasen och $toggle INTE är satt till FALSE
+				if($toggle) {
+					$sql = "
+					DELETE 
+					FROM user_interested_in_ad
+					WHERE ad_id = $cleanAdId
+					AND user_id = $userId";
+
+					$data = DB::query($sql);
+					$output = ['redirect_url'=>'/ads/?id='.$cleanAdId];
+				} 
+
+				// Om vi har en rad från databasen och $toggle MANUELLT är satt till FALSE
+				// self::checkInterest($ad_id, FALSE)
+				else {
+					$output = TRUE;
+				}
+
+			} 
+
+			// Om vi inte fått tillbaka någon rad från databasen, dvs användaren har inte visat intresse i en specifik annons
+			else {
+
+				// Om vi inte har någon rad och $toggle INTE är satt till FALSE ska vi lägga till en rad i databasen
+				if($toggle) {
+					$sql = "
+					INSERT INTO user_interested_in_ad
+					(ad_id, user_id, date)
+					VALUES
+					($cleanAdId, $userId, $date)";
+
+					$data = DB::query($sql);
+					$output = ['redirect_url'=>'/ads/?id='.$cleanAdId];
+				} 
+
+				// Om vi inte har någon rad och $toggle ÄR SATT till FALSE
+				else {
+					$output = FALSE;
+				}
+			}
+		}
+
+		else {
+			$output = FALSE;
+		}
+
+		return $output;
+
 	}
 
 }

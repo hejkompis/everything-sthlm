@@ -28,11 +28,25 @@
 
 	<div class="row">
 		<div class="col-xs-12">
-			{% if user %}
-				{{user.firstName}} {{user.lastName}}
+			{% if user and not userInterest %}
+				<a href="/ads/checkinterest/?id={{ad.id}}">Visa intresse</a>
+			{% elseif user and userInterest %}	
+				<a href="/ads/checkinterest/?id={{ad.id}}">Ångra intresse</a>
 			{% else %}
-				Du är inte inloggad, logga in!!
+				<a href="/user">Du måste logga in!</a>
+
 			{% endif %}
 		</div>
 	</div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
