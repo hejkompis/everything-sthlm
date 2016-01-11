@@ -20,6 +20,8 @@
 					<label>Annonstyp</label><br />
 					<div class="">
 						<select name="adtype" class="form-control">
+							<option value="">Alla Annonstyper</option>
+
 							{% for adType in adTypes %}
 
 							<option value="{{adType.id}}" {% if adType.id in searchAdTypes %} selected="selected" {% endif %}> {{adType.name}}

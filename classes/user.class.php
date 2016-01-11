@@ -80,17 +80,12 @@ class User {
 				('$firstname', '$lastname', '$address_city', '$address_zip', '$address_street', '$email', '$scrambledPassword')
 		";
 
-		//$con innehåller uppkopplingen till databasen. 
-		//När man gör en INSERT/UPDATE används detta.  
-		$data = DB::$con->query($sql);
+		$data = DB::query($sql);
 
 		//Om vi har lyckats skapa en användare (lägga in denna i databasen) returneras $data som TRUE och 
 		//användaren skickas till /user annars visas databaserror. 
 		if($data) {
 			header('Location: //'.ROOT.'/user');	
-		} else {
-			echo DB::$con->error; 
-			die();
 		}
 	}
 
