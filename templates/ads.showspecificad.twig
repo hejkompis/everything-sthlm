@@ -28,6 +28,12 @@
 
 	<div class="row">
 		<div class="col-xs-12">
+			{% if user and countInterest > 1 %}
+				Det är {{countInterest}} andra personer som har visat intresse för denna annons. 
+			{% elseif user and countInterest == 1 %}
+				Det är en annan person som har visat intresse för denna annons.
+			{% endif %}
+
 			{% if user and not userInterest %}
 				<a href="/ads/checkinterest/?id={{ad.id}}">Visa intresse</a>
 			{% elseif user and userInterest %}	

@@ -179,7 +179,8 @@ class Ads {
 		'title' 		=> $ad->title,
 		'tags'			=> self::getAllTags(),
 		'user'			=> User::isLoggedIn(FALSE),
-		'userInterest' 	=> self::checkInterest($ad->id, FALSE)
+		'userInterest' 	=> self::checkInterest($ad->id, FALSE),
+		'countInterest' => self::countUserInterest($ad->id)
 		];
 		
 		return $output;
@@ -512,6 +513,30 @@ class Ads {
 
 		return $output;
 
+	}
+
+	private static function countUserInterest($adId) {
+
+		$user = User::isLoggedIn(FALSE);
+		$output = FALSE; 
+
+		if($user) { 
+
+			$userId = $user->id;
+
+			$sql = "
+				SELECT COUNT(user_id) as count 
+				FROM user_interested_in_ad
+				WHERE ad_id = $adId 
+				AND user_id != $userId
+			";
+			
+			$data = DB::query($sql, TRUE); 
+
+			$output = $data['count'];
+		}
+
+		return $output;
 	}
 
 }
