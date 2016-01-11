@@ -121,10 +121,10 @@ class User {
 	//inloggad = får ej gå vidare i koden. 
 	public static function isLoggedIn($sendToLogin = TRUE) {
 		//Finns ingen användare och vi vill skicka anv. till login-form:
-		if(!$_SESSION["everythingSthlm"]["userId"] && $sendToLogin) {
+		if(!isset($_SESSION["everythingSthlm"]["userId"]) && $sendToLogin) {
 			header('Location: //'.ROOT.'/user/loginform'); exit;
 		//Finns ingen anv. och $sendToLogin är FALSE	
-		} elseif(!$_SESSION["everythingSthlm"]["userId"] && !$sendToLogin) {
+		} elseif(!isset($_SESSION["everythingSthlm"]["userId"]) && !$sendToLogin) {
 			$output = FALSE;
 		} else {
 			$id = $_SESSION["everythingSthlm"]["userId"];
