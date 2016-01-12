@@ -439,6 +439,8 @@ class Ads {
 	// metoden automatiskt att lägga till eller ta bort i databasen
 	public static function checkInterest($input, $toggle = TRUE){
 
+		// Skickar med FALSE för att inte skicka användaren till 
+		// inloggningsformuläret
 		$user 			= User::isLoggedIn(FALSE);
 
 		if ($user) {
@@ -516,10 +518,10 @@ class Ads {
 	}
 
 	private static function countUserInterest($adId) {
-
+		//Kollar om anv är inloggad + skickar med FALSE för att inte skickas
+		//direkt t loginformulär om man ej är det. 
 		$user = User::isLoggedIn(FALSE);
-		$output = FALSE; 
-
+		 
 		if($user) { 
 
 			$userId = $user->id;
@@ -534,6 +536,8 @@ class Ads {
 			$data = DB::query($sql, TRUE); 
 
 			$output = $data['count'];
+		} else {
+			$output = FALSE;
 		}
 
 		return $output;
