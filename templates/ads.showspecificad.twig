@@ -44,6 +44,19 @@
 			{% endif %}
 		</div>
 	</div>
+	<br>
+	<div class="row">
+		<div class="col-xs-12">
+
+			{% if user and ad.interested_users %} 
+				Användare som har visat intresser för din annons:<br>
+				{% for user in ad.interested_users %}
+					{{user.firstname}} {{user.lastname}} {{user.email}}<br>
+				{% endfor %}	
+			{% endif %}
+		</div>
+	</div>
+
 </div>
 
 

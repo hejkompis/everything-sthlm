@@ -16,7 +16,8 @@ class Ads {
 				$address_street,
 				$address_zip,
 				$address_city,
-				$payment;
+				$payment,
+				$interested_users;
 
 	//$input kommer från getAllAds, getSpecificAd eller getUserAds
 	function __construct($input) { 
@@ -35,6 +36,7 @@ class Ads {
 		$this->tags 			= self::getSpecificTags($this->id);
 		$this->createdDaysAgo	= round((time()-$input['date_created'])/60/60/24);
 		$this->payment			= $input['payment'];
+		$this->interested_users	= self::getInterestedUsers($this->id, $this->userId);
 	}
 
 	function __get($var) {
@@ -542,5 +544,37 @@ class Ads {
 
 		return $output;
 	}
+
+	//Hämta användare som är intresserad av en annons
+	private static function getInterestedUsers($adId, $userId) {
+
+		//Kollar först om anv är inloggad, om nej ska man inte bli skickad till loginfomulär därför skickas FALSE med.
+		$user = User::isLoggedIn(FALSE);
+
+		$cleanAdId = DB::clean($adId);
+		$cleanUserId = DB::clean($userId);
+
+		if($user && $user->id == $cleanUserId) {
+			
+			$sql = "
+			SELECT user.firstname 	AS firstname, 
+			user.lastname 			AS lastname, 
+			user.email 				AS email
+			FROM user, user_interested_in_ad
+			WHERE user.id = user_interested_in_ad.user_id
+			AND user_interested_in_ad.ad_id = ".$cleanAdId."
+			ORDER BY user_interested_in_ad.date DESC
+			";
+
+			$data = DB::query($sql);
+
+			$output = $data;
+		} 
+		else {	
+			$output = FALSE;
+		}
+
+		return $output;
+	}   
 
 }
