@@ -60,49 +60,41 @@
                     <li>
                         <a class="page-scroll" href="#">Premium</a>
                   </li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-        <li class="open"><p class="navbar-text">Har du redan ett konto?</p></li>
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true"><b>Logga in</b> <span class="caret"></span></a>
-            <ul id="login-dp" class="dropdown-menu">
-                <li>
+                  {% if not user %}
+            <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true"><b>Logga in</b> <span class="caret"></span></a>
+                <ul id="login-dp" class="dropdown-menu">
+                    <li>
                      <div class="row">
                             <div class="col-md-12">
-                                Logga in via
-                                <div class="social-buttons">
-                                    <a href="#" class="btn btn-fb"><i class="fa fa-facebook"></i> Facebook</a>
-                                    <a href="#" class="btn btn-tw"><i class="fa fa-twitter"></i> Twitter</a>
-                                </div>
-                                eller
-                                 <form class="form" role="form" method="post" action="/user/login/" accept-charset="UTF-8" id="login-nav">
-                                        <div class="form-group">
-                                             <label class="sr-only" for="exampleInputEmail2">Email adress</label>
-                                             <input type="email" class="form-control" id="exampleInputEmail2" placeholder="Email address" required>
-                                        </div>
-                                        <div class="form-group">
-                                             <label class="sr-only" for="exampleInputPassword2">Lösenord</label>
-                                             <input type="password" class="form-control" id="exampleInputPassword2" placeholder="Password" required>
-                                             <div class="help-block text-right"><a href="">Forget the password ?</a></div>
-                                        </div>
-                                        <div class="form-group">
-                                             <button type="submit" class="btn btn-primary btn-block">Logga in</button>
-                                        </div>
-                                        <div class="checkbox">
-                                             <label>
-                                             <input type="checkbox"> Håll mig inloggad
-                                             </label>
-                                        </div>
-                                 </form>
+                                <div class="bottom text-center">
+                                <a href="#">Skapa konto</a>
                             </div>
-                            <div class="bottom text-center">
-                                Ny här? <a href="#"><b>Skapa konto</b></a>
+                                 <form action="/user/login/" method="post">
+                                    <div class="form-group">
+                                        <label for="email">E-post</label>
+                                        <input type="text" id="email" name="email" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="password">Lösenord</label>
+                                        <input type="password" id="password" name="password" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-primary">Logga in</button>
+                                    </div>
+                                </form>
                             </div>
                      </div>
                 </li>
             </ul>
         </li>
-      </ul>
+         {% else %}
+        <li>
+            <a class="page-scroll" href="/user/logout">Logga ut</a>
+        </li>
+        {% endif %}
+    </ul>
+
             </div>
             <!-- /.navbar-collapse -->
         </div>

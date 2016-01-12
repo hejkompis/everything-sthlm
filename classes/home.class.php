@@ -5,7 +5,8 @@
 		static public function fallback() {
 
 			$output = [
-				'page' => 'home.twig'
+				'page' => 'home.twig',
+				'user' => User::isLoggedIn(FALSE)
 			];
 
 			return $output;
