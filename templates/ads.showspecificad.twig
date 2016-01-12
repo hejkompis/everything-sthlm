@@ -33,14 +33,13 @@
 			{% elseif user and countInterest == 1 %}
 				Det är en annan person som har visat intresse för denna annons.
 			{% endif %}
-
+			
 			{% if user and not userInterest %}
 				<a href="/ads/checkinterest/?id={{ad.id}}">Visa intresse</a>
 			{% elseif user and userInterest %}	
 				<a href="/ads/checkinterest/?id={{ad.id}}">Ångra intresse</a>
 			{% else %}
 				<a href="/user">Du måste logga in!</a>
-
 			{% endif %}
 		</div>
 	</div>
@@ -49,9 +48,9 @@
 		<div class="col-xs-12">
 
 			{% if user and ad.interested_users %} 
-				Användare som har visat intresser för din annons:<br>
+				Användare som har visat intresse för din annons:<br>
 				{% for user in ad.interested_users %}
-					{{user.firstname}} {{user.lastname}} {{user.email}}<br>
+						{{user.firstname}} {{user.lastname}} {{user.email}}<br>
 				{% endfor %}	
 			{% endif %}
 		</div>
