@@ -246,6 +246,23 @@ class Ads {
 		return $output;
 	}
 
+	public static function activateAdForm($input) {
+		
+		$user = User::isLoggedIn();
+		$ad = self::getSpecificAd($input);
+
+		$output = [
+		'title' 		=> 'Aktivera annons', 
+		'page' 			=> 'ads.activateadform.twig',
+		'user' 			=> $user,
+		'ad' 			=> $ad,
+		'tags'			=> self::getAllTags(),
+		'ad_types'		=> self::getAllAdTypes()
+		];
+
+		return $output;
+	}
+
 	//Metod för att skapa ny annons
 	public static function saveAd($input) {
 		$user = User::isLoggedIn();
@@ -360,6 +377,26 @@ class Ads {
 		} 
 
 		return $output;
+	}
+
+	public static function activateAd($input) {
+		$user = User::isLoggedIn();
+
+		$cleanInput = DB::clean($input);
+
+		$ad_id = $cleanInput['id'];
+		$date_expire = strtotime($cleanInput['date_expire']);
+
+		$sql = "UPDATE ads 
+				SET date_expire = '$date_expire'
+				WHERE id = ".$ad_id;
+
+		DB::query($sql);
+
+		$output = ['redirect_url' => '//'.ROOT.'/user/'];
+
+		return $output;
+						
 	}
 
 	//Hämtar alla taggar från DB
