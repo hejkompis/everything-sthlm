@@ -1,50 +1,23 @@
-<!DOCTYPE html>
-
-<html>
-
-	<head>
-
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>Everything STHLM - {{title}}</title>
-		<!-- Latest compiled and minified CSS -->
-		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-		<!-- Fontawesone -->
-		<link href="//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css" rel="stylesheet">
-		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
-		<!-- Latest compiled and minified JavaScript -->
-		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-
-	</head>
-
-	<body>
+{% include 'header.twig' %}
 
 		<!-- 
-
 			nästa twig-fråga:
 			finns det en "page"-variabel skickad med från metoden.
 			om det gör det utgår vi från att det är en läsbar html-fil och försöker hämta den
 			vi säger också åt index.twig, att om det inte finns med nån "page" så ska den hämta
 			home.twig, så att den alltid åtminstone ritar ut startsidan. den här kan vi sen ersätta med
 			en sida som innehåller ett felmeddelande, det är mer logiskt än att komma till startsidan.
-
 		-->
-
-		{% if page %}
-			{% include page %}
-		{% else %}
-			{% include "home.twig" %}
-		{% endif %}
+        
+            {% include page %}
+       
+            
 
 		<!--
-
 			variabeln "info" som vi frågar efter nedan gör egentligen inget, 
 			men om vi i vår metod skapar en sådan, kan man lättare förstå 
 			vilken variabel och metod som används, 
 			framför allt om man gör varje "info"-meddelande unikt för varje metod.
-
 		-->
 
 		{% if info %}
@@ -57,6 +30,5 @@
 			</div>
 		{% endif %}
 
-	</body>
-
-</html>
+{% include 'footer.twig' %}
+	

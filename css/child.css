@@ -1,0 +1,18 @@
+/*CHILD*/
+.navbar-default {
+    height: 100px;
+}
+
+.margin {
+    margin-top: 500px;
+}
+
+.navbar {
+    margin: 0px;
+}
+
+.navbar__background {
+    background-color: black;
+    border-radius: 0px;
+}
+

@@ -1,14 +1,12 @@
-<div class="container">
-	<div class="row">
-		<div class="col-xs-12">
-			Hej {{user.firstName}} 
-			<br>
-			<a href="/ads/newadform">Skapa ny annons</a><br><br><br>
-		</div>
-	</div>
-
-	<div class="row">
-		<div class="col-xs-12">
+   <section id="portfolio" class="bg-light-gray">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2 class="section-heading">Hej {{user.firstName}}</h2>
+                    <h3>Här är alla dina annonser</h3>
+                    <h3 class="section-subheading text-muted"><a href="/ads/newadform">Sätt igång och skapa en ny!</a></h3>
+                </div>
+            </div>
 		
 			{% if ads %}
 				{% include "user.ads.twig" %}
@@ -16,6 +14,5 @@
 				Du har inga annonser... <a href="/ads/newadform">Skapa ny annons</a>
 			{% endif %}	
 
-		</div>
-	</div>
 </div>
+</section>

@@ -4,7 +4,12 @@
 
 		static public function fallback() {
 
-			return Ads::getAllAds();
+			$output = [
+				'page' => 'home.twig',
+				'user' => User::isLoggedIn(FALSE)
+			];
+
+			return $output;
 
 		}
 
