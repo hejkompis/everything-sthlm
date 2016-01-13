@@ -1,17 +1,14 @@
-<div class="container">
-	<div class="row">
-		<div class="col-xs-12">
-			<div class="adBox">
-				<h2>{{ad.title}}</h2>
-					{% if ad.tags %}
-						{% for tag in tags %}
-							{% if tag.id in ad.tags %}<h4>{{tag.name}}{% endif %}</h4>
-						{% endfor %}
-					{% endif %}
-				<p>{{ad.content}}</p>
-				<h4>Ersättning/Bytes mot:</h4>
-				<p>{{ad.payment}}</p>
-				<p>Annonsen publicerades 
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-lg-offset-2">
+                        <div class="modal-body">
+                            <!-- Project Details Go Here -->
+                            <h2>{{ad.title}}</h2>
+                            <p class="item-intro text-muted">Typ av annons: {{ad.typeName}}</p>
+                            <img class="img-responsive img-centered" src="../img/portfolio/roundicons-free.png" alt="">
+                           	<p>{{ad.content}}</p>
+                            <ul class="list-inline">
+                                <li>Publicerades: 
 					{% if ad.createdDaysAgo == 0 %}
 						idag.
 					{% elseif ad.createdDaysAgo == 1 %}
@@ -19,44 +16,50 @@
 					{% else %}
 						för {{ad.createdDaysAgo}} dagar sedan.
 					{% endif %}
-				</p>
-
-				<p>Typ av annons {{ad.typeName}}</p>
-			</div>
-		</div>
-	</div>
-
-	<div class="row">
-		<div class="col-xs-12">
-			{% if user and countInterest > 1 %}
-				Det är {{countInterest}} andra personer som har visat intresse för denna annons. 
-			{% elseif user and countInterest == 1 %}
-				Det är en annan person som har visat intresse för denna annons.
-			{% endif %}
-			
-			{% if user and not userInterest %}
-				<a href="/ads/checkinterest/?id={{ad.id}}">Visa intresse</a>
-			{% elseif user and userInterest %}	
-				<a href="/ads/checkinterest/?id={{ad.id}}">Ångra intresse</a>
-			{% else %}
-				<a href="/user">Du måste logga in!</a>
-			{% endif %}
-		</div>
-	</div>
-	<br>
-	<div class="row">
-		<div class="col-xs-12">
-
-			{% if user and ad.interested_users %} 
-				Användare som har visat intresse för din annons:<br>
-				{% for user in ad.interested_users %}
-						{{user.firstname}} {{user.lastname}} {{user.email}}<br>
-				{% endfor %}	
-			{% endif %}
-		</div>
-	</div>
-
-</div>
+								</li>
+                                <li>Ersättning/Bytes mot: {{ad.payment}}</li>
+                                <li>Taggar: {% if ad.tags %}
+						{% for tag in tags %}
+							{% if tag.id in ad.tags %}{{tag.name}}, {% endif %}
+						{% endfor %}
+					{% endif %}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                    <div class="row">
+	                    <div class="col-lg-8 col-lg-offset-2">
+	                    	<div class="modal-body">
+					            {% if user and countInterest > 1 %}
+									Det är {{countInterest}} andra personer som har visat intresse för denna annons. 
+								{% elseif user and countInterest == 1 %}
+									Det är en annan person som har visat intresse för denna annons.
+								{% endif %}
+								
+								{% if user and not userInterest %}
+									<a href="/ads/checkinterest/?id={{ad.id}}"> <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-check"></i> Visa intresse </button></a>
+								{% elseif user and userInterest %}	
+									<a href="/ads/checkinterest/?id={{ad.id}}"><button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Ångra intresse </button></a>
+								{% else %}
+									<p>Låter detta intressant?</p>
+									<a href="/user"><button type="button" class="btn btn-primary" data-dismiss="modal"> Logga in! </button></a>
+								{% endif %}
+							</div>
+	                    </div>
+	                  </div>
+					<div class="row">
+						 <div class="col-lg-8 col-lg-offset-2">
+						 	<div class="modal-body">
+								{% if user and ad.interested_users %} 
+									Användare som har visat intresse för din annons:<br>
+									{% for user in ad.interested_users %}
+											{{user.firstname}} {{user.lastname}} {{user.email}}<br>
+									{% endfor %}	
+								{% endif %}
+							</div>
+						</div>
+					</div>
+            </div>
 
 
 
