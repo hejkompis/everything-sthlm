@@ -17,7 +17,8 @@ class Ads {
 				$address_zip,
 				$address_city,
 				$payment,
-				$interested_users;
+				$interested_users,
+				$expireTimestamp;
 
 	//$input kommer från getAllAds, getSpecificAd eller getUserAds
 	function __construct($input) { 
@@ -27,6 +28,7 @@ class Ads {
 		$this->content 			= $input['content'];
 		$this->dateCreated 		= date('Y-m-d', $input['date_created']);
 		$this->dateExpire 		= date('Y-m-d', $input['date_expire']);
+		$this->expireTimestamp	= $input['date_expire'];
 		$this->userId 			= $input['user_id'];
 		$this->typeId 			= $input['ad_type'];
 		$this->typeName			= self::getSpecificAdType($this->id);
@@ -96,7 +98,7 @@ class Ads {
 		}
 
 		//Gör det möjligt att söka på Adtype 
-		if(isset($input['adtype'])) {
+		if(isset($input['adtype']) && $input['adtype']!= "") {
 			$searchAdType = DB::clean($input['adtype']);
 			$sqlAdType = " AND ad_type = $searchAdType "; 
 
