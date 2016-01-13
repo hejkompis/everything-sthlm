@@ -117,7 +117,7 @@ class User {
 	public static function isLoggedIn($sendToLogin = TRUE) {
 		//Finns ingen användare och vi vill skicka anv. till login-form:
 		if(!$_SESSION["everythingSthlm"]["userId"] && $sendToLogin) {
-			header('Location: //'.ROOT.'/user/loginform'); exit;
+			header('Location: //'.ROOT.'/home'); exit;
 		//Finns ingen anv. och $sendToLogin är FALSE	
 		} elseif(!$_SESSION["everythingSthlm"]["userId"] && !$sendToLogin) {
 			$output = FALSE;
