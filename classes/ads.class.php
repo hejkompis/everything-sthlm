@@ -414,7 +414,7 @@ class Ads {
 		$date_expire = strtotime($cleanInput['date_expire']);
 
 		$sql = "UPDATE ads 
-				SET date_expire = '$date_expire'
+				SET date_expire = '$date_expire', active = 'TRUE'
 				WHERE id = ".$ad_id;
 
 		DB::query($sql);
