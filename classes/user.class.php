@@ -9,14 +9,16 @@ class User {
 			$phone, 
 			$address_street, 
 			$address_zip, 
-			$address_city;
+			$address_city,
+			$premium = FALSE,
+			$no_of_ads;
 
 	private static $user = FALSE;
 
 	function __construct($id){
 		//$cleadId tvättas via clean() i DB-klassen. 
 		$cleanId = DB::clean($id);
-		$sql = "SELECT firstname, lastname, email, phone, address_street, address_zip, address_city
+		$sql = "SELECT firstname, lastname, email, phone, address_street, address_zip, address_city, premium
 				FROM user
 				WHERE id = ".$cleanId;
 
@@ -33,6 +35,12 @@ class User {
 		$this->address_street 	= $data["address_street"];
 		$this->address_zip 		= $data["address_zip"];
 		$this->address_city 	= $data["address_city"];
+		$this->no_of_ads		= self::countUserAds($this->id);
+
+		if($data['premium'] == 1) {
+			$this->premium = TRUE;
+		}
+	
 	}
 
 	//Om man inte har angett en metod i URL körs fallback-metoden.
@@ -108,6 +116,9 @@ class User {
 		}
 
 		//Detta görs för att vi måste ta vägen någonstans när vi har loggat in.
+		// IF isset $_SESSION['everythingSthlm']['ref_url']
+		// $output = ['redirect_url' => $_SESSION['everythingSthlm']['...']];
+		// ELSE 
 		header('Location: //'.ROOT.'/user'); 
 	}
 
@@ -115,9 +126,12 @@ class User {
 	//användarobjektet annars skickas man t inloggningsformuläret. Elseif ska bara säga nej du är inte 
 	//inloggad = får ej gå vidare i koden. 
 	public static function isLoggedIn($sendToLogin = TRUE) {
+
 		//Finns ingen användare och vi vill skicka anv. till login-form:
 		if(!isset($_SESSION["everythingSthlm"]["userId"]) && $sendToLogin) {
-			header('Location: //'.ROOT.'/user/loginform'); exit;	
+			// $_SESSION['everythingSthlm']['ref_url'] = $_SERVER['HTTP_REFERRAL']
+			//$output = ['redirect_url' => '/user/loginform'];
+			header('Location: /user/loginform');
 		} 
 		//Finns ingen anv. och $sendToLogin är FALSE
 		elseif(!isset($_SESSION["everythingSthlm"]["userId"]) && !$sendToLogin) {
@@ -144,7 +158,6 @@ class User {
  	//Dashboard visas på /user. Här skickar vi med user-objekt och användarens annonser. 
  	public static function dashboard() { 
 		$user = self::isLoggedIn(); 
-
 		if($user) {
 		
 			$output = [
@@ -166,10 +179,23 @@ class User {
  	//Loggar ut användaren.
  	public static function logOut() {
 
- 		$_SESSION['everythingSthlm']['userId'] = FALSE;
+ 		//$_SESSION['everythingSthlm']['userId'] = FALSE;
+ 		session_destroy();
  		self::$user = FALSE;
 
  		header('Location: //'.ROOT); 
  	}
+
+ 	private static function countUserAds($userId) {
+
+ 		$cleanUserId = DB::clean($userId);
+ 		$sql = "SELECT count(*) as count FROM user_has_created_ads WHERE user_id = ".$cleanUserId;
+ 		$data = DB::query($sql, TRUE);
+
+ 		$output = $data['count'];
+ 		return $output;
+
+ 	}
+
 }
 
