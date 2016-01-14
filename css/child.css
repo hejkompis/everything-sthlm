@@ -1,7 +1,7 @@
-/*CHILD*/
+/*CHILD
 .navbar-default {
     height: 100px;
-}
+}*/
 
 .margin {
     margin-top: 500px;
@@ -11,8 +11,40 @@
     margin: 0px;
 }
 
-.navbar__background {
-    background-color: black;
-    border-radius: 0px;
+.nav-loginform {
+	padding: 20px;
+	width: 300px;
+}
+
+#create-acount {
+	color: black;
+} 
+
+@media (min-width:750px) {
+    .navbar-default {
+    	border-radius: 0px;
+    	background-color: #222222;
+        padding: 10px 0;
+        -webkit-transition: padding .3s;
+        -moz-transition: padding .3s;
+        transition: padding .3s;
+        border: 0
+    }
+    .navbar-default .navbar-brand {
+        font-size: 2em;
+        -webkit-transition: all .3s;
+        -moz-transition: all .3s;
+        transition: all .3s
+    }
+    .navbar-default .navbar-nav>.active>a {
+        border-radius: 3px
+    }
+    .navbar-default.navbar-shrink {
+        background-color: #222;
+        padding: 0px 0
+    }
+    .navbar-default.navbar-shrink .navbar-brand {
+        font-size: 1.5em
+    }
 }
 

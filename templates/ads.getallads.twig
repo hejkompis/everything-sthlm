@@ -20,7 +20,7 @@
 					<label><h4>Taggar</label></h4><br />
 					{% for tag in tags %}
 						<div class="checkbox-inline">
-							<label class="checkbox-inline"><input type="checkbox" name="tags[]" value="{{tag.id}}"{% if tag.id in searchTags %} checked="checked" {% endif %}> {{tag.name}}</label>
+							<label class="checkbox-inline"><input type="checkbox" name="tags[]" value="{{tag.id}}"{% if tag.id in searchTags %} checked="checked" {% endif %}>{{tag.name}}</label>
 						</div>
 					{% endfor %}
 				</div>
