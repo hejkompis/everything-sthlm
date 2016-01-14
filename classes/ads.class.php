@@ -68,14 +68,14 @@ class Ads {
 	}
 
 	private function checkActive($active) {
-		if ($active == 'TRUE') {
+		if ($active) {
 			$output = TRUE;
 			
 			if ($this->expireTimestamp <= time()) {
 				$this->active = FALSE;
 
 				$sql = "UPDATE ads 
-						SET active = 'FALSE'
+						SET active = '0'
 						WHERE id = ".$this->id;
 
 				DB::query($sql);
@@ -414,7 +414,7 @@ class Ads {
 		$date_expire = strtotime($cleanInput['date_expire']);
 
 		$sql = "UPDATE ads 
-				SET date_expire = '$date_expire', active = 'TRUE'
+				SET date_expire = '$date_expire', active = '1'
 				WHERE id = ".$ad_id;
 
 		DB::query($sql);
@@ -433,7 +433,7 @@ class Ads {
 		$id = $cleanInput['id'];
 
 		$sql = "UPDATE ads 
-				SET active = 'FALSE'
+				SET active = '0'
 				WHERE id = ".$id;
 
 		DB::query($sql);
@@ -526,7 +526,7 @@ class Ads {
 
 		// Skickar med FALSE för att inte skicka användaren till 
 		// inloggningsformuläret
-		$user 			= User::isLoggedIn(FALSE);
+		$user = User::isLoggedIn(FALSE);
 
 		if ($user) {
 
