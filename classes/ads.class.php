@@ -40,24 +40,8 @@ class Ads {
 		$this->createdDaysAgo	= round((time()-$input['date_created'])/60/60/24);
 		$this->payment			= $input['payment'];
 		$this->interested_users	= self::getInterestedUsers($this->id, $this->userId);
-		
-		if ($input['active'] == 'TRUE') {
-			$this->active = TRUE;
-			if ($this->expireTimestamp <= time()) {
-				$this->active = FALSE;
-
-				$sql = "UPDATE ads 
-						SET active = 'FALSE'
-						WHERE id = ".$this->id;
-
-				DB::query($sql);
-			}
-		}
-		else {
-			$this->active = FALSE;
-		}
-			
-
+		$this->active 			= $this->checkActive($input['active']);
+	
 	}
 
 	function __get($var) {
@@ -81,6 +65,27 @@ class Ads {
 		} else { 
 			return self::getAllAds($input);
 		}
+	}
+
+	private function checkActive($active) {
+		if ($active == 'TRUE') {
+			$output = TRUE;
+			
+			if ($this->expireTimestamp <= time()) {
+				$this->active = FALSE;
+
+				$sql = "UPDATE ads 
+						SET active = 'FALSE'
+						WHERE id = ".$this->id;
+
+				DB::query($sql);
+			}
+		}
+		else {
+			$output = FALSE;
+		}
+
+		return $output;
 	}
 
 	//FALSE eftersom $input är valfri. Har ingen sökning skett visas alla Ads
