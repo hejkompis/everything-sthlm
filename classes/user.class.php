@@ -117,7 +117,7 @@ class User {
 	public static function isLoggedIn($sendToLogin = TRUE) {
 		//Finns ingen användare och vi vill skicka anv. till login-form:
 		if(!$_SESSION["everythingSthlm"]["userId"] && $sendToLogin) {
-			header('Location: //'.ROOT.'/home'); exit;
+			header('Location: //'.ROOT.'/user/loginform'); exit;
 		//Finns ingen anv. och $sendToLogin är FALSE	
 		} elseif(!isset($_SESSION["everythingSthlm"]["userId"]) && !$sendToLogin) {
 			$output = FALSE;
@@ -142,13 +142,21 @@ class User {
  	//Dashboard visas på /user. Här skickar vi med user-objekt och användarens annonser. 
  	public static function dashboard() { 
 		$user = self::isLoggedIn(); 
+
+		if($user) {
 		
-		$output = [
-		'title' => 'Hej och välkommen '.$user->firstName.'!', 
-		'page' 	=> 'user.dashboard.twig',
-		'user' 	=> $user,
-		'ads' 	=> Ads::getUserAds()
-		];
+			$output = [
+			'title' => 'Hej och välkommen '.$user->firstName.'!', 
+			'page' 	=> 'user.dashboard.twig',
+			'user' 	=> $user,
+			'ads' 	=> Ads::getUserAds()
+			];
+		}
+		else {
+			$output = [
+			'page' => 'home.twig'
+			];
+		}
 
 		return $output;
  	}
@@ -159,7 +167,7 @@ class User {
  		$_SESSION['everythingSthlm']['userId'] = FALSE;
  		self::$user = FALSE;
 
- 		self::isLoggedIn();
+ 		header('Location: //'.ROOT); 
  	}
 }
 
