@@ -325,6 +325,7 @@ class Ads {
 
 			$ad_id = $data;
 			
+			// spara alla taggar som hör till annonsen
 			foreach($tags as $tag_id) {
 				$sql = "INSERT INTO ad_has_tag 
 						(ad_id, tag_id) 
@@ -334,6 +335,15 @@ class Ads {
 
 				DB::query($sql);
 			}
+
+			// spara ner att användaren har skapat en annons så vi kan räkna antalet annonser
+			$sql = "INSERT INTO user_has_created_ads 
+					(ad_id, user_id, date) 
+					VALUES 
+					($ad_id, $userId, $date_created)
+					";
+
+			DB::query($sql);
 
 			$output = ['redirect_url' => '//'.ROOT.'/user'];
 				

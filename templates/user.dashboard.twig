@@ -3,16 +3,54 @@
             <div class="row">
                 <div class="col-lg-12 text-center">
                     <h2 class="section-heading">Hej {{user.firstName}}</h2>
-                    <h3>Här är alla dina annonser</h3>
-                    <h3 class="section-subheading text-muted"><a href="/ads/newadform">Sätt igång och skapa en ny!</a></h3>
+                    {%
+                        set correctNumbers = [
+                            'noll',
+                            'ett', 
+                            'två',
+                            'tre',
+                            'fyra',
+                            'fem',
+                            'sex',
+                            'sju',
+                            'åtta',
+                            'nio',
+                            'tio',
+                            'elva',
+                            'tolv'
+                        ]
+                    %}
+                    {% if user.no_of_ads == 0 %}
+                        <h3>Du har inte publicerat någon annons än.</h3>
+                    {% elseif user.no_of_ads == 1 %}
+                        <h3>Du har publicerat annons sedan du startade ditt konto.</h3>
+                    {% elseif user.no_of_ads > 1 and user.no_of_ads <= 12 %}
+                        <h3>Du har publicerat {{correctNumbers[user.no_of_ads]}} annonser sedan du startade ditt konto.</h3>
+                    {% elseif user.no_of_ads > 11 %}
+                        <h3>Du har publicerat {{user.no_of_ads}} annonser sedan du startade ditt konto.</h3>
+                    {% endif %}
+
+                    {% if user.premium %}
+                        <h3 class="section-subheading text-muted"><a href="/ads/newadform">Sätt igång och skapa en ny!</a></h3>
+                        <a href="unsetuserpremium" data-type="confirm" data-message="Vill du verkligen avsluta?">Avsluta din Premium-prenumeration</a>
+                    {% elseif user.no_of_ads < 3 and user.premium == false %}
+                        <h3 class="section-subheading text-muted"><a href="/ads/newadform">Sätt igång och skapa en ny!</a></h3>
+                        <div>
+                            <a href="premiumform" class="btn btn-primary">Uppgradera ditt konto</a>
+                        </div>
+                    {% else %}
+                        Du har använt alla dina gratisannonser. Uppgradera ditt konto till Premium för kunna lägga in fler annonser.
+                        <div class="half-margin-top">
+                            <a href="premiumform" class="btn btn-primary">Uppgradera ditt konto</a>
+                        </div>
+                    {% endif %}
+                    
                 </div>
             </div>
 		
 			{% if ads %}
 				{% include "user.ads.twig" %}
-			{% else %}
-				Du har inga annonser... <a href="/ads/newadform">Skapa ny annons</a>
-			{% endif %}	
+            {% endif %}	
 
 </div>
 </section>

@@ -20,6 +20,14 @@
 	color: black;
 } 
 
+.half-margin-top {
+    margin-top:15px;
+}
+
+.inline-block {
+    display: inline-block;
+}
+
 @media (min-width:750px) {
     .navbar-default {
     	border-radius: 0px;
@@ -47,4 +55,6 @@
         font-size: 1.5em
     }
 }
+
+
 
