@@ -32,7 +32,7 @@
 
                     {% if user.premium %}
                         <h3 class="section-subheading text-muted"><a href="/ads/newadform">Sätt igång och skapa en ny!</a></h3>
-                        <a href="unsetuserpremium" data-type="confirm" data-message="Vill du verkligen avsluta?">Avsluta din Premium-prenumeration</a>
+                
                     {% elseif user.no_of_ads < 3 and user.premium == false %}
                         <h3 class="section-subheading text-muted"><a href="/ads/newadform">Sätt igång och skapa en ny!</a></h3>
                         <div>
@@ -40,7 +40,7 @@
                         </div>
                     {% else %}
                         Du har använt alla dina gratisannonser. Uppgradera ditt konto till Premium för kunna lägga in fler annonser.
-                        <div class="half-margin-top">
+                        <div>
                             <a href="premiumform" class="btn btn-primary">Uppgradera ditt konto</a>
                         </div>
                     {% endif %}

@@ -229,8 +229,9 @@ class User {
 
 		$output = ['redirect_url' => '../'];
 		return $output;
-
 	}
+
+		
 
 }
 
