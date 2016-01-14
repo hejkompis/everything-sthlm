@@ -300,7 +300,7 @@ class Ads {
 		$address_street = $cleanInput['address_street'];
 		$address_zip 	= preg_replace("/[^0-9]/", "", $cleanInput['address_zip']);
 		$address_city 	= $cleanInput['address_city'];
-		$date_expire 	= strtotime($cleanInput['date_expire']);
+		$date_expire 	= time()+(60*60*24*7);
 		$userId 		= $user->id;
 		$ad_type		= $cleanInput['ad_type'];
 		$date_created	= time();
