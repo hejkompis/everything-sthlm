@@ -18,7 +18,8 @@ class Ads {
 				$address_city,
 				$payment,
 				$interested_users,
-				$expireTimestamp;
+				$expireTimestamp,
+				$active;
 
 	//$input kommer från getAllAds, getSpecificAd eller getUserAds
 	function __construct($input) { 
@@ -39,6 +40,8 @@ class Ads {
 		$this->createdDaysAgo	= round((time()-$input['date_created'])/60/60/24);
 		$this->payment			= $input['payment'];
 		$this->interested_users	= self::getInterestedUsers($this->id, $this->userId);
+		$this->active 			= $this->checkActive($input['active']);
+	
 	}
 
 	function __get($var) {
@@ -62,6 +65,27 @@ class Ads {
 		} else { 
 			return self::getAllAds($input);
 		}
+	}
+
+	private function checkActive($active) {
+		if ($active) {
+			$output = TRUE;
+			
+			if ($this->expireTimestamp <= time()) {
+				$this->active = FALSE;
+
+				$sql = "UPDATE ads 
+						SET active = '0'
+						WHERE id = ".$this->id;
+
+				DB::query($sql);
+			}
+		}
+		else {
+			$output = FALSE;
+		}
+
+		return $output;
 	}
 
 	//FALSE eftersom $input är valfri. Har ingen sökning skett visas alla Ads
@@ -117,7 +141,8 @@ class Ads {
 				ads.address_zip 	as address_zip, 
 				ads.address_city 	as address_city, 
 				ads.ad_type 		as ad_type,
-				ads.payment 		as payment
+				ads.payment 		as payment,
+				ads.active 			as active
 			FROM ads, user 
 			WHERE user.id = ads.user_id ".$sqlSearch.$sqlTags.$sqlAdType. " AND date_expire >= ".time()."
 			ORDER BY date_created DESC";
@@ -159,7 +184,8 @@ class Ads {
 				ads.address_zip 	as address_zip, 
 				ads.address_city 	as address_city, 
 				ads.ad_type 		as ad_type, 
-				ads.payment 		as payment 
+				ads.payment 		as payment,
+				ads.active 			as active 
 				FROM ads, user
 				WHERE user.id = ads.user_id AND ads.id = $id
 				";
@@ -195,7 +221,7 @@ class Ads {
 	static public function getUserAds($input = FALSE) {
 		$user = User::isLoggedIn(); 
 
-		$sql = "SELECT id, title, content, date_created, date_expire, user_id, address_street, address_zip, address_city, ad_type, payment
+		$sql = "SELECT id, title, content, date_created, date_expire, user_id, address_street, address_zip, address_city, ad_type, payment, active
 				FROM ads
 				WHERE user_id = ".$user->id;
 
@@ -388,7 +414,7 @@ class Ads {
 		$date_expire = strtotime($cleanInput['date_expire']);
 
 		$sql = "UPDATE ads 
-				SET date_expire = '$date_expire'
+				SET date_expire = '$date_expire', active = '1'
 				WHERE id = ".$ad_id;
 
 		DB::query($sql);
@@ -397,6 +423,24 @@ class Ads {
 
 		return $output;
 						
+	}
+
+	public static function inactivateAd($input) {
+		$user = User::isLoggedIn();
+
+		$cleanInput = DB::clean($input);
+
+		$id = $cleanInput['id'];
+
+		$sql = "UPDATE ads 
+				SET active = '0'
+				WHERE id = ".$id;
+
+		DB::query($sql);
+
+		$output = ['redirect_url' => '//'.ROOT.'/user/'];
+
+		return $output;
 	}
 
 	//Hämtar alla taggar från DB
@@ -482,7 +526,7 @@ class Ads {
 
 		// Skickar med FALSE för att inte skicka användaren till 
 		// inloggningsformuläret
-		$user 			= User::isLoggedIn(FALSE);
+		$user = User::isLoggedIn(FALSE);
 
 		if ($user) {
 

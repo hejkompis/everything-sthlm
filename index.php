@@ -4,7 +4,6 @@
 
     // vi aktiverar session_start så att vi kan använda oss av $_SESSION om vi vill
     session_start();
-
     # -- 2
 
     // skapa en konstant som heter ROOT. På så sätt kan vi alltid veta vilken som är vår huvudadress, exempelvis 192.168.1.33 eller everythingsthlm.se

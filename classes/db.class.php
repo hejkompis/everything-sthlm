@@ -8,6 +8,7 @@
 
 		private function __construct() {
 			self::$mysqli = new mysqli($this->db['url'], $this->db['user'], $this->db['password'], $this->db['database']);
+			self::$mysqli->query("SET NAMES 'utf8'");
 			self::$con = self::con();
 		}
 
@@ -100,7 +101,9 @@
 				}
 
 				if(!$res) {
-					echo self::$mysqli->error; die();
+					echo self::$mysqli->error; 
+					echo $query;
+					die();
 				}
 			}
 			return $output;
