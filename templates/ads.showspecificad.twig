@@ -1,3 +1,12 @@
+            {% set notDenied = 0 %}
+						 		
+			{% for user in ad.interested_users %}
+				{% if not user.denied %}
+					{% set notDenied = notDenied + 1 %}
+				{% endif %}
+			{% endfor %}
+
+
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8 col-lg-offset-2">
@@ -30,7 +39,7 @@
                     <div class="row">
 	                    <div class="col-lg-8 col-lg-offset-2">
 	                    	<div class="modal-body">
-					            {% if user and countInterest > 1 %}
+					            {% if user and countInterest > 1 and notDenied > 0 %}
 									Det är {{countInterest}} andra personer som har visat intresse för denna annons. 
 								{% elseif user and countInterest == 1 %}
 									Det är en annan person som har visat intresse för denna annons.
@@ -48,21 +57,25 @@
 	                    </div>
 	                  </div>
 					<div class="row">
-						 <div class="col-lg-8 col-lg-offset-2">
+						 <div class="col-lg-12 col-lg-offset-2">
 						 	<div class="modal-body">
-								{% if user and ad.interested_users %} 
-									Användare som har visat intresse för din annons:
+						 		
+								
+								{% if user and ad.interested_users and amount > 0 %} 
+									<h4>Användare som har visat intresse för din annons:</h4>
 
 									{% for user in ad.interested_users %}
+										{% if not user.denied %}
 										<div class="row">
 											<div class="col-lg-8 col-lg-4">
 
-											{{user.id}}{{user.firstname}} {{user.lastname}}<br> {{user.email}}
+											{{user.firstname}} {{user.lastname}}<br> {{user.email}}
 											</div>
 											<div class="col-lg-8 col-lg-4">
 											<a href="/ads/denyuser/?user_id={{user.id}}&ad_id={{ad.id}}"><button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i>Neka</button></a>
 											</div>
 										</div>
+										{% endif %}
 									{% endfor %}	
 								{% endif %}
 							</div>

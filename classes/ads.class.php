@@ -441,9 +441,19 @@ class Ads {
 
 		$cleanInput = DB::clean($input);
 
-		$sql = "UPDATE user_interested_in_ad
-				SET ";
+		$adId = $cleanInput['ad_id'];
+		$userId = $cleanInput['user_id'];
 
+		$sql = "UPDATE user_interested_in_ad
+				SET denied = '1'
+				WHERE ad_id = $adId
+				AND user_id = $userId";
+
+		DB::query($sql);
+
+		$output = ['redirect_url' => '//'.ROOT.'/ads/?id='.$adId];
+
+		return $output;
 
 	}
 
@@ -662,10 +672,11 @@ class Ads {
 		if($user && $user->id == $cleanUserId) {
 			
 			$sql = "
-			SELECT user.id 			AS id, 
-			user.firstname 			AS firstname, 
-			user.lastname 			AS lastname, 
-			user.email 				AS email
+			SELECT user.id 					AS id, 
+			user.firstname 					AS firstname, 
+			user.lastname 					AS lastname, 
+			user.email 						AS email,
+			user_interested_in_ad.denied	AS denied
 			FROM user, user_interested_in_ad
 			WHERE user.id = user_interested_in_ad.user_id
 			AND user_interested_in_ad.ad_id = ".$cleanAdId."
