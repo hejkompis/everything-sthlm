@@ -21,6 +21,9 @@ class Ads {
 				$expireTimestamp,
 				$active;
 
+	//Property för för förlängning av annons
+	private static $daysforward = 7;
+
 	//$input kommer från getAllAds, getSpecificAd eller getUserAds
 	function __construct($input) { 
 		
@@ -145,7 +148,7 @@ class Ads {
 				ads.active 			as active
 			FROM ads, user 
 			WHERE user.id = ads.user_id ".$sqlSearch.$sqlTags.$sqlAdType. " AND date_expire >= ".time()."
-			ORDER BY date_created DESC";
+			ORDER BY date_updated DESC";
 		
 		$data_array = DB::query($sql);
 		
@@ -223,7 +226,8 @@ class Ads {
 
 		$sql = "SELECT id, title, content, date_created, date_expire, user_id, address_street, address_zip, address_city, ad_type, payment, active
 				FROM ads
-				WHERE user_id = ".$user->id;
+				WHERE user_id = ".$user->id."
+				ORDER BY date_updated DESC";
 
 		$data_array = DB::query($sql);
 
@@ -278,12 +282,11 @@ class Ads {
 		$ad = self::getSpecificAd($input);
 
 		$output = [
-		'title' 		=> 'Aktivera annons', 
-		'page' 			=> 'ads.activateadform.twig',
-		'user' 			=> $user,
-		'ad' 			=> $ad,
-		'tags'			=> self::getAllTags(),
-		'ad_types'		=> self::getAllAdTypes()
+		'title' 			=> 'Aktivera annons', 
+		'page' 				=> 'ads.activateadform.twig',
+		'user' 				=> $user,
+		'ad' 				=> $ad,
+		'new_expire_date' 	=> date('Y-m-d', mktime(0, 0, 0, date('m'), date('d') + self::$daysforward, date('Y')))
 		];
 
 		return $output;
@@ -300,7 +303,7 @@ class Ads {
 		$address_street = $cleanInput['address_street'];
 		$address_zip 	= preg_replace("/[^0-9]/", "", $cleanInput['address_zip']);
 		$address_city 	= $cleanInput['address_city'];
-		$date_expire 	= strtotime($cleanInput['date_expire']);
+		$date_expire 	= time()+(60*60*24*self::$daysforward);
 		$userId 		= $user->id;
 		$ad_type		= $cleanInput['ad_type'];
 		$date_created	= time();
@@ -314,9 +317,9 @@ class Ads {
 		}
 
 		$sql = "INSERT INTO ads 
-				(title, content, user_id, address_street, address_zip, address_city, date_expire, date_created, ad_type, payment, active)
+				(title, content, user_id, address_street, address_zip, address_city, date_expire, date_created, date_updated, ad_type, payment, active)
 				VALUES
-				('$title', '$content', '$userId', '$address_street', '$address_zip', '$address_city', '$date_expire', '$date_created', '$ad_type', '$payment', '$active')
+				('$title', '$content', '$userId', '$address_street', '$address_zip', '$address_city', '$date_expire', '$date_created', '$date_created', '$ad_type', '$payment', '$active')
 		";
 
 		$data = DB::query($sql);
@@ -422,10 +425,11 @@ class Ads {
 		$cleanInput = DB::clean($input);
 
 		$ad_id = $cleanInput['id'];
-		$date_expire = strtotime($cleanInput['date_expire']);
+		$date_expire = time()+(60*60*24*self::$daysforward);
+		$date_updated = time();
 
 		$sql = "UPDATE ads 
-				SET date_expire = '$date_expire', active = '1'
+				SET date_expire = '$date_expire', active = '1', date_updated = $date_updated
 				WHERE id = ".$ad_id;
 
 		DB::query($sql);

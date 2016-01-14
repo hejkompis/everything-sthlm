@@ -21,13 +21,13 @@
                         ]
                     %}
                     {% if user.no_of_ads == 0 %}
-                        <h3>Du har inte publicerat någon annons än.</h3>
+                        <p>Du har inte publicerat någon annons än.</p>
                     {% elseif user.no_of_ads == 1 %}
-                        <h3>Du har publicerat annons sedan du startade ditt konto.</h3>
+                        <p>Du har publicerat annons sedan du startade ditt konto.</p>
                     {% elseif user.no_of_ads > 1 and user.no_of_ads <= 12 %}
-                        <h3>Du har publicerat {{correctNumbers[user.no_of_ads]}} annonser sedan du startade ditt konto.</h3>
+                        <p>Du har publicerat {{correctNumbers[user.no_of_ads]}} annonser sedan du startade ditt konto.</p>
                     {% elseif user.no_of_ads > 11 %}
-                        <h3>Du har publicerat {{user.no_of_ads}} annonser sedan du startade ditt konto.</h3>
+                        <p>Du har publicerat {{user.no_of_ads}} annonser sedan du startade ditt konto.</p>
                     {% endif %}
 
                     {% if user.premium %}
