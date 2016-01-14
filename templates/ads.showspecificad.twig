@@ -45,8 +45,9 @@
 									Det är en annan person som har visat intresse för denna annons.
 								{% endif %}
 								
-								{% if user and not userInterest %}
+								{% if user and not userInterest and user.id != ad.userId %}
 									<a href="/ads/checkinterest/?id={{ad.id}}"> <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-check"></i> Visa intresse </button></a>
+								{% elseif user and not userInterest %}	
 								{% elseif user and userInterest %}	
 									<a href="/ads/checkinterest/?id={{ad.id}}"><button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Ångra intresse </button></a>
 								{% else %}
@@ -61,7 +62,7 @@
 						 	<div class="modal-body">
 						 		
 								
-								{% if user and ad.interested_users and amount > 0 %} 
+								{% if user and ad.interested_users and notDenied > 0 %} 
 									<h4>Användare som har visat intresse för din annons:</h4>
 
 									{% for user in ad.interested_users %}
