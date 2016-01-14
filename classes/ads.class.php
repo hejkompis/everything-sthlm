@@ -305,6 +305,7 @@ class Ads {
 		$ad_type		= $cleanInput['ad_type'];
 		$date_created	= time();
 		$payment		= $cleanInput['payment'];
+		$active 		= '1';
 
 		if(!isset($cleanInput['tags'])) {
 			$tags = [];
@@ -313,9 +314,9 @@ class Ads {
 		}
 
 		$sql = "INSERT INTO ads 
-				(title, content, user_id, address_street, address_zip, address_city, date_expire, date_created, ad_type, payment)
+				(title, content, user_id, address_street, address_zip, address_city, date_expire, date_created, ad_type, payment, active)
 				VALUES
-				('$title', '$content', '$userId', '$address_street', '$address_zip', '$address_city', '$date_expire', '$date_created', '$ad_type', '$payment')
+				('$title', '$content', '$userId', '$address_street', '$address_zip', '$address_city', '$date_expire', '$date_created', '$ad_type', '$payment', '$active')
 		";
 
 		$data = DB::query($sql);
@@ -433,6 +434,17 @@ class Ads {
 
 		return $output;
 						
+	}
+
+	public static function denyUser($input) {
+		$user = User::isLoggedIn();
+
+		$cleanInput = DB::clean($input);
+
+		$sql = "UPDATE user_interested_in_ad
+				SET ";
+
+
 	}
 
 	public static function inactivateAd($input) {
@@ -650,7 +662,8 @@ class Ads {
 		if($user && $user->id == $cleanUserId) {
 			
 			$sql = "
-			SELECT user.firstname 	AS firstname, 
+			SELECT user.id 			AS id, 
+			user.firstname 			AS firstname, 
 			user.lastname 			AS lastname, 
 			user.email 				AS email
 			FROM user, user_interested_in_ad

@@ -51,9 +51,18 @@
 						 <div class="col-lg-8 col-lg-offset-2">
 						 	<div class="modal-body">
 								{% if user and ad.interested_users %} 
-									Användare som har visat intresse för din annons:<br>
+									Användare som har visat intresse för din annons:
+
 									{% for user in ad.interested_users %}
-											{{user.firstname}} {{user.lastname}} {{user.email}}<br>
+										<div class="row">
+											<div class="col-lg-8 col-lg-4">
+
+											{{user.id}}{{user.firstname}} {{user.lastname}}<br> {{user.email}}
+											</div>
+											<div class="col-lg-8 col-lg-4">
+											<a href="/ads/denyuser/?user_id={{user.id}}&ad_id={{ad.id}}"><button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i>Neka</button></a>
+											</div>
+										</div>
 									{% endfor %}	
 								{% endif %}
 							</div>
