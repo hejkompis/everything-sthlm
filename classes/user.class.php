@@ -197,5 +197,40 @@ class User {
 
  	}
 
+ 	//Skriver ut formulär för att skapa ny användare
+	public static function premiumForm() {
+		$output = [
+					'browserTitle' => 'Uppgradera till Premium', 
+					'page' => 'user.premiumform.twig'
+		];
+
+		return $output;
+	}
+
+
+	public static function setUserPremium() {
+
+		$user = self::isLoggedIn();
+
+		$sql = "UPDATE user SET premium = 1 WHERE id = ".$user->id;
+		$data = DB::query($sql);
+
+		$output = ['redirect_url' => '../'];
+		return $output;
+
+	}
+
+	public static function unsetUserPremium() {
+
+		$user = self::isLoggedIn();
+
+		$sql = "UPDATE user SET premium = 0 WHERE id = ".$user->id;
+		$data = DB::query($sql);
+
+		$output = ['redirect_url' => '../'];
+		return $output;
+
+	}
+
 }
 
