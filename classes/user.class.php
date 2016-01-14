@@ -57,7 +57,7 @@ class User {
 
 	//Skriver ut formulär för att skapa ny användare
 	public static function newUserForm() {
-		$output = ['title' => 'Skapa användare', 'page' => 'user.newuserform.twig'];
+		$output = ['browserTitle' => 'Skapa användare', 'page' => 'user.newuserform.twig'];
 
 		return $output;
 	}
@@ -116,17 +116,19 @@ class User {
 	//inloggad = får ej gå vidare i koden. 
 	public static function isLoggedIn($sendToLogin = TRUE) {
 		//Finns ingen användare och vi vill skicka anv. till login-form:
-		if(!$_SESSION["everythingSthlm"]["userId"] && $sendToLogin) {
-			header('Location: //'.ROOT.'/user/loginform'); exit;
-		//Finns ingen anv. och $sendToLogin är FALSE	
-		} elseif(!isset($_SESSION["everythingSthlm"]["userId"]) && !$sendToLogin) {
+		if(!isset($_SESSION["everythingSthlm"]["userId"]) && $sendToLogin) {
+			header('Location: //'.ROOT.'/user/loginform'); exit;	
+		} 
+		//Finns ingen anv. och $sendToLogin är FALSE
+		elseif(!isset($_SESSION["everythingSthlm"]["userId"]) && !$sendToLogin) {
 			$output = FALSE;
-		} else {
+		} 
+		// Annars finns ett användar-id i sessionen från vilket vi skapar ett nytt användarobjekt som vi också lagrar i klassen User
+		else {
 			$id = $_SESSION["everythingSthlm"]["userId"];
 			if(!self::$user) {
 				self::$user = new User($id);
 			}
-
 			$output = self::$user;
 		}
 		return $output;
@@ -134,7 +136,7 @@ class User {
 
 	//Skickar info så vi kan skriva ut loginformuläret.
 	public static function loginForm() {
-		$output = ['title' => 'Logga in', 'page' => 'user.loginform.twig'];
+		$output = ['browserTitle' => 'Logga in', 'page' => 'user.loginform.twig'];
 
 		return $output;
  	}
@@ -146,7 +148,7 @@ class User {
 		if($user) {
 		
 			$output = [
-			'title' => 'Hej och välkommen '.$user->firstName.'!', 
+			'browserTitle' => 'Hej och välkommen '.$user->firstName.'!', 
 			'page' 	=> 'user.dashboard.twig',
 			'user' 	=> $user,
 			'ads' 	=> Ads::getUserAds()
