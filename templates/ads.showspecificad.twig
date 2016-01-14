@@ -61,7 +61,7 @@
 						 	<div class="modal-body">
 						 		
 								
-								{% if user and ad.interested_users and amount > 0 %} 
+								{% if user and ad.interested_users and notDenied > 0 %} 
 									<h4>Användare som har visat intresse för din annons:</h4>
 
 									{% for user in ad.interested_users %}
