@@ -160,7 +160,7 @@ class Ads {
 		$output = [
 		'ads' 			=> $ads,
 		'page' 			=> 'ads.getallads.twig',
-		'title' 		=> 'Alla annonser',
+		'browserTitle' 	=> 'Alla annonser',
 		'search' 		=> $searchString,
 		'tags'			=> self::getAllTags(),
 		'searchTags'	=> $searchTags,
@@ -209,7 +209,7 @@ class Ads {
 		$output = [
 		'ad' 			=> $ad,
 		'page' 			=> 'ads.showspecificad.twig',
-		'title' 		=> $ad->title,
+		'browserTitle'	=> $ad->title,
 		'tags'			=> self::getAllTags(),
 		'user'			=> User::isLoggedIn(FALSE),
 		'userInterest' 	=> self::checkInterest($ad->id, FALSE),
@@ -246,7 +246,7 @@ class Ads {
 		$dateExpire = date('Y-m-d', time()+(60*60*24*7));
 
 		$output = [
-		'title' 		=> 'Skapa ny annons', 
+		'browserTitle' 	=> 'Skapa ny annons', 
 		'page' 			=> 'ads.newadform.twig',
 		'user' 			=> $user,
 		'date_expire' 	=> $dateExpire,
@@ -265,7 +265,7 @@ class Ads {
 		$ad = self::getSpecificAd($input);
 
 		$output = [
-		'title' 		=> 'Redigera annons', 
+		'browserTitle' 	=> 'Redigera annons', 
 		'page' 			=> 'ads.editadform.twig',
 		'user' 			=> $user,
 		'ad' 			=> $ad,
@@ -282,7 +282,7 @@ class Ads {
 		$ad = self::getSpecificAd($input);
 
 		$output = [
-		'title' 			=> 'Aktivera annons', 
+		'browserTitle' 		=> 'Aktivera annons', 
 		'page' 				=> 'ads.activateadform.twig',
 		'user' 				=> $user,
 		'ad' 				=> $ad,

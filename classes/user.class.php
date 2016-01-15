@@ -218,7 +218,6 @@ class User {
 
 		$output = ['redirect_url' => '../'];
 		return $output;
-
 	}
 
 	public static function unsetUserPremium() {
