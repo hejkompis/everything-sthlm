@@ -161,10 +161,11 @@ class User {
 		if($user) {
 		
 			$output = [
-			'browserTitle' => 'Hej och välkommen '.$user->firstName.'!', 
-			'page' 	=> 'user.dashboard.twig',
-			'user' 	=> $user,
-			'ads' 	=> Ads::getUserAds()
+			'browserTitle' 		=> 'Hej och välkommen '.$user->firstName.'!', 
+			'page' 				=> 'user.dashboard.twig',
+			'user' 				=> $user,
+			'ads' 				=> Ads::getUserAds(),
+			'interestingAds' 	=> Ads::getInterestingAds()
 			];
 		}
 		else {

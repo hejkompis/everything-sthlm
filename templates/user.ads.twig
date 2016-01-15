@@ -1,6 +1,8 @@
 <div class="container">
 	 <div class="row">
-      <h3>Dina aktiva annonser</h3>
+      <div class="col-md-8 col-sm-6">
+        <div class="row">
+          <h4>Mina aktiva annonser</h4>
           {% for ad in ads %}
             {% if ad.active %}
               <div class="col-md-4 col-sm-6 portfolio-item">
@@ -23,9 +25,10 @@
                 </div>
             {% endif %}
 				  {% endfor %}
+
     </div>
     <div class="row">
-      <h3>Inaktiva annonser</h3>
+      <h4>Inaktiva annonser</h4>
           {% for ad in ads %}
             {% if not ad.active %}
               <div class="col-md-4 col-sm-6 portfolio-item">
@@ -48,6 +51,29 @@
                 </div>
             {% endif %}
           {% endfor %}
+        </div>
+      </div>
+      <div class="col-md-4 col-sm-6">
+       <h4>Annonser jag visat intresse för</h4>
+        {% for ad in interestingAds %}
+          <div class="col-md-6 col-sm-6 portfolio-item">
+                <a href="/ads/?id={{ad.id}}" class="portfolio-link" data-toggle="modal">
+                  <div class="portfolio-hover">
+                    <div class="portfolio-hover-content">
+                      <i class="fa fa-plus fa-3x"></i>
+                    </div>
+                  </div>
+                    <img src="../img/portfolio/roundicons.png" class="img-responsive" alt="">
+                </a>
+                  <div class="portfolio-caption">
+                    <a href="/ads/?id={{ad.id}}">{{ad.title}}</a>
+                    <p>Publicerad: {{ad.dateCreated}}</p>
+                    <p>Bäst före: {{ad.dateExpire}}</p>
+                   
+                </div>
+                </div>
+        {% endfor %}  
+      </div>
     </div>
 </div>
  </section>

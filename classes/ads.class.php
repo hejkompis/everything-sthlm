@@ -664,6 +664,27 @@ class Ads {
 		return $output;
 	}
 
+	public static function getInterestingAds() {
+		$user = User::isLoggedIn(); 
+
+		$sql = "SELECT ads.id, ads.title, ads.content, ads.date_created, ads.date_expire, ads.user_id, ads.address_street, ads.address_zip, ads.address_city, ads.ad_type, ads.payment, ads.active
+				FROM ads, user_interested_in_ad
+				WHERE ads.id = user_interested_in_ad.ad_id
+				AND user_interested_in_ad.user_id = ".$user->id." 
+				ORDER BY date_updated DESC";
+
+		$data_array = DB::query($sql);
+
+		$ads = []; 
+		foreach ($data_array as $data) {
+			$ads[] = new Ads($data); 
+		}
+
+		$output = $ads;
+		
+		return $output;
+	}
+
 	//Hämta användare som är intresserad av en annons
 	private static function getInterestedUsers($adId, $userId) {
 
