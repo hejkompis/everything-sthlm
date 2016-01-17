@@ -1,0 +1,87 @@
+/*CHILD
+.navbar-default {
+    height: 100px;
+}*/
+
+.margin {
+    margin-top: 500px;
+}
+
+.navbar {
+    margin: 0px;
+}
+
+.nav-loginform {
+	padding: 20px;
+	width: 300px;
+}
+
+#create-acount {
+	color: black;
+} 
+
+.half-margin-top {
+    margin-top:15px;
+}
+
+.inline-block {
+    display: inline-block;
+}
+
+footer p a .footer-links {
+	line-height: 40px;
+    font-family: Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    text-transform: uppercase;
+    text-transform: none
+}
+
+@media (min-width:750px) {
+    .navbar-default {
+    	border-radius: 0px;
+    	background-color: #222222;
+        padding: 10px 0;
+        -webkit-transition: padding .3s;
+        -moz-transition: padding .3s;
+        transition: padding .3s;
+        border: 0
+    }
+    .navbar-default .navbar-brand {
+        font-size: 2em;
+        -webkit-transition: all .3s;
+        -moz-transition: all .3s;
+        transition: all .3s
+    }
+    .navbar-default .navbar-nav>.active>a {
+        border-radius: 3px
+    }
+    .navbar-default.navbar-shrink {
+        background-color: #222;
+        padding: 0px 0
+    }
+    .navbar-default.navbar-shrink .navbar-brand {
+        font-size: 1.5em
+    }
+}
+
+.portfolio-link {
+    background-color: #555;
+    vertical-align: middle;
+}
+
+.portfolio-link > img.normal-size {
+    max-width: 360px;
+    max-height:260px;
+    margin:0 auto;
+}
+
+.portfolio-link > img.small-size {
+    max-width: 260px;
+    max-height:166px;
+    margin:0 auto;
+}
+
+.portfolio-link > img.mini-size {
+    max-width: 150px;
+    max-height:108px;
+    margin:0 auto;
+}

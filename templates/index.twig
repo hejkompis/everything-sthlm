@@ -1,0 +1,34 @@
+{% include 'header.twig' %}
+
+		<!-- 
+			nästa twig-fråga:
+			finns det en "page"-variabel skickad med från metoden.
+			om det gör det utgår vi från att det är en läsbar html-fil och försöker hämta den
+			vi säger också åt index.twig, att om det inte finns med nån "page" så ska den hämta
+			home.twig, så att den alltid åtminstone ritar ut startsidan. den här kan vi sen ersätta med
+			en sida som innehåller ett felmeddelande, det är mer logiskt än att komma till startsidan.
+		-->
+        
+            {% include page %}
+       
+            
+
+		<!--
+			variabeln "info" som vi frågar efter nedan gör egentligen inget, 
+			men om vi i vår metod skapar en sådan, kan man lättare förstå 
+			vilken variabel och metod som används, 
+			framför allt om man gör varje "info"-meddelande unikt för varje metod.
+		-->
+
+		{% if info %}
+			<div class="container">
+				<div class="row">
+					<div class="col-xs-12 well well-sm">
+						{{info}}
+					</div>
+				</div>
+			</div>
+		{% endif %}
+
+{% include 'footer.twig' %}
+	
