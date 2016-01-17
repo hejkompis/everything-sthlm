@@ -44,6 +44,13 @@ class Ads {
 		$this->payment			= $input['payment'];
 		$this->interested_users	= self::getInterestedUsers($this->id, $this->userId);
 		$this->active 			= $this->checkActive($input['active']);
+
+		if($input['image'] != '') {
+			$this->image = '/uploads/'.$input['image'];
+		}
+		else {
+			$this->image = '/img/portfolio/roundicons.png';
+		}
 	
 	}
 
@@ -145,7 +152,8 @@ class Ads {
 				ads.address_city 	as address_city, 
 				ads.ad_type 		as ad_type,
 				ads.payment 		as payment,
-				ads.active 			as active
+				ads.active 			as active,
+				ads.image 			as image
 			FROM ads, user 
 			WHERE user.id = ads.user_id ".$sqlSearch.$sqlTags.$sqlAdType. " AND date_expire >= ".time()."
 			ORDER BY date_updated DESC";
@@ -188,7 +196,8 @@ class Ads {
 				ads.address_city 	as address_city, 
 				ads.ad_type 		as ad_type, 
 				ads.payment 		as payment,
-				ads.active 			as active 
+				ads.active 			as active,
+				ads.image 			as image
 				FROM ads, user
 				WHERE user.id = ads.user_id AND ads.id = $id
 				";
@@ -224,7 +233,7 @@ class Ads {
 	static public function getUserAds($input = FALSE) {
 		$user = User::isLoggedIn(); 
 
-		$sql = "SELECT id, title, content, date_created, date_expire, user_id, address_street, address_zip, address_city, ad_type, payment, active
+		$sql = "SELECT id, title, content, date_created, date_expire, user_id, address_street, address_zip, address_city, ad_type, payment, active, image
 				FROM ads
 				WHERE user_id = ".$user->id."
 				ORDER BY date_updated DESC";
@@ -337,6 +346,13 @@ class Ads {
 						";
 
 				DB::query($sql);
+
+				if($_FILES['image']['name'] != '') {
+				
+					self::uploadFile($_FILES['image'], $ad_id);
+
+				}
+
 			}
 
 			// spara ner att användaren har skapat en annons så vi kan räkna antalet annonser
@@ -359,7 +375,7 @@ class Ads {
 	//Körs för för att spara den redigerade versionen av en anonns som har skpats i editAdForm()
 	public static function updateAd($input) { 
 		//Kollar först om användaren är inloggad.
-		$user = User::isLoggedIn();	
+		$user = User::isLoggedIn();
 		
 		$cleanInput = DB::clean($input);
 		
@@ -369,7 +385,6 @@ class Ads {
 		$address_street = $cleanInput['address_street'];
 		$address_zip 	= preg_replace("/[^0-9]/", "", $cleanInput['address_zip']);
 		$address_city 	= $cleanInput['address_city'];
-		$date_expire 	= strtotime($cleanInput['date_expire']);
 		$userId 		= $user->id;
 		$ad_type		= $cleanInput['ad_type'];
 		$payment		= $cleanInput['payment'];
@@ -389,7 +404,6 @@ class Ads {
 				address_street 	= '$address_street',
 				address_zip 	= '$address_zip',
 				address_city 	= '$address_city',
-				date_expire 	= '$date_expire',
 				ad_type 		= '$ad_type',
 				payment			= '$payment'
 				WHERE id = ".$ad_id;
@@ -412,6 +426,13 @@ class Ads {
 
 				DB::query($sql);
 			}
+
+			if($_FILES['image']['name'] != '') {
+				
+				self::uploadFile($_FILES['image'], $ad_id);
+
+			}
+
 			$output = ['redirect_url' => '//'.ROOT.'/user'];
 				
 		} 
@@ -667,7 +688,7 @@ class Ads {
 	public static function getInterestingAds() {
 		$user = User::isLoggedIn(); 
 
-		$sql = "SELECT ads.id, ads.title, ads.content, ads.date_created, ads.date_expire, ads.user_id, ads.address_street, ads.address_zip, ads.address_city, ads.ad_type, ads.payment, ads.active
+		$sql = "SELECT ads.id, ads.title, ads.content, ads.date_created, ads.date_expire, ads.user_id, ads.address_street, ads.address_zip, ads.address_city, ads.ad_type, ads.payment, ads.active, ads.image
 				FROM ads, user_interested_in_ad
 				WHERE ads.id = user_interested_in_ad.ad_id
 				AND user_interested_in_ad.user_id = ".$user->id." 
@@ -717,6 +738,39 @@ class Ads {
 		}
 
 		return $output;
-	}   
+	}
+
+	private static function uploadFile($tmp_file, $ad_id) {
+
+		$dir = 'uploads/';
+
+		$pathinfo = pathinfo($tmp_file['name']);
+		$name = $pathinfo['filename'];
+		$ext = $pathinfo['extension'];
+
+		$file = $name.'_'.time().'.'.$ext;
+		$file_with_dir = $dir.$file;
+
+		if (file_exists($file_with_dir)) {
+			echo 'Filen finns redan.'; exit;
+		}
+
+		$allowedExt = array('jpg', 'jpeg', 'png', 'gif');
+
+		if(!in_array($ext, $allowedExt)) {
+			echo 'Fel filtyp.'; exit;
+		}
+
+		if (move_uploaded_file($tmp_file['tmp_name'], $file_with_dir)) {
+			
+			$sql = "UPDATE ads SET image = '".$file."' WHERE id = ".$ad_id;
+			DB::query($sql);
+
+		}
+		else {
+			echo 'Det här gick snett!';
+		}
+
+	}
 
 }

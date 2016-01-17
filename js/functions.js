@@ -1,5 +1,7 @@
 /* jQuery-funktioner */
 
+var root = window.location.origin;
+
 $(document).ready(function() {
 	
 	$(document).on('click', '[data-type="confirm"]', function() {
