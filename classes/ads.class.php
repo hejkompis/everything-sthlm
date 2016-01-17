@@ -19,7 +19,8 @@ class Ads {
 				$payment,
 				$interested_users,
 				$expireTimestamp,
-				$active;
+				$active,
+				$image;
 
 	//Property för för förlängning av annons
 	private static $daysforward = 7;
