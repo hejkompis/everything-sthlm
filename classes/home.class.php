@@ -8,14 +8,15 @@
 				'page' 				=> 'home.twig',
 				'user' 				=> User::isLoggedIn(FALSE),
 				'activeadsamount' 	=> self::getActiveAds(),
-				'usersamount' 		=> self::getUsers()
+				'usersamount' 		=> self::getUsers(),
+				'latestupload'		=> self::latestUploadedAd()
 			];
 
 			return $output;
 			
 		}
 
-		static public function getActiveAds() {
+		static private function getActiveAds() {
 			$sql = "SELECT COUNT(id) as count
 					FROM ads
 					WHERE active = 1
@@ -28,13 +29,26 @@
 			return $output;
 		}
 
-		static public function getUsers() {
+		static private function getUsers() {
 			$sql = "SELECT COUNT(id) as count
 					FROM user
 			";
 
 			$data = DB::query($sql, TRUE);
 			$output = $data['count'];
+
+			return $output;
+		}
+
+		static private function latestUploadedAd() {
+			$sql = "SELECT title as title, id
+					FROM ads
+					ORDER by date_created DESC
+					LIMIT 1
+			";
+			
+			$data = DB::query($sql, TRUE);
+			$output = $data;
 
 			return $output;
 		}

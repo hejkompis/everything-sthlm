@@ -12,18 +12,21 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 text-center">
-                    <h2 class="section-heading">Statistik</h2>
-                    <h3 class="section-subheading text-muted">Lorem ipsum dolor sit amet consectetur.</h3>
+                    <h2 class="section-heading">Just nu</h2>
                 </div>
             </div>
             <div class="row text-center">
-                <div class="col-md-6">
-                    <h4 class="service-heading">Aktiva annonser just nu</h4>
+                <div class="col-md-4">
+                    <h4 class="service-heading">Aktiva annonser</h4>
                     <h2 class="text-muted">{{activeadsamount}}</h2>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <h4 class="service-heading">Registrerade användare</h4>
-                    <h2 class="text-muted">{{useramount}}</h2>
+                    <h2 class="text-muted">{{usersamount}}</h2>
+                </div>
+                <div class="col-md-4">
+                    <h4 class="service-heading">Senast skapade annons</h4>
+                    <h2 class="text-muted"><a href="/ads/?id={{latestupload.id}}">{{latestupload.title}}</a></h2>
                 </div>
             </div>
         </div>
