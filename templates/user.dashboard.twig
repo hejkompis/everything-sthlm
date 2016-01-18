@@ -23,7 +23,7 @@
                     {% if user.no_of_ads == 0 %}
                         <p>Du har inte publicerat någon annons än.</p>
                     {% elseif user.no_of_ads == 1 %}
-                        <p>Du har publicerat annons sedan du startade ditt konto.</p>
+                        <p>Du har publicerat en annons sedan du startade ditt konto.</p>
                     {% elseif user.no_of_ads > 1 and user.no_of_ads <= 12 %}
                         <p>Du har publicerat {{correctNumbers[user.no_of_ads]}} annonser sedan du startade ditt konto.</p>
                     {% elseif user.no_of_ads > 11 %}
