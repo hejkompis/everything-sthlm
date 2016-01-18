@@ -41,13 +41,14 @@
 		}
 
 		static private function latestUploadedAd() {
-			$sql = "SELECT title as title
+			$sql = "SELECT title as title, id
 					FROM ads
-					ORDER date_created DESC LIMIT BY 1
+					ORDER by date_created DESC
+					LIMIT 1
 			";
 			
 			$data = DB::query($sql, TRUE);
-			$output = $data['title'];
+			$output = $data;
 
 			return $output;
 		}
