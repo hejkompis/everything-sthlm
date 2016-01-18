@@ -287,7 +287,8 @@ class Ads {
 				ads.image 			as image,
 				user.firstname 		as user_firstname
 				FROM ads, user
-				WHERE user_id = ".$user->id."
+				WHERE ads.user_id = user.id
+				AND ads.user_id = ".$user->id."
 				ORDER BY date_updated DESC";
 
 		$data_array = DB::query($sql);
@@ -298,6 +299,7 @@ class Ads {
 		}
 
 		return $ads;
+		
 	}
 
 	//Om man är inloggad får man möjlighet att skapa ny annons 
