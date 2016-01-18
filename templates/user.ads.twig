@@ -71,7 +71,7 @@
                     <p>Bäst före: {{ad.dateExpire}}</p>
                    
                       {% if user.premium %}
-                      <a href="/ads/activateadform/?id={{ad.id}}">Aktivera annons</a>
+                      <a class="btn btn-primary btn-sm align-to-bottom" href="/ads/activateadform/?id={{ad.id}}">Aktivera annons</a>
                       {% endif %}
                       <a href="/ads/deletead/?id={{ad.id}}" data-type="confirm" data-message="Verkligen radera annons?" class="btn btn-primary btn-sm align-to-bottom">Radera</a>
                     

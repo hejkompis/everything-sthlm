@@ -99,7 +99,7 @@ footer p a .footer-links {
 @media (min-width:1200px), (min-width:768px) and (max-width:991px)  {
 
     .portfolio-link {
-        background-color: #555;
+        background-color: white;
         vertical-align: middle;
     }
 
@@ -141,7 +141,7 @@ footer p a .footer-links {
 @media (min-width:992px) and (max-width:1199px) {
 
     .portfolio-link {
-        background-color: #555;
+        background-color: white;
         vertical-align: middle;
     }
 
