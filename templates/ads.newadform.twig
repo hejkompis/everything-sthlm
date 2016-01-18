@@ -8,7 +8,7 @@
            </div>
 		<div class="row">
 		<div class="col-xs-12">
-			<form action="/ads/savead/" method="post">
+			<form action="/ads/savead/" method="post" enctype="multipart/form-data">
 				<div class="form-group">
 					<label for="title"><h4>Titel</h4></label>
 					<input type="text" id="title" name="title" class="form-control" >
@@ -26,24 +26,24 @@
 
 				<div class="form-group">
 					<label for="address_street"><h4>Gata</h4></label>
-					<input type="text" id="address_street" name="address_street" class="form-control" value="{{user.address_street}}"> 
+					<input type="text" id="address_street" name="address_street" class="form-control" value="{{user.addressStreet}}"> 
 				</div>
 				
 				<div class="form-group">
 					<label for="address_zip"><h4>Postnummer</h4></label>
-					<input type="text" id="address_zip" name="address_zip" class="form-control" value="{{user.address_zip}}"> 
+					<input type="text" id="address_zip" name="address_zip" class="form-control" value="{{user.addressZip}}"> 
 				</div>
 				
 				<div class="form-group">
 					<label for="address_city"><h4>Ort</h4></label>
-					<input type="text" id="address_city" name="address_city" class="form-control" value="{{user.address_city}}"> 
+					<input type="text" id="address_city" name="address_city" class="form-control" value="{{user.addressCity}}"> 
 				</div>
 
 				<div class="form-group">
 					<label for="ad_type"><h4>Typ av annons</h4></label>
 					<select class="form-control" name="ad_type">
-						{% for ad_type in ad_types %}
-						<option value="{{ad_type.id}}">{{ad_type.name}}</option>
+						{% for adType in adTypes %}
+						<option value="{{adType.id}}">{{adType.name}}</option>
 						{% endfor %}
 					</select>
 				</div>
@@ -52,13 +52,9 @@
 					<label><h4>Taggar</h4></label><br />
 
 					{% for tag in tags %}
-
 						<div class="checkbox">
-
 							<label><input type="checkbox" name="tags[]" value="{{tag.id}}"> {{tag.name}}</label>
-
 						</div>
-
 					{% endfor %}
 				</div>
 				<div class="form-group">
@@ -67,7 +63,7 @@
 				</div>
 				<div class="form-group">
 					<label for="date_expire"><h4>Annonsen tas ner</h4></label>
-					<p id="date_expire">{{date_expire}}</p>			
+					<p id="date_expire">{{dateExpire}}</p>			
 				</div>
 				<div class="form-group">
 					<button type="submit" class="btn btn-primary">Skapa annons</button>
