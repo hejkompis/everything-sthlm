@@ -86,8 +86,12 @@
 					<div class="portfolio-caption">
 						<a href="/ads/?id={{ad.id}}">{{ad.title}}</a>
 						<p class="text-muted">{{ad.dateCreated}}</p>
-						{% if ad.distance %}
-							<p>Du är {{ad.distance}} bort</p>
+						{% if ad.userId != user.id %}
+							{% if ad.distance %}
+								<p>Du är {{ad.distance}} bort</p>
+							{% endif %}
+						{% else %}
+							Det här är din annons!
 						{% endif %}
 					</div>
 				</div>
