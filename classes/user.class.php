@@ -7,11 +7,11 @@ class User {
 			$lastName, 
 			$email, 
 			$phone, 
-			$address_street, 
-			$address_zip, 
-			$address_city,
+			$addressStreet, 
+			$addressZip, 
+			$addressCity,
 			$premium = FALSE,
-			$no_of_ads;
+			$noOfAds;
 
 	private static $user = FALSE;
 
@@ -32,10 +32,10 @@ class User {
 		$this->lastName 		= $data["lastname"];
 		$this->email 			= $data["email"];
 		$this->phone 			= $data["phone"];
-		$this->address_street 	= $data["address_street"];
-		$this->address_zip 		= $data["address_zip"];
-		$this->address_city 	= $data["address_city"];
-		$this->no_of_ads		= self::countUserAds($this->id);
+		$this->addressStreet 	= $data["address_street"];
+		$this->addressZip 		= $data["address_zip"];
+		$this->addressCity 		= $data["address_city"];
+		$this->noOfAds			= self::countUserAds($this->id);
 
 		if($data['premium'] == 1) {
 			$this->premium = TRUE;
@@ -76,9 +76,9 @@ class User {
 
 		$firstname 		= $cleanInput['firstname'];
 		$lastname 		= $cleanInput['lastname'];
-		$address_street = $cleanInput['address_street'];
-		$address_zip 	= preg_replace("/[^0-9]/", "", $cleanInput['address_zip']);
-		$address_city 	= $cleanInput['address_city'];
+		$addressStreet = $cleanInput['address_street'];
+		$addressZip 	= preg_replace("/[^0-9]/", "", $cleanInput['address_zip']);
+		$addressCity 	= $cleanInput['address_city'];
 		$email 			= $cleanInput['email'];
 		$scrambledPassword = hash_hmac("sha1", $cleanInput["password"], "dont put baby in the corner");
 		
@@ -125,6 +125,29 @@ class User {
 	//Kollar om användaren är inloggad eller inte. Om man är inloggad finns möjlighet att plocka ut 
 	//användarobjektet annars skickas man t inloggningsformuläret. Elseif ska bara säga nej du är inte 
 	//inloggad = får ej gå vidare i koden. 
+	public static function checkLoginStatus($sendToLogin = TRUE) {
+
+		//Finns ingen användare och vi vill skicka anv. till login-form:
+		if(!isset($_SESSION["everythingSthlm"]["userId"]) && $sendToLogin) {
+			// $_SESSION['everythingSthlm']['ref_url'] = $_SERVER['HTTP_REFERRAL']
+			//$output = ['redirect_url' => '/user/loginform'];
+			header('Location: /user/loginform');
+		} 
+		//Finns ingen anv. och $sendToLogin är FALSE
+		elseif(!isset($_SESSION["everythingSthlm"]["userId"]) && !$sendToLogin) {
+			$output = FALSE;
+		} 
+		// Annars finns ett användar-id i sessionen från vilket vi skapar ett nytt användarobjekt som vi också lagrar i klassen User
+		else {
+			$id = $_SESSION["everythingSthlm"]["userId"];
+			if(!self::$user) {
+				self::$user = new User($id);
+			}
+			$output = self::$user;
+		}
+		return $output;
+	}
+
 	public static function isLoggedIn($sendToLogin = TRUE) {
 
 		//Finns ingen användare och vi vill skicka anv. till login-form:
@@ -157,7 +180,7 @@ class User {
 
  	//Dashboard visas på /user. Här skickar vi med user-objekt och användarens annonser. 
  	public static function dashboard() { 
-		$user = self::isLoggedIn(); 
+		$user = self::checkLoginStatus(); 
 		if($user) {
 		
 			$output = [
@@ -211,7 +234,7 @@ class User {
 
 	public static function setUserPremium() {
 
-		$user = self::isLoggedIn();
+		$user = self::checkLoginStatus();
 
 		$sql = "UPDATE user SET premium = 1 WHERE id = ".$user->id;
 		$data = DB::query($sql);
@@ -222,7 +245,7 @@ class User {
 
 	public static function unsetUserPremium() {
 
-		$user = self::isLoggedIn();
+		$user = self::checkLoginStatus();
 
 		$sql = "UPDATE user SET premium = 0 WHERE id = ".$user->id;
 		$data = DB::query($sql);
@@ -233,12 +256,12 @@ class User {
 
 	public static function getAddress() {
 
-		self::isLoggedIn(false);
+		self::checkLoginStatus(false);
 
 		if(self::$user) {
-			$output['street'] = self::$user->address_street;
-			$output['zip'] = self::$user->address_zip;
-			$output['city'] = self::$user->address_city;
+			$output['street'] = self::$user->addressStreet;
+			$output['zip'] = self::$user->addressZip;
+			$output['city'] = self::$user->addressCity;
 		}
 		else {
 			$output = false;

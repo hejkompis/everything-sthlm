@@ -20,20 +20,20 @@
                             'tolv'
                         ]
                     %}
-                    {% if user.no_of_ads == 0 %}
+                    {% if user.noOfAds == 0 %}
                         <p>Du har inte publicerat någon annons än.</p>
-                    {% elseif user.no_of_ads == 1 %}
+                    {% elseif user.noOfAds == 1 %}
                         <p>Du har publicerat en annons sedan du startade ditt konto.</p>
-                    {% elseif user.no_of_ads > 1 and user.no_of_ads <= 12 %}
-                        <p>Du har publicerat {{correctNumbers[user.no_of_ads]}} annonser sedan du startade ditt konto.</p>
-                    {% elseif user.no_of_ads > 11 %}
-                        <p>Du har publicerat {{user.no_of_ads}} annonser sedan du startade ditt konto.</p>
+                    {% elseif user.noOfAds > 1 and user.noOfAds <= 12 %}
+                        <p>Du har publicerat {{correctNumbers[user.noOfAds]}} annonser sedan du startade ditt konto.</p>
+                    {% elseif user.noOfAds > 11 %}
+                        <p>Du har publicerat {{user.noOfAds}} annonser sedan du startade ditt konto.</p>
                     {% endif %}
 
                     {% if user.premium %}
                         <h3 class="section-subheading text-muted"><a href="/ads/newadform">Sätt igång och skapa en ny!</a></h3>
                 
-                    {% elseif user.no_of_ads < 3 and user.premium == false %}
+                    {% elseif user.noOfAds < 3 and user.premium == false %}
                         <h3 class="section-subheading text-muted"><a href="/ads/newadform">Sätt igång och skapa en ny!</a></h3>
                         <div>
                             <a href="premiumform" class="btn btn-primary">Uppgradera ditt konto</a>

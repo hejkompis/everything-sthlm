@@ -63,29 +63,56 @@ footer p a .footer-links {
     }
 }
 
-/*
+@media (min-width:1200px), (max-width:991px)  {
 
-.portfolio-link {
-    background-color: #555;
-    vertical-align: middle;
+    .portfolio-link {
+        background-color: #555;
+        vertical-align: middle;
+    }
+
+    .portfolio-link > img.normal-size {
+        max-width: 360px;
+        max-height:260px;
+        margin:0 auto;
+    }
+
+    .portfolio-link > img.small-size {
+        max-width: 260px;
+        max-height:166px;
+        margin:0 auto;
+    }
+
+    .portfolio-link > img.mini-size {
+        max-width: 150px;
+        max-height:108px;
+        margin:0 auto;
+    }
+
 }
 
-.portfolio-link > img.normal-size {
-    max-width: 360px;
-    max-height:260px;
-    margin:0 auto;
-}
+@media (min-width:992px) and (max-width:1199px) {
 
-.portfolio-link > img.small-size {
-    max-width: 260px;
-    max-height:166px;
-    margin:0 auto;
-}
+    .portfolio-link {
+        background-color: #555;
+        vertical-align: middle;
+    }
 
-.portfolio-link > img.mini-size {
-    max-width: 150px;
-    max-height:108px;
-    margin:0 auto;
-}
+    .portfolio-link > img.normal-size {
+        max-width: 293px;
+        max-height:212px;
+        margin:0 auto;
+    }
 
-*/
+    .portfolio-link > img.small-size {
+        max-width: 186px;
+        max-height:134px;
+        margin:0 auto;
+    }
+
+    .portfolio-link > img.mini-size {
+        max-width: 117px;
+        max-height:84px;
+        margin:0 auto;
+    }
+
+}

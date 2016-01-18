@@ -6,10 +6,10 @@
 
 			$output = [
 				'page' 				=> 'home.twig',
-				'user' 				=> User::isLoggedIn(FALSE),
-				'activeadsamount' 	=> self::getActiveAds(),
-				'usersamount' 		=> self::getUsers(),
-				'latestupload'		=> self::latestUploadedAd()
+				'user' 				=> User::checkLoginStatus(FALSE),
+				'activeAdsAmount' 	=> self::getActiveAds(),
+				'usersAmount' 		=> self::getUsers(),
+				'latestUpload'		=> self::latestUploadedAd()
 			];
 
 			return $output;
