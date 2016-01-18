@@ -5,12 +5,38 @@
 		static public function fallback() {
 
 			$output = [
-				'page' => 'home.twig',
-				'user' => User::isLoggedIn(FALSE)
+				'page' 				=> 'home.twig',
+				'user' 				=> User::isLoggedIn(FALSE),
+				'activeadsamount' 	=> self::getActiveAds(),
+				'usersamount' 		=> self::getUsers()
 			];
 
 			return $output;
+			
+		}
 
+		static public function getActiveAds() {
+			$sql = "SELECT COUNT(id) as count
+					FROM ads
+					WHERE active = 1
+			"; 
+
+			$data = DB::query($sql, TRUE);
+
+			$output = $data['count'];
+
+			return $output;
+		}
+
+		static public function getUsers() {
+			$sql = "SELECT COUNT(id) as count
+					FROM user
+			";
+
+			$data = DB::query($sql, TRUE);
+			$output = $data['count'];
+
+			return $output;
 		}
 
 	}
