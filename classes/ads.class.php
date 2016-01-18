@@ -14,18 +14,18 @@ class Ads {
 				$tags, 
 				$typeName,
 				$typeId,
-				$address_street,
-				$address_zip,
-				$address_city,
+				$addressStreet,
+				$addressZip,
+				$addressCity,
 				$payment,
-				$interested_users,
+				$interestedUsers,
 				$expireTimestamp,
 				$active,
 				$image,
 				$distance;
 
 	//Property för för förlängning av annons
-	private static $daysforward = 7;
+	private static $daysForward = 7;
 
 	//$input kommer från getAllAds, getSpecificAd eller getUserAds
 	function __construct($input) { 
@@ -40,13 +40,13 @@ class Ads {
 		$this->userFirstname	= $input['user_firstname'];
 		$this->typeId 			= $input['ad_type'];
 		$this->typeName			= self::getSpecificAdType($this->id);
-		$this->address_street 	= $input['address_street'];
-		$this->address_zip 		= $input['address_zip'];
-		$this->address_city 	= $input['address_city'];
+		$this->addressStreet 	= $input['address_street'];
+		$this->addressZip 		= $input['address_zip'];
+		$this->addressCity  	= $input['address_city'];
 		$this->tags 			= self::getSpecificTags($this->id);
 		$this->createdDaysAgo	= round((time()-$input['date_created'])/60/60/24);
 		$this->payment			= $input['payment'];
-		$this->interested_users	= self::getInterestedUsers($this->id, $this->userId);
+		$this->interestedUsers	= self::getInterestedUsers($this->id, $this->userId);
 		$this->active 			= $this->checkActive($input['active']);
 
 		if($input['image'] != '') {
@@ -132,7 +132,8 @@ class Ads {
 		if(isset($input['search'])) {
 			$searchString = DB::clean($input['search']);
 			$searchString = strtolower($searchString);
-			$sqlSearch = " AND (LOWER(ads.title) LIKE '%".$searchString."%' OR LOWER(ads.content) LIKE '%".$searchString."%') ";	
+			$sqlSearch = " AND (LOWER(ads.title) LIKE '%".$searchString."%' 
+						OR LOWER(ads.content) LIKE '%".$searchString."%') ";	
 		} else {
 			$searchString = FALSE;
 			$sqlSearch = "";
@@ -195,10 +196,10 @@ class Ads {
 			WHERE user.id = ads.user_id ".$sqlSearch.$sqlTags.$sqlAdType.$sqlSearchDistance. " AND date_expire >= ".time()."
 			ORDER BY date_updated DESC";
 		
-		$data_array = DB::query($sql);
+		$dataArray = DB::query($sql);
 		
 		$ads = []; 
-		foreach ($data_array as $data) {
+		foreach ($dataArray as $data) {
 			$ads[] = new Ads($data); 
 		}
 
@@ -210,7 +211,7 @@ class Ads {
 		'tags'			=> self::getAllTags(),
 		'searchTags'	=> $searchTags,
 		'adTypes'		=> self::getAllAdTypes(),
-		'user'			=> User::isLoggedIn(FALSE),
+		'user'			=> User::checkLoginStatus(FALSE),
 		'distance'		=> $searchDistance
 		];
 
@@ -258,7 +259,7 @@ class Ads {
 		'page' 			=> 'ads.showspecificad.twig',
 		'browserTitle'	=> $ad->title,
 		'tags'			=> self::getAllTags(),
-		'user'			=> User::isLoggedIn(FALSE),
+		'user'			=> User::checkLoginStatus(FALSE),
 		'userInterest' 	=> self::checkInterest($ad->id, FALSE),
 		'countInterest' => self::countUserInterest($ad->id)
 		];
@@ -270,7 +271,7 @@ class Ads {
 	//visas de anonnser som är skapade av den inloggade användaren
 	static public function getUserAds($input = FALSE) {
 		
-		$user = User::isLoggedIn(); 
+		$user = User::checkLoginStatus(); 
 
 		$sql = "SELECT 
 				ads.id 				as id, 
@@ -292,10 +293,10 @@ class Ads {
 				AND user.id = ".$user->id."
 				ORDER BY date_updated DESC";
 
-		$data_array = DB::query($sql);
+		$dataArray = DB::query($sql);
 
 		$ads = []; 
-		foreach ($data_array as $data) {
+		foreach ($dataArray as $data) {
 			$ads[] = new Ads($data); 
 		}
 
@@ -306,16 +307,16 @@ class Ads {
 	//Om man är inloggad får man möjlighet att skapa ny annons 
 	public static function newAdForm() {
 		
-		$user = User::isLoggedIn();
+		$user = User::checkLoginStatus();
 		$dateExpire = date('Y-m-d', time()+(60*60*24*7));
 
 		$output = [
 		'browserTitle' 	=> 'Skapa ny annons', 
 		'page' 			=> 'ads.newadform.twig',
 		'user' 			=> $user,
-		'date_expire' 	=> $dateExpire,
+		'dateExpire' 	=> $dateExpire,
 		'tags'			=> self::getAllTags(),
-		'ad_types'		=> self::getAllAdTypes()
+		'adTypes'		=> self::getAllAdTypes()
 		];
 
 		return $output;
@@ -325,7 +326,7 @@ class Ads {
 	//information i ett formulär i Twig
 	public static function editAdForm($input) {
 		
-		$user = User::isLoggedIn();
+		$user = User::checkLoginStatus();
 		$ad = self::getSpecificAd($input);
 
 		$output = [
@@ -334,7 +335,7 @@ class Ads {
 		'user' 			=> $user,
 		'ad' 			=> $ad,
 		'tags'			=> self::getAllTags(),
-		'ad_types'		=> self::getAllAdTypes()
+		'adTypes'		=> self::getAllAdTypes()
 		];
 
 		return $output;
@@ -342,7 +343,7 @@ class Ads {
 
 	public static function activateAdForm($input) {
 		
-		$user = User::isLoggedIn();
+		$user = User::checkLoginStatus();
 		$ad = self::getSpecificAd($input);
 
 		$output = [
@@ -350,34 +351,33 @@ class Ads {
 		'page' 				=> 'ads.activateadform.twig',
 		'user' 				=> $user,
 		'ad' 				=> $ad,
-		'new_expire_date' 	=> date('Y-m-d', mktime(0, 0, 0, date('m'), date('d') + self::$daysforward, date('Y')))
+		'newExpireDate' 	=> date('Y-m-d', mktime(0, 0, 0, date('m'), date('d') + self::$daysForward, date('Y')))
 		];
 
 		return $output;
 	}
 
-	//Metod för att skapa ny annons
+	//Metod för att spara ny annons
 	public static function saveAd($input) {
-		$user = User::isLoggedIn();
+		$user = User::checkLoginStatus();
 
 		$cleanInput = DB::clean($input);
 
 		$title 			= $cleanInput['title'];
 		$content 		= $cleanInput['content'];
-		$address_street = $cleanInput['address_street'];
-		$address_zip 	= preg_replace("/[^0-9]/", "", $cleanInput['address_zip']);
-		$address_city 	= $cleanInput['address_city'];
-		$date_expire 	= time()+(60*60*24*self::$daysforward);
+		$addressStreet 	= $cleanInput['address_street'];
+		$addressZip 	= preg_replace("/[^0-9]/", "", $cleanInput['address_zip']);
+		$addressCity 	= $cleanInput['address_city'];
+		$dateExpire 	= time()+(60*60*24*self::$daysForward);
 		$userId 		= $user->id;
-		$ad_type		= $cleanInput['ad_type'];
-		$date_created	= time();
+		$adTypes		= $cleanInput['ad_type'];
+		$dateCreated	= time();
 		$payment		= $cleanInput['payment'];
 		$active 		= '1';
-		$latlng 		= self::getLatLng($address_zip, $address_street, $address_city);
-		$latitude 		= $latlng['latitude'];
-		$longitude 		= $latlng['longitude'];
+		$latLng 		= self::getLatLng($addressZip, $addressStreet, $addressCity);
+		$latitude 		= $latLng['latitude'];
+		$longitude 		= $latLng['longitude'];
 	
-
 
 		if(!isset($cleanInput['tags'])) {
 			$tags = [];
@@ -386,40 +386,63 @@ class Ads {
 		}
 
 		$sql = "INSERT INTO ads 
-				(title, content, user_id, address_street, address_zip, address_city, date_expire, date_created, date_updated, ad_type, payment, active, latitude, longitude)
+				(title, 
+				content, 
+				user_id, 
+				address_street, 
+				address_zip, 
+				address_city, 
+				date_expire, 
+				date_created, 
+				date_updated, 
+				ad_type, 
+				payment, 
+				active, 
+				latitude, 
+				longitude)
 				VALUES
-				('$title', '$content', '$userId', '$address_street', '$address_zip', '$address_city', '$date_expire', '$date_created', '$date_created', '$ad_type', '$payment', '$active', '$latitude', '$longitude')
+				('$title', 
+				'$content',
+				'$userId',
+				'$addressStreet',
+				'$addressZip',
+				'$addressCity',
+				'$dateExpire',
+				'$dateCreated',
+				'$dateCreated',
+				'$adType',
+				'$payment',
+				'$active',
+				'$latitude',
+				'$longitude')
 		";
 
 		$data = DB::query($sql);
 
 		if($data) {
 
-			$ad_id = $data;
+			$adId = $data;
 			
 			// spara alla taggar som hör till annonsen
-			foreach($tags as $tag_id) {
+			foreach($tags as $tagId) {
 				$sql = "INSERT INTO ad_has_tag 
 						(ad_id, tag_id) 
 						VALUES 
-						($ad_id, $tag_id)
+						($adId, $tagId)
 						";
 
 				DB::query($sql);
 
 				if($_FILES['image']['name'] != '') {
-				
-					self::uploadFile($_FILES['image'], $ad_id);
-
+					self::uploadFile($_FILES['image'], $adId);
 				}
-
 			}
 
-			// spara ner att användaren har skapat en annons så vi kan räkna antalet annonser
+			// Spara ner att användaren har skapat en annons så vi kan räkna totalt antal publicerade annonser
 			$sql = "INSERT INTO user_has_created_ads 
 					(ad_id, user_id, date) 
 					VALUES 
-					($ad_id, $userId, $date_created)
+					($adId, $userId, $dateCreated)
 					";
 
 			DB::query($sql);
@@ -435,22 +458,22 @@ class Ads {
 	//Körs för för att spara den redigerade versionen av en anonns som har skpats i editAdForm()
 	public static function updateAd($input) { 
 		//Kollar först om användaren är inloggad.
-		$user = User::isLoggedIn();
+		$user = User::checkLoginStatus();
 		
 		$cleanInput = DB::clean($input);
 		
-		$ad_id 			= $cleanInput['id'];
+		$adId 			= $cleanInput['id'];
 		$title 			= $cleanInput['title'];
 		$content 		= $cleanInput['content'];
-		$address_street = $cleanInput['address_street'];
-		$address_zip 	= preg_replace("/[^0-9]/", "", $cleanInput['address_zip']);
-		$address_city 	= $cleanInput['address_city'];
+		$addressStreet 	= $cleanInput['address_street'];
+		$addressZip 	= preg_replace("/[^0-9]/", "", $cleanInput['address_zip']);
+		$addressCity 	= $cleanInput['address_city'];
 		$userId 		= $user->id;
-		$ad_type		= $cleanInput['ad_type'];
+		$adType			= $cleanInput['ad_type'];
 		$payment		= $cleanInput['payment'];
-		$latlng 		= self::getLatLng($address_zip, $address_street, $address_city);
-		$latitude 		= $latlng['latitude'];
-		$longitude 		= $latlng['longitude'];
+		$latLng 		= self::getLatLng($addressZip, $addressStreet, $addressCity);
+		$latitude 		= $latLng['latitude'];
+		$longitude 		= $latLng['longitude'];
 
 		if(!isset($cleanInput['tags'])) {
 			$tags = [];
@@ -478,15 +501,15 @@ class Ads {
 		if($data) {
 
 			$sql = "DELETE FROM ad_has_tag 
-					WHERE ad_id = ".$ad_id;
+					WHERE ad_id = ".$adId;
 			
 			DB::query($sql);
 			
-			foreach($tags as $tag_id) {
+			foreach($tags as $tagId) {
 				$sql = "INSERT INTO ad_has_tag 
 						(ad_id, tag_id) 
 						VALUES 
-						($ad_id, $tag_id)
+						($adId, $tagId)
 						";
 
 				DB::query($sql);
@@ -494,8 +517,7 @@ class Ads {
 
 			if($_FILES['image']['name'] != '') {
 				
-				self::uploadFile($_FILES['image'], $ad_id);
-
+				self::uploadFile($_FILES['image'], $adId);
 			}
 
 			$output = ['redirect_url' => '//'.ROOT.'/user'];
@@ -506,17 +528,17 @@ class Ads {
 	}
 
 	public static function activateAd($input) {
-		$user = User::isLoggedIn();
+		$user = User::checkLoginStatus();
 
 		$cleanInput = DB::clean($input);
 
-		$ad_id = $cleanInput['id'];
-		$date_expire = time()+(60*60*24*self::$daysforward);
-		$date_updated = time();
+		$adId = $cleanInput['id'];
+		$dateExpire = time()+(60*60*24*self::$daysForward);
+		$dateUpdated = time();
 
 		$sql = "UPDATE ads 
-				SET date_expire = '$date_expire', active = '1', date_updated = $date_updated
-				WHERE id = ".$ad_id;
+				SET date_expire = '$dateExpire', active = '1', date_updated = $dateUpdated
+				WHERE id = ".$adId;
 
 		DB::query($sql);
 
@@ -527,7 +549,7 @@ class Ads {
 	}
 
 	public static function denyUser($input) {
-		$user = User::isLoggedIn();
+		$user = User::checkLoginStatus();
 
 		$cleanInput = DB::clean($input);
 
@@ -548,15 +570,15 @@ class Ads {
 	}
 
 	public static function inactivateAd($input) {
-		$user = User::isLoggedIn();
+		$user = User::checkLoginStatus();
 
 		$cleanInput = DB::clean($input);
 
-		$id = $cleanInput['id'];
+		$adId = $cleanInput['id'];
 
 		$sql = "UPDATE ads 
 				SET active = '0'
-				WHERE id = ".$id;
+				WHERE id = ".$adId;
 
 		DB::query($sql);
 
@@ -578,15 +600,15 @@ class Ads {
 	}
 
 	//Hämtar taggar som är kopplade till en specifik annons
-	private static function getSpecificTags($ad_id) {
+	private static function getSpecificTags($adId) {
 
-		$clean_ad_id = DB::clean($ad_id);
+		$cleanAdId = DB::clean($adId);
 
 		$output = [];
 
 		$sql = "SELECT tag_id 
 				FROM ad_has_tag 
-				WHERE ad_id = ".$clean_ad_id;
+				WHERE ad_id = ".$cleanAdId;
 
 		$array = DB::query($sql);
 		
@@ -599,7 +621,7 @@ class Ads {
 
 	//Är man inloggad kan 
 	public static function deleteAd($input) {
-		$user = User::isLoggedIn();
+		$user = User::checkLoginStatus();
 		$cleanId = DB::clean($input['id']);
 
 		$sql = "DELETE FROM ads 
@@ -626,8 +648,8 @@ class Ads {
 	} 
 
 	//Hämtar specifik adtype kopplad till vald annons
-	private static function getSpecificAdType($id) {
-		$cleanId = DB::clean($id);
+	private static function getSpecificAdType($adId) {
+		$cleanId = DB::clean($adId);
 		
 		$sql = "SELECT ad_types.name as name 
 				FROM ad_types, ads 
@@ -648,13 +670,11 @@ class Ads {
 
 		// Skickar med FALSE för att inte skicka användaren till 
 		// inloggningsformuläret
-		$user = User::isLoggedIn(FALSE);
+		$user = User::checkLoginStatus(FALSE);
 
 		if ($user) {
-
 			if (is_array($input)) {
 				$cleanAdId = DB::clean($input['id']);
-				
 			}
 			else {
 				$cleanAdId 	= DB::clean($input);
@@ -663,11 +683,10 @@ class Ads {
 			$userId 		= $user->id;
 			$date 			= time();
 
-			$sql = "
-			SELECT * 
-			FROM user_interested_in_ad
-			WHERE ad_id = $cleanAdId
-			AND user_id = $userId";
+			$sql = "SELECT * 
+					FROM user_interested_in_ad
+					WHERE ad_id = $cleanAdId
+					AND user_id = $userId";
 
 			$data = DB::query($sql, TRUE);
 
@@ -676,11 +695,10 @@ class Ads {
 
 				// Om vi en rad från databasen och $toggle INTE är satt till FALSE
 				if($toggle) {
-					$sql = "
-					DELETE 
-					FROM user_interested_in_ad
-					WHERE ad_id = $cleanAdId
-					AND user_id = $userId";
+					$sql = "DELETE 
+							FROM user_interested_in_ad
+							WHERE ad_id = $cleanAdId
+							AND user_id = $userId";
 
 					$data = DB::query($sql);
 					$output = ['redirect_url'=>'/ads/?id='.$cleanAdId];
@@ -694,16 +712,15 @@ class Ads {
 
 			} 
 
-			// Om vi inte fått tillbaka någon rad från databasen, dvs användaren har inte visat intresse i en specifik annons
+			// Om vi inte får tillbaka någon rad från databasen, dvs användaren har inte visat intresse för en specifik annons
 			else {
 
 				// Om vi inte har någon rad och $toggle INTE är satt till FALSE ska vi lägga till en rad i databasen
 				if($toggle) {
-					$sql = "
-					INSERT INTO user_interested_in_ad
-					(ad_id, user_id, date)
-					VALUES
-					($cleanAdId, $userId, $date)";
+					$sql = "INSERT INTO user_interested_in_ad
+							(ad_id, user_id, date)
+							VALUES
+							($cleanAdId, $userId, $date)";
 
 					$data = DB::query($sql);
 					$output = ['redirect_url'=>'/ads/?id='.$cleanAdId];
@@ -727,18 +744,16 @@ class Ads {
 	private static function countUserInterest($adId) {
 		//Kollar om anv är inloggad + skickar med FALSE för att inte skickas
 		//direkt t loginformulär om man ej är det. 
-		$user = User::isLoggedIn(FALSE);
+		$user = User::checkLoginStatus(FALSE);
 		 
 		if($user) { 
 
 			$userId = $user->id;
 
-			$sql = "
-				SELECT COUNT(user_id) as count 
-				FROM user_interested_in_ad
-				WHERE ad_id = $adId 
-				AND user_id != $userId
-			";
+			$sql = "SELECT COUNT(user_id) as count 
+					FROM user_interested_in_ad
+					WHERE ad_id = $adId 
+					AND user_id != $userId";
 			
 			$data = DB::query($sql, TRUE); 
 
@@ -751,7 +766,7 @@ class Ads {
 	}
 
 	public static function getInterestingAds() {
-		$user = User::isLoggedIn(); 
+		$user = User::checkLoginStatus(); 
 
 		$sql = "SELECT 
 				ads.id 				as id, 
@@ -774,10 +789,10 @@ class Ads {
 				AND user_interested_in_ad.user_id = ".$user->id." 
 				ORDER BY date_updated DESC";
 
-		$data_array = DB::query($sql);
+		$dataArray = DB::query($sql);
 
 		$ads = []; 
-		foreach ($data_array as $data) {
+		foreach ($dataArray as $data) {
 			$ads[] = new Ads($data); 
 		}
 
@@ -790,24 +805,22 @@ class Ads {
 	private static function getInterestedUsers($adId, $userId) {
 
 		//Kollar först om anv är inloggad, om nej ska man inte bli skickad till loginfomulär därför skickas FALSE med.
-		$user = User::isLoggedIn(FALSE);
+		$user = User::checkLoginStatus(FALSE);
 
 		$cleanAdId = DB::clean($adId);
 		$cleanUserId = DB::clean($userId);
 
 		if($user && $user->id == $cleanUserId) {
 			
-			$sql = "
-			SELECT user.id 					AS id, 
-			user.firstname 					AS firstname, 
-			user.lastname 					AS lastname, 
-			user.email 						AS email,
-			user_interested_in_ad.denied	AS denied
-			FROM user, user_interested_in_ad
-			WHERE user.id = user_interested_in_ad.user_id
-			AND user_interested_in_ad.ad_id = ".$cleanAdId."
-			ORDER BY user_interested_in_ad.date DESC
-			";
+			$sql = "SELECT user.id 					AS id, 
+					user.firstname 					AS firstname, 
+					user.lastname 					AS lastname, 
+					user.email 						AS email,
+					user_interested_in_ad.denied	AS denied
+					FROM user, user_interested_in_ad
+					WHERE user.id = user_interested_in_ad.user_id
+					AND user_interested_in_ad.ad_id = ".$cleanAdId."
+					ORDER BY user_interested_in_ad.date DESC";
 
 			$data = DB::query($sql);
 
@@ -820,7 +833,7 @@ class Ads {
 		return $output;
 	}
 
-	private static function uploadFile($tmp_file, $ad_id) {
+	private static function uploadFile($tmpFile, $adId) {
 
 		$directory = 'uploads/';
 
@@ -829,11 +842,11 @@ class Ads {
 		$ext = $pathinfo['extension'];
 
 		$file = $name.'_'.time().'.'.$ext;
-		$file_with_directory = $directory.$file;
+		$fileWithDirectory = $directory.$file;
 		// samma som ovan
-		// $file_with_directory = 'uploads/filname .ext';
+		// $fileWithDirectory = 'uploads/filname .ext';
 
-		if (file_exists($file_with_directory)) {
+		if (file_exists($fileWithDirectory)) {
 			echo 'Filen finns redan.'; exit;
 		}
 
@@ -843,9 +856,9 @@ class Ads {
 			echo 'Fel filtyp.'; exit;
 		}
 
-		if (move_uploaded_file($tmp_file['tmp_name'], $file_with_directory)) {
+		if (move_uploaded_file($tmpFile['tmp_name'], $fileWithDirectory)) {
 			
-			$sql = "UPDATE ads SET image = '".$file."' WHERE id = ".$ad_id;
+			$sql = "UPDATE ads SET image = '".$file."' WHERE id = ".$adId;
 			DB::query($sql);
 
 		}
@@ -893,13 +906,6 @@ class Ads {
 			else {
 				$output = $meters." meter";
 			}
-
-
 			return $output;
-
-
 	}
-
-
-
 }

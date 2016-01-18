@@ -26,28 +26,29 @@
 				
 				<div class="form-group">
 					<label for="address_street"><h4>Gata</h4></label>
-					<input type="text" id="address_street" name="address_street" class="form-control" value="{{ad.address_street}}"> 
+					<input type="text" id="address_street" name="address_street" class="form-control" value="{{ad.addressStreet}}">
 				</div>
 				
 				<div class="form-group">
 					<label for="address_zip"><h4>Postnummer</h4></label>
-					<input type="text" id="address_zip" name="address_zip" class="form-control" value="{{ad.address_zip}}"> 
+					<input type="text" id="address_zip" name="address_zip" class="form-control" value="{{ad.addressZip}}"> 
 				</div>
 				
 				<div class="form-group">
 					<label for="address_city"><h4>Ort</h4></label>
-					<input type="text" id="address_city" name="address_city" class="form-control" value="{{ad.address_city}}"> 
+					<input type="text" id="address_city" name="address_city" class="form-control" value="{{ad.addressCity}}"> 
 				</div>
+				
 				<div class="form-group">
 					<label for="ad_type"><h4>Typ av annons</h4></label>
 					<select class="form-control" name="ad_type">
 
-						{% for ad_type in ad_types %}
-							<option value="{{ad_type.id}}"
-							{% if ad_type.id == ad.typeId %} 
+						{% for adType in adTypes %}
+							<option value="{{adType.id}}"
+							{% if adType.id == ad.typeId %} 
 								selected="selected"
 							{% endif %}> 
-							{{ad_type.name}}</option>
+							{{adType.name}}</option>
 						{% endfor %}
 
 					</select>
