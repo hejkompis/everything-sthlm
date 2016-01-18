@@ -52,9 +52,9 @@
 								{% if user and not userInterest and user.id != ad.userId %}
 									<a href="/ads/checkinterest/?id={{ad.id}}"> <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-check"></i> Visa intresse </button></a>
 								{% elseif user and not userInterest %}	
-								{% elseif user and userInterest %}	
+								{% elseif user and userInterest and user.id != ad.userId%}	
 									<a href="/ads/checkinterest/?id={{ad.id}}"><button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Ångra intresse </button></a>
-								{% else %}
+								{% elseif user.id != ad.userId %}
 									<p>Låter detta intressant?</p>
 									<a href="/user/loginform"><button type="button" class="btn btn-primary" data-dismiss="modal"> Logga in! </button></a>
 								{% endif %}
