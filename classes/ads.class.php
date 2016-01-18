@@ -142,7 +142,26 @@ class Ads {
 			$sqlAdType = "";
 		}
 
-		$sql = "SELECT ads.id 		as id, 
+		if(isset($input['distance'])) {
+			$searchDistance = DB::clean($input['distance']);
+			$myaddress = User::getAddress();
+			$mylocation = self::getLatLng($myaddress['zip'], $myaddress['street'], $myaddress['city']);
+			$earthRadius = 6371000;
+			$sqlDistanceFirst = " ROUND(
+				".$earthRadius." * ACOS(  
+					SIN( ".$mylocation['latitude']."*PI()/180 ) * SIN( ads.latitude*PI()/180 )
+					+ COS( ".$mylocation['latitude']."*PI()/180 ) * COS( ads.latitude*PI()/180 )  *  COS( (ads.longitude*PI()/180) - (".$mylocation['longitude']."*PI()/180) )   
+				) 
+			, 1) AS distance ";
+			$sqlDistanceSecond = " HAVING distance <= $searchDistance ";
+		} else {
+			$searchDistance = FALSE;
+			$sqlDistanceFirst = "";
+			$sqlDistanceSecond = "";
+		}
+
+		$sql = "SELECT ".$sqlDistanceFirst.",
+				ads.id 		as id,
 				ads.title 			as title, 
 				ads.content 		as content, 
 				ads.date_created 	as date_created, 
@@ -156,7 +175,7 @@ class Ads {
 				ads.active 			as active,
 				ads.image 			as image
 			FROM ads, user 
-			WHERE user.id = ads.user_id ".$sqlSearch.$sqlTags.$sqlAdType. " AND date_expire >= ".time()."
+			WHERE user.id = ads.user_id ".$sqlSearch.$sqlTags.$sqlAdType.$sqlDistanceSecond. " AND date_expire >= ".time()."
 			ORDER BY date_updated DESC";
 		
 		$data_array = DB::query($sql);
@@ -319,6 +338,11 @@ class Ads {
 		$date_created	= time();
 		$payment		= $cleanInput['payment'];
 		$active 		= '1';
+		$latlng 		= self::getLatLng($address_zip, $address_street, $address_city);
+		$latitude 		= $latlng['latitude'];
+		$longitude 		= $latlng['longitude'];
+	
+
 
 		if(!isset($cleanInput['tags'])) {
 			$tags = [];
@@ -327,9 +351,9 @@ class Ads {
 		}
 
 		$sql = "INSERT INTO ads 
-				(title, content, user_id, address_street, address_zip, address_city, date_expire, date_created, date_updated, ad_type, payment, active)
+				(title, content, user_id, address_street, address_zip, address_city, date_expire, date_created, date_updated, ad_type, payment, active, latitude, longitude)
 				VALUES
-				('$title', '$content', '$userId', '$address_street', '$address_zip', '$address_city', '$date_expire', '$date_created', '$date_created', '$ad_type', '$payment', '$active')
+				('$title', '$content', '$userId', '$address_street', '$address_zip', '$address_city', '$date_expire', '$date_created', '$date_created', '$ad_type', '$payment', '$active', '$latitude', '$longitude')
 		";
 
 		$data = DB::query($sql);
@@ -389,6 +413,9 @@ class Ads {
 		$userId 		= $user->id;
 		$ad_type		= $cleanInput['ad_type'];
 		$payment		= $cleanInput['payment'];
+		$latlng 		= self::getLatLng($address_zip, $address_street, $address_city);
+		$latitude 		= $latlng['latitude'];
+		$longitude 		= $latlng['longitude'];
 
 		if(!isset($cleanInput['tags'])) {
 			$tags = [];
@@ -406,7 +433,9 @@ class Ads {
 				address_zip 	= '$address_zip',
 				address_city 	= '$address_city',
 				ad_type 		= '$ad_type',
-				payment			= '$payment'
+				payment			= '$payment',
+				latitude		= '$latitude',
+				longitude		= '$longitude'
 				WHERE id = ".$ad_id;
 
 		$data = DB::query($sql);
@@ -771,6 +800,30 @@ class Ads {
 		else {
 			echo 'Det här gick snett!';
 		}
+
+	}
+
+	public static function getLatLng($postcode = '', $address = '', $city = '', $country = 'SWEDEN') {
+
+		$fullAddress = $address.'+'.$postcode.'+'.$city.'+'.$country;
+		$prepAddr = str_replace(' ','%20',$fullAddress);
+		$geocode = file_get_contents('http://maps.google.com/maps/api/geocode/json?address='.$prepAddr.'&sensor=false');
+		
+		$data = json_decode($geocode);
+		
+		$output['latitude'] 		= $data->results[0]->geometry->location->lat;
+		$output['longitude'] 		= $data->results[0]->geometry->location->lng;
+		
+
+		if(!isset($data->results[0]->partial_match) && $data->results[0]->types[0] == 'street_address') {
+			return $output;
+		}
+		else {
+			echo '<strong>Något gick fel</strong><br />';
+			echo '<pre>';
+				print_r($data); exit;
+			echo '</pre>';
+		}				
 
 	}
 

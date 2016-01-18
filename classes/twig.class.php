@@ -2,7 +2,7 @@
 
 // vi hämtar läser in den för Twig nödvändiga filen autoloader.php med hjälp av require_once.
 // får vi inget felmeddelande någonstans om denna vet vi att det blivit rätt
-require_once('../Twig/lib/Twig/Autoloader.php');
+require_once('Twig/lib/Twig/Autoloader.php');
 
 // vi anger klassens namn
 class Twig {

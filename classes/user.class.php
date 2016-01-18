@@ -231,7 +231,20 @@ class User {
 		return $output;
 	}
 
-		
+	public static function getAddress() {
+
+		self::isLoggedIn(false);
+
+		if(self::$user) {
+			$output['street'] = self::$user->address_street;
+			$output['zip'] = self::$user->address_zip;
+			$output['city'] = self::$user->address_city;
+		}
+		else {
+			$output = false;
+		}
+		return $output;
+	}
 
 }
 
