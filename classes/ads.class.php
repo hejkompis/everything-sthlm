@@ -152,7 +152,7 @@ class Ads {
 					SIN( ".$mylocation['latitude']."*PI()/180 ) * SIN( ads.latitude*PI()/180 )
 					+ COS( ".$mylocation['latitude']."*PI()/180 ) * COS( ads.latitude*PI()/180 )  *  COS( (ads.longitude*PI()/180) - (".$mylocation['longitude']."*PI()/180) )   
 				) 
-			, 1) AS distance ";
+			, 1) AS distance, ";
 			$sqlDistanceSecond = " HAVING distance <= $searchDistance ";
 		} else {
 			$searchDistance = FALSE;
@@ -160,7 +160,7 @@ class Ads {
 			$sqlDistanceSecond = "";
 		}
 
-		$sql = "SELECT ".$sqlDistanceFirst.",
+		$sql = "SELECT ".$sqlDistanceFirst."
 				ads.id 		as id,
 				ads.title 			as title, 
 				ads.content 		as content, 
@@ -772,16 +772,18 @@ class Ads {
 
 	private static function uploadFile($tmp_file, $ad_id) {
 
-		$dir = 'uploads/';
+		$directory = 'uploads/';
 
 		$pathinfo = pathinfo($tmp_file['name']);
 		$name = $pathinfo['filename'];
 		$ext = $pathinfo['extension'];
 
 		$file = $name.'_'.time().'.'.$ext;
-		$file_with_dir = $dir.$file;
+		$file_with_directory = $directory.$file;
+		// samma som ovan
+		// $file_with_directory = 'uploads/filname .ext';
 
-		if (file_exists($file_with_dir)) {
+		if (file_exists($file_with_directory)) {
 			echo 'Filen finns redan.'; exit;
 		}
 
@@ -791,14 +793,14 @@ class Ads {
 			echo 'Fel filtyp.'; exit;
 		}
 
-		if (move_uploaded_file($tmp_file['tmp_name'], $file_with_dir)) {
+		if (move_uploaded_file($tmp_file['tmp_name'], $file_with_directory)) {
 			
 			$sql = "UPDATE ads SET image = '".$file."' WHERE id = ".$ad_id;
 			DB::query($sql);
 
 		}
 		else {
-			echo 'Det här gick snett!';
+			echo 'Det här gick snett!'; exit;
 		}
 
 	}
