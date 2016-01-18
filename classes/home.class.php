@@ -15,14 +15,14 @@
 		}
 
 		static public function getActiveAds() {
-			$sql = "SELECT COUNT(id)
+			$sql = "SELECT COUNT(id) as count
 					FROM ads
 					WHERE active = 1
 			"; 
 
-			$data = DB::query($sql);
+			$data = DB::query($sql, TRUE);
 
-			$output = $data;
+			$output = $data['count'];
 
 			return $output;
 		}
