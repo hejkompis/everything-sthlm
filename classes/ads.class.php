@@ -55,7 +55,7 @@ class Ads {
 		}
 
 		if(isset($input['distance'])) {
-			$this->distance = $input['distance'];
+			$this->distance = self::getDistance($input['distance']);
 		}
 		else {
 			$this->distance = FALSE;
@@ -843,5 +843,28 @@ class Ads {
 		}				
 
 	}
+
+	private static function getDistance($meters){
+		$kilometers = round(($meters / 1000), 1);
+
+			if ($kilometers >= 10) {
+				$output = round(($meters / 10000), 1)." mil";
+			} 
+
+			elseif ($kilometers > 0 && $kilometers < 10) {
+				$output = $kilometers." kilometer";
+			}
+
+			else {
+				$output = $meters." meter";
+			}
+
+
+			return $output;
+
+
+	}
+
+
 
 }
