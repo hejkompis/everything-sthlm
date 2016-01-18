@@ -20,7 +20,8 @@ class Ads {
 				$interested_users,
 				$expireTimestamp,
 				$active,
-				$image;
+				$image,
+				$distance;
 
 	//Property för för förlängning av annons
 	private static $daysforward = 7;
@@ -51,6 +52,13 @@ class Ads {
 		}
 		else {
 			$this->image = '/img/portfolio/roundicons.png';
+		}
+
+		if(isset($input['distance'])) {
+			$this->distance = $input['distance'];
+		}
+		else {
+			$this->distance = FALSE;
 		}
 	
 	}
@@ -101,6 +109,22 @@ class Ads {
 
 	//FALSE eftersom $input är valfri. Har ingen sökning skett visas alla Ads
 	static public function getAllAds($input = FALSE) { 
+
+		$myaddress = User::getAddress();
+
+		if($myaddress) {
+			$mylocation = self::getLatLng($myaddress['zip'], $myaddress['street'], $myaddress['city']);
+			$earthRadius = 6371000;
+			$sqlReturnDistance = " ROUND(
+				".$earthRadius." * ACOS(  
+					SIN( ".$mylocation['latitude']."*PI()/180 ) * SIN( ads.latitude*PI()/180 )
+					+ COS( ".$mylocation['latitude']."*PI()/180 ) * COS( ads.latitude*PI()/180 )  *  COS( (ads.longitude*PI()/180) - (".$mylocation['longitude']."*PI()/180) )   
+				) 
+			, 0) AS distance, ";
+		}
+		else {
+			$sqlReturnDistance = "";
+		}
 	
 		//Gör det möjligt att söka på Ads med fritext
 		if(isset($input['search'])) {
@@ -144,24 +168,14 @@ class Ads {
 
 		if(isset($input['distance'])) {
 			$searchDistance = DB::clean($input['distance']);
-			$myaddress = User::getAddress();
-			$mylocation = self::getLatLng($myaddress['zip'], $myaddress['street'], $myaddress['city']);
-			$earthRadius = 6371000;
-			$sqlDistanceFirst = " ROUND(
-				".$earthRadius." * ACOS(  
-					SIN( ".$mylocation['latitude']."*PI()/180 ) * SIN( ads.latitude*PI()/180 )
-					+ COS( ".$mylocation['latitude']."*PI()/180 ) * COS( ads.latitude*PI()/180 )  *  COS( (ads.longitude*PI()/180) - (".$mylocation['longitude']."*PI()/180) )   
-				) 
-			, 1) AS distance, ";
-			$sqlDistanceSecond = " HAVING distance <= $searchDistance ";
+			$sqlSearchDistance = " HAVING distance <= $searchDistance ";
 		} else {
 			$searchDistance = FALSE;
-			$sqlDistanceFirst = "";
-			$sqlDistanceSecond = "";
+			$sqlSearchDistance = "";
 		}
 
-		$sql = "SELECT ".$sqlDistanceFirst."
-				ads.id 		as id,
+		$sql = "SELECT ".$sqlReturnDistance."
+				ads.id 				as id,
 				ads.title 			as title, 
 				ads.content 		as content, 
 				ads.date_created 	as date_created, 
@@ -175,7 +189,7 @@ class Ads {
 				ads.active 			as active,
 				ads.image 			as image
 			FROM ads, user 
-			WHERE user.id = ads.user_id ".$sqlSearch.$sqlTags.$sqlAdType.$sqlDistanceSecond. " AND date_expire >= ".time()."
+			WHERE user.id = ads.user_id ".$sqlSearch.$sqlTags.$sqlAdType.$sqlSearchDistance. " AND date_expire >= ".time()."
 			ORDER BY date_updated DESC";
 		
 		$data_array = DB::query($sql);
@@ -193,7 +207,8 @@ class Ads {
 		'tags'			=> self::getAllTags(),
 		'searchTags'	=> $searchTags,
 		'adTypes'		=> self::getAllAdTypes(),
-		'user'			=> User::isLoggedIn(FALSE)
+		'user'			=> User::isLoggedIn(FALSE),
+		'distance'		=> $searchDistance
 		];
 
 		return $output;
@@ -813,8 +828,8 @@ class Ads {
 		
 		$data = json_decode($geocode);
 		
-		$output['latitude'] 		= $data->results[0]->geometry->location->lat;
-		$output['longitude'] 		= $data->results[0]->geometry->location->lng;
+		$output['latitude']		= $data->results[0]->geometry->location->lat;
+		$output['longitude'] 	= $data->results[0]->geometry->location->lng;
 		
 
 		if(!isset($data->results[0]->partial_match) && $data->results[0]->types[0] == 'street_address') {
