@@ -8,7 +8,8 @@ class Ads {
 				$dateCreated,
 				$createdDaysAgo, 
 				$dateExpire, 
-				$userId, 
+				$userId,
+				$userFirstname, 
 				$imageName, 
 				$tags, 
 				$typeName,
@@ -36,6 +37,7 @@ class Ads {
 		$this->dateExpire 		= date('Y-m-d', $input['date_expire']);
 		$this->expireTimestamp	= $input['date_expire'];
 		$this->userId 			= $input['user_id'];
+		$this->userFirstname	= $input['user_firstname'];
 		$this->typeId 			= $input['ad_type'];
 		$this->typeName			= self::getSpecificAdType($this->id);
 		$this->address_street 	= $input['address_street'];
@@ -181,6 +183,7 @@ class Ads {
 				ads.date_created 	as date_created, 
 				ads.date_expire 	as date_expire, 
 				ads.user_id 		as user_id, 
+				user.firstname 		as user_firstname,
 				ads.address_street 	as address_street, 
 				ads.address_zip 	as address_zip, 
 				ads.address_city 	as address_city, 
@@ -225,7 +228,7 @@ class Ads {
 				ads.date_created 	as date_created, 
 				ads.date_expire 	as date_expire, 
 				user.id 			as user_id,
-				user.firstname 		as firstname, 
+				user.firstname 		as user_firstname, 
 				ads.address_street 	as address_street, 
 				ads.address_zip 	as address_zip, 
 				ads.address_city 	as address_city, 
@@ -268,8 +271,22 @@ class Ads {
 	static public function getUserAds($input = FALSE) {
 		$user = User::isLoggedIn(); 
 
-		$sql = "SELECT id, title, content, date_created, date_expire, user_id, address_street, address_zip, address_city, ad_type, payment, active, image
-				FROM ads
+		$sql = "SELECT 
+				ads.id 				as id, 
+				ads.title 			as title, 
+				ads.content 		as content, 
+				ads.date_created 	as date_created, 
+				ads.date_expire 	as date_expire, 
+				ads.user_id 		as user_id, 
+				ads.address_street 	as address_street, 
+				ads.address_zip 	as address_zip, 
+				ads.address_city 	as address_city, 
+				ads.ad_type 		as ad_type, 
+				ads.payment 		as payment, 
+				ads.active 			as active, 
+				ads.image 			as image,
+				user.firstname 		as user_firstname
+				FROM ads, user
 				WHERE user_id = ".$user->id."
 				ORDER BY date_updated DESC";
 
