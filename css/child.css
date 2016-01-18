@@ -70,19 +70,34 @@ footer p a .footer-links {
         vertical-align: middle;
     }
 
-    .portfolio-link > img.normal-size {
+    .portfolio-link.normal-size {
+        height:260px;
+        width:360px;
+    }
+
+    .portfolio-link.normal-size > img {
         max-width: 360px;
         max-height:260px;
         margin:0 auto;
     }
 
-    .portfolio-link > img.small-size {
+    .portfolio-link.small-size {
+        height:166px;
+        width:260px;
+    }
+
+    .portfolio-link.small-size > img {
         max-width: 260px;
         max-height:166px;
         margin:0 auto;
     }
 
-    .portfolio-link > img.mini-size {
+    .portfolio-link.mini-size {
+        height:108px;
+        width:150px;
+    }
+
+    .portfolio-link.mini-size > img {
         max-width: 150px;
         max-height:108px;
         margin:0 auto;
@@ -97,16 +112,31 @@ footer p a .footer-links {
         vertical-align: middle;
     }
 
+    .portfolio-link.normal-size {
+        width:293px;
+        height:212px;
+    }
+
     .portfolio-link > img.normal-size {
         max-width: 293px;
         max-height:212px;
         margin:0 auto;
     }
 
+    .portfolio-link.small-size {
+        width:186px;
+        height:134px;
+    }
+
     .portfolio-link > img.small-size {
         max-width: 186px;
         max-height:134px;
         margin:0 auto;
+    }
+
+    .portfolio-link.mini-size {
+        width:117px;
+        height:84px;
     }
 
     .portfolio-link > img.mini-size {

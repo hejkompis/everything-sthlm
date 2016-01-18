@@ -75,13 +75,13 @@
 		<div class="row">
     	 	{% for ad in ads %}
     	 		<div class="col-md-4 col-sm-6 portfolio-item">
-            		<a href="/ads/?id={{ad.id}}" class="portfolio-link" data-toggle="modal">
+            		<a href="/ads/?id={{ad.id}}" class="portfolio-link normal-size" data-toggle="modal">
                     	<div class="portfolio-hover">
 							<div class="portfolio-hover-content">
 								<i class="fa fa-plus fa-3x"></i>
 							</div>
 						</div>
-						<img src="{{ad.image}}" class="img-responsive normal-size" alt="">
+						<img src="{{ad.image}}" class="img-responsive" alt="">
 					</a>
 					<div class="portfolio-caption">
 						<a href="/ads/?id={{ad.id}}">{{ad.title}}</a>

@@ -3,8 +3,8 @@
 class User {
 
 	private $id, 
-			$firstName, 
-			$lastName, 
+			$firstname, 
+			$lastname, 
 			$email, 
 			$phone, 
 			$addressStreet, 
@@ -28,8 +28,8 @@ class User {
 		$data = DB::query($sql, TRUE);
 		
 		$this->id 				= $cleanId;
-		$this->firstName 		= $data["firstname"];
-		$this->lastName 		= $data["lastname"];
+		$this->firstname 		= $data["firstname"];
+		$this->lastname 		= $data["lastname"];
 		$this->email 			= $data["email"];
 		$this->phone 			= $data["phone"];
 		$this->addressStreet 	= $data["address_street"];
