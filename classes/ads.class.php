@@ -269,6 +269,7 @@ class Ads {
 	//Kollar först om man är inloggad, ifall inloggning är TRUE 
 	//visas de anonnser som är skapade av den inloggade användaren
 	static public function getUserAds($input = FALSE) {
+		
 		$user = User::isLoggedIn(); 
 
 		$sql = "SELECT 
@@ -288,7 +289,7 @@ class Ads {
 				user.firstname 		as user_firstname
 				FROM ads, user
 				WHERE ads.user_id = user.id
-				AND ads.user_id = ".$user->id."
+				AND user.id = ".$user->id."
 				ORDER BY date_updated DESC";
 
 		$data_array = DB::query($sql);
@@ -752,9 +753,24 @@ class Ads {
 	public static function getInterestingAds() {
 		$user = User::isLoggedIn(); 
 
-		$sql = "SELECT ads.id, ads.title, ads.content, ads.date_created, ads.date_expire, ads.user_id, ads.address_street, ads.address_zip, ads.address_city, ads.ad_type, ads.payment, ads.active, ads.image
-				FROM ads, user_interested_in_ad
+		$sql = "SELECT 
+				ads.id 				as id, 
+				ads.title 			as title, 
+				ads.content 		as content, 
+				ads.date_created 	as date_created, 
+				ads.date_expire 	as date_expire, 
+				ads.user_id 		as user_id, 
+				ads.address_street 	as address_street, 
+				ads.address_zip 	as address_zip, 
+				ads.address_city 	as address_city, 
+				ads.ad_type 		as ad_type, 
+				ads.payment 		as payment, 
+				ads.active 			as active, 
+				ads.image 			as image,
+				user.firstname 		as user_firstname
+				FROM ads, user_interested_in_ad, user
 				WHERE ads.id = user_interested_in_ad.ad_id
+				AND user.id = ads.user_id
 				AND user_interested_in_ad.user_id = ".$user->id." 
 				ORDER BY date_updated DESC";
 
