@@ -1,7 +1,7 @@
 <div class="container">
 	 <div class="row">
       <div class="col-md-12 col-sm-6 text-center">
-        <h3 class="section-subheading">Annonser jag visat intresse för</h3>
+        <h3 class="section-subheading">Annonser du har visat intresse för</h3>
         <div class="row row-centered">
 
        
@@ -24,12 +24,12 @@
     
         </div>
         <div class="row row-centered">
-          <h3 class="section-subheading">Mina aktiva annonser</h3>
+          <h3 class="section-subheading">Dina aktiva annonser</h3>
           {% for ad in ads %}
             {% if ad.active %}
 
               <div class="col-md-4 col-sm-12 portfolio-item">
-                <a href="/ads/?id={{ad.id}}" class="portfolio-link small-size" data-toggle="modal">
+                <a href="/ads/?id={{ad.id}}" class="portfolio-link normal-size" data-toggle="modal">
 
                   <div class="portfolio-hover">
                     <div class="portfolio-hover-content">
@@ -51,12 +51,12 @@
 
     </div>
     <div class="row row-centered">
-      <h3 class="section-subheading">Inaktiva annonser</h3>
+      <h3 class="section-subheading">Dina inaktiva annonser</h3>
           {% for ad in ads %}
             {% if not ad.active %}
 
               <div class="col-md-4 col-sm-12 portfolio-item">
-                <a href="/ads/?id={{ad.id}}" class="portfolio-link small-size" data-toggle="modal">
+                <a href="/ads/?id={{ad.id}}" class="portfolio-link normal-size" data-toggle="modal">
 
                   <div class="portfolio-hover">
                     <div class="portfolio-hover-content">
@@ -81,29 +81,6 @@
           {% endfor %}
         </div>
       </div>
-
-      <div class="col-md-4 col-sm-6">
-       <h4>Annonser jag visat intresse för</h4>
-        {% for ad in interestingAds %}
-          <div class="col-md-6 col-sm-6 portfolio-item mini-size">
-                <a href="/ads/?id={{ad.id}}" class="portfolio-link" data-toggle="modal">
-                  <div class="portfolio-hover">
-                    <div class="portfolio-hover-content">
-                      <i class="fa fa-plus fa-3x"></i>
-                    </div>
-                  </div>
-                    <img src="{{ad.image}}" class="img-responsive mini-size" alt="">
-                </a>
-                  <div class="portfolio-caption">
-                    <a href="/ads/?id={{ad.id}}">{{ad.title}}</a>
-                    <p>Publicerad: {{ad.dateCreated}}</p>
-                    <p>Bäst före: {{ad.dateExpire}}</p>
-                   
-                </div>
-                </div>
-        {% endfor %}  
-      </div>
-
     </div>
 </div>
  </section>
