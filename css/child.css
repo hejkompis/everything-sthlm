@@ -68,6 +68,11 @@ footer p a .footer-links {
     text-transform: none
 }
 
+
+.navbar-default .nav li a.text-yellow {
+    color: #fed136;
+}
+
 @media (min-width:750px) {
     .navbar-default {
     	border-radius: 0px;

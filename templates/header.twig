@@ -43,6 +43,27 @@
                         <li class="hidden">
                             <a href="#page-top"></a>
                         </li>
+                        {% if user.premium %}
+                            <li>
+                                <a class="text-yellow" href="/ads/newadform/">Ny annons</a>
+                            </li>
+
+                        {% elseif user and user.noOfAds < 3 and user.premium == false %}
+                            <li>
+                                <a class="text-yellow" href="/ads/newadform/">Ny annons</a>
+                            </li>
+                        {% elseif user and user.noOfAds >= 3 and user.premium == false %}
+                            <li>
+                                <a class="text-yellow" href="/user/premiumform">Uppgradera konto</a>
+                            </li>  
+
+                        {% else %}
+                            <li>
+                                <a class="text-yellow" href="/user/newuserform/">Skapa konto</a>
+                            </li>
+                        {% endif %}
+                        
+
                         <li>
                             <a class="" href="/ads">Annonser</a>
                         </li>
