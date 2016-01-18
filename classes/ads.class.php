@@ -487,14 +487,14 @@ class Ads {
 		$sql = 	"UPDATE ads SET
 				title 			= '$title', 
 				content 		= '$content',
-				address_street 	= '$address_street',
-				address_zip 	= '$address_zip',
-				address_city 	= '$address_city',
-				ad_type 		= '$ad_type',
+				address_street 	= '$addressStreet',
+				address_zip 	= '$addressZip',
+				address_city 	= '$addressCity',
+				ad_type 		= '$adType',
 				payment			= '$payment',
 				latitude		= '$latitude',
 				longitude		= '$longitude'
-				WHERE id = ".$ad_id;
+				WHERE id = ".$adId;
 
 		$data = DB::query($sql);
 
@@ -837,7 +837,7 @@ class Ads {
 
 		$directory = 'uploads/';
 
-		$pathinfo = pathinfo($tmp_file['name']);
+		$pathinfo = pathinfo($tmpFile['name']);
 		$name = $pathinfo['filename'];
 		$ext = $pathinfo['extension'];
 

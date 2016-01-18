@@ -5,14 +5,14 @@
           <h4>Mina aktiva annonser</h4>
           {% for ad in ads %}
             {% if ad.active %}
-              <div class="col-md-4 col-sm-6 portfolio-item">
-                <a href="/ads/?id={{ad.id}}" class="portfolio-link" data-toggle="modal">
+              <div class="col-md-4 col-sm-12 portfolio-item">
+                <a href="/ads/?id={{ad.id}}" class="portfolio-link small-size" data-toggle="modal">
                   <div class="portfolio-hover">
                     <div class="portfolio-hover-content">
                       <i class="fa fa-plus fa-3x"></i>
                     </div>
                   </div>
-                    <img src="{{ad.image}}" class="img-responsive small-size" alt="">
+                    <img src="{{ad.image}}" class="img-responsive" alt="">
                 </a>
                   <div class="portfolio-caption">
                     <a href="/ads/?id={{ad.id}}">{{ad.title}}</a>
@@ -31,8 +31,8 @@
       <h4>Inaktiva annonser</h4>
           {% for ad in ads %}
             {% if not ad.active %}
-              <div class="col-md-4 col-sm-6 portfolio-item">
-                <a href="/ads/?id={{ad.id}}" class="portfolio-link" data-toggle="modal">
+              <div class="col-md-4 col-sm-12 portfolio-item">
+                <a href="/ads/?id={{ad.id}}" class="portfolio-link small-size" data-toggle="modal">
                   <div class="portfolio-hover">
                     <div class="portfolio-hover-content">
                       <i class="fa fa-plus fa-3x"></i>
@@ -59,7 +59,7 @@
       <div class="col-md-4 col-sm-6">
        <h4>Annonser jag visat intresse för</h4>
         {% for ad in interestingAds %}
-          <div class="col-md-6 col-sm-6 portfolio-item">
+          <div class="col-md-6 col-sm-6 portfolio-item mini-size">
                 <a href="/ads/?id={{ad.id}}" class="portfolio-link" data-toggle="modal">
                   <div class="portfolio-hover">
                     <div class="portfolio-hover-content">

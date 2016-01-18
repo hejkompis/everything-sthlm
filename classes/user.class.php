@@ -76,7 +76,7 @@ class User {
 
 		$firstname 		= $cleanInput['firstname'];
 		$lastname 		= $cleanInput['lastname'];
-		$addressStreet = $cleanInput['address_street'];
+		$addressStreet  = $cleanInput['address_street'];
 		$addressZip 	= preg_replace("/[^0-9]/", "", $cleanInput['address_zip']);
 		$addressCity 	= $cleanInput['address_city'];
 		$email 			= $cleanInput['email'];
@@ -147,30 +147,7 @@ class User {
 		}
 		return $output;
 	}
-
-	public static function isLoggedIn($sendToLogin = TRUE) {
-
-		//Finns ingen användare och vi vill skicka anv. till login-form:
-		if(!isset($_SESSION["everythingSthlm"]["userId"]) && $sendToLogin) {
-			// $_SESSION['everythingSthlm']['ref_url'] = $_SERVER['HTTP_REFERRAL']
-			//$output = ['redirect_url' => '/user/loginform'];
-			header('Location: /user/loginform');
-		} 
-		//Finns ingen anv. och $sendToLogin är FALSE
-		elseif(!isset($_SESSION["everythingSthlm"]["userId"]) && !$sendToLogin) {
-			$output = FALSE;
-		} 
-		// Annars finns ett användar-id i sessionen från vilket vi skapar ett nytt användarobjekt som vi också lagrar i klassen User
-		else {
-			$id = $_SESSION["everythingSthlm"]["userId"];
-			if(!self::$user) {
-				self::$user = new User($id);
-			}
-			$output = self::$user;
-		}
-		return $output;
-	}
-
+	
 	//Skickar info så vi kan skriva ut loginformuläret.
 	public static function loginForm() {
 		$output = ['browserTitle' => 'Logga in', 'page' => 'user.loginform.twig'];
@@ -184,7 +161,7 @@ class User {
 		if($user) {
 		
 			$output = [
-			'browserTitle' 		=> 'Hej och välkommen '.$user->firstName.'!', 
+			'browserTitle' 		=> 'Hej och välkommen '.$user->firstname.'!', 
 			'page' 				=> 'user.dashboard.twig',
 			'user' 				=> $user,
 			'ads' 				=> Ads::getUserAds(),
