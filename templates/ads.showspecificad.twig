@@ -1,5 +1,5 @@
 {% set notDenied = 0 %}						 		
-{% for user in ad.interested_users %}
+{% for user in ad.interestedUsers %}
 	{% if not user.denied %}
 		{% set notDenied = notDenied + 1 %}
 	{% endif %}
@@ -70,9 +70,9 @@
 	<div class="row">
 		<div class="col-lg-12 col-lg-offset-2">
 			<div class="modal-body">
-				{% if user and ad.interested_users and notDenied > 0 %} 
+				{% if user and ad.interestedUsers and notDenied > 0 %} 
 					<h4>Användare som har visat intresse för din annons:</h4>
-					{% for user in ad.interested_users %}
+					{% for user in ad.interestedUsers %}
 						{% if not user.denied %}
 							<div class="row">
 								<div class="col-lg-8 col-lg-4">

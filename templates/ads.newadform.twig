@@ -42,8 +42,8 @@
 				<div class="form-group">
 					<label for="ad_type"><h4>Typ av annons</h4></label>
 					<select class="form-control" name="ad_type">
-						{% for ad_type in ad_types %}
-						<option value="{{ad_type.id}}">{{ad_type.name}}</option>
+						{% for adType in adTypes %}
+						<option value="{{adType.id}}">{{adType.name}}</option>
 						{% endfor %}
 					</select>
 				</div>
@@ -52,13 +52,9 @@
 					<label><h4>Taggar</h4></label><br />
 
 					{% for tag in tags %}
-
 						<div class="checkbox">
-
 							<label><input type="checkbox" name="tags[]" value="{{tag.id}}"> {{tag.name}}</label>
-
 						</div>
-
 					{% endfor %}
 				</div>
 				<div class="form-group">
@@ -67,7 +63,7 @@
 				</div>
 				<div class="form-group">
 					<label for="date_expire"><h4>Annonsen tas ner</h4></label>
-					<p id="date_expire">{{date_expire}}</p>			
+					<p id="date_expire">{{dateExpire}}</p>			
 				</div>
 				<div class="form-group">
 					<button type="submit" class="btn btn-primary">Skapa annons</button>
