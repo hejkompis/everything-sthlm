@@ -10,7 +10,7 @@
                 <a href="/ads/?id={{ad.id}}" class="portfolio-link" data-toggle="modal">
                   <div class="portfolio-hover">
                     <div class="portfolio-hover-content">
-                      <i class="fa fa-plus fa-3x"></i>
+                      
                     </div>
                   </div>
                    <div class="portfolio-caption">
@@ -24,10 +24,10 @@
     
         </div>
         <div class="row row-centered">
-          <h3 class="section-subheading">Dina aktiva annonser</h3>
+          
           {% for ad in ads %}
             {% if ad.active %}
-
+              <h3 class="section-subheading">Dina aktiva annonser</h3>
               <div class="col-md-4 col-sm-12 portfolio-item">
                 <a href="/ads/?id={{ad.id}}" class="portfolio-link normal-size" data-toggle="modal">
 
@@ -51,9 +51,9 @@
 
     </div>
     <div class="row row-centered">
-      <h3 class="section-subheading">Dina inaktiva annonser</h3>
           {% for ad in ads %}
             {% if not ad.active %}
+              <h3 class="section-subheading">Dina inaktiva annonser</h3>
 
               <div class="col-md-4 col-sm-12 portfolio-item">
                 <a href="/ads/?id={{ad.id}}" class="portfolio-link normal-size" data-toggle="modal">

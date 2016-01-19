@@ -896,7 +896,6 @@ class Ads {
 				print_r($data); exit;
 			echo '</pre>';
 		}				
-
 	}
 
 	private static function getDistance($meters){
