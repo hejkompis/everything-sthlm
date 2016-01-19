@@ -271,7 +271,14 @@ class Ads {
 	//visas de anonnser som är skapade av den inloggade användaren
 	static public function getUserAds($input = FALSE) {
 		
+		$cleanInput = DB::clean($input);
 		$user = User::checkLoginStatus(); 
+
+		if ($input) {
+			$id = $cleanInput; 
+		} else { 
+			$id = $user->id;
+		}
 
 		$sql = "SELECT 
 				ads.id 				as id, 
@@ -290,7 +297,7 @@ class Ads {
 				user.firstname 		as user_firstname
 				FROM ads, user
 				WHERE ads.user_id = user.id
-				AND user.id = ".$user->id."
+				AND user.id = ".$id."
 				ORDER BY date_updated DESC";
 
 		$dataArray = DB::query($sql);

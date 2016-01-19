@@ -246,5 +246,22 @@ class User {
 		return $output;
 	}
 
+	public static function userProfile($input) { 
+
+		$cleanInput = DB::clean($input); 
+
+		$id = $cleanInput['id'];
+		
+		//$user = self::checkLoginStatus();
+
+		$output = [
+		'browserTitle' 	=> 'Användarprofil', 
+		'page' 			=> 'user.profile.twig',
+		'ads' 			=> Ads::getUserAds($id) 
+		];
+
+		return $output; 
+	}
+
 }
 
