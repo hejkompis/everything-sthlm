@@ -246,6 +246,15 @@ class User {
 		return $output;
 	}
 
+	public static function getUser($input) {
+		$cleanInput = DB::clean($input);
+		$id = $cleanInput;
+
+		$output = new User($id);
+
+		return $output;
+	}
+
 	public static function userProfile($input) { 
 
 		$cleanInput = DB::clean($input); 
@@ -257,7 +266,9 @@ class User {
 		$output = [
 		'browserTitle' 	=> 'Användarprofil', 
 		'page' 			=> 'user.profile.twig',
-		'ads' 			=> Ads::getUserAds($id) 
+		'ads' 			=> Ads::getUserAds($id),
+		'user'			=> Self::getUser($id)
+
 		];
 
 		return $output; 
