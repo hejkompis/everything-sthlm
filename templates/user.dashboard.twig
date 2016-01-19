@@ -26,7 +26,7 @@
                     {% elseif user.noOfAds == 1 %}
                         <p class="light-gray heading-white">Du har publicerat en annons sedan du startade ditt konto.</p>
                     {% elseif user.noOfAds > 1 and user.noOfAds <= 12 %}
-                        <p class="light-gray heading white">Du har publicerat {{correctNumbers[user.noOfAds]}} annonser sedan du startade ditt konto.</p>
+                        <p class="light-gray heading-white">Du har publicerat {{correctNumbers[user.noOfAds]}} annonser sedan du startade ditt konto.</p>
                     {% elseif user.noOfAds > 11 %}
                         <p class="light-gray heading-white">Du har publicerat {{user.noOfAds}} annonser sedan du startade ditt konto.</p>
 
@@ -41,7 +41,7 @@
                             <a href="premiumform" class="btn btn-primary">Uppgradera ditt konto</a>
                         </div>
                     {% else %}
-                        <p class="light-gray">Du har använt alla dina gratisannonser. Uppgradera ditt konto till Premium för kunna lägga in fler annonser.</p>
+                        <p class="light-gray heading-white">Du har använt alla dina gratisannonser. Uppgradera ditt konto till Premium för kunna lägga in fler annonser.</p>
                         <div>
                             <a href="premiumform" class="btn btn-primary">Uppgradera ditt konto</a>
                         </div>
