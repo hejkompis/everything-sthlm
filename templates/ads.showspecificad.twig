@@ -17,7 +17,7 @@
 				</div>
 				<p>{{ad.content}}</p>
 				<img class="img-responsive" src="{{ad.image}}" alt="">
-				<ul class="list-inline">
+				<ul class="list-nobullet">
 					<li>
 						<h5>Publicerades
 							{% if ad.createdDaysAgo == 0 %} 
@@ -42,7 +42,7 @@
 							{% if ad.tags %}
 								{% for tag in tags %}
 									{% if tag.id in ad.tags %}
-										{% if not loop.first %}, {% endif %}{{tag.name}}
+										{% if not loop.first %} {% endif %}{{tag.name}}
 									{% endif %}
 								{% endfor %}
 							{% endif %}

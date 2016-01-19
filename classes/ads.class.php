@@ -891,10 +891,10 @@ class Ads {
 			return $output;
 		}
 		else {
-			echo '<strong>Något gick fel</strong><br />';
+			/*echo '<strong>Något gick fel</strong><br />';
 			echo '<pre>';
 				print_r($data); exit;
-			echo '</pre>';
+			echo '</pre>';*/
 		}				
 	}
 
