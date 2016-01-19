@@ -85,7 +85,7 @@ class User {
 		$sql = "INSERT INTO user 
 				(firstname, lastname, address_city, address_zip, address_street, email, password)
 				VALUES
-				('$firstname', '$lastname', '$address_city', '$address_zip', '$address_street', '$email', '$scrambledPassword')
+				('$firstname', '$lastname', '$addressCity', '$addressZip', '$addressStreet', '$email', '$scrambledPassword')
 		";
 
 		$data = DB::query($sql);
@@ -263,7 +263,7 @@ class User {
 		
 		//$user = self::checkLoginStatus();
 
-		$output = [
+		$output = [ 
 		'browserTitle' 	=> 'Användarprofil', 
 		'page' 			=> 'user.profile.twig',
 		'ads' 			=> Ads::getUserAds($id),
