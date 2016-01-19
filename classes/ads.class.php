@@ -899,13 +899,13 @@ class Ads {
 	}
 
 	private static function getDistance($meters){
-		$kilometers = round(($meters / 1000), 1);
+		$kilometers = round($meters / 1000);
 
 			if ($kilometers >= 10) {
-				$output = round(($meters / 10000), 1)." mil";
+				$output = round($meters / 10000)." mil";
 			} 
 
-			elseif ($kilometers > 0 && $kilometers < 10) {
+			else if ($kilometers >= 1 && $kilometers < 10) {
 				$output = $kilometers." kilometer";
 			}
 
@@ -915,3 +915,10 @@ class Ads {
 			return $output;
 	}
 }
+
+
+
+
+
+
+

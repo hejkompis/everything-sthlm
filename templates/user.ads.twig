@@ -1,11 +1,22 @@
-<div class="container">
-	 <div class="row">
-      <div class="col-md-12 col-sm-6 text-center">
-        <h3 class="section-subheading">Annonser du har visat intresse för</h3>
-        <div class="row row-centered">
+{% set activeads = 0 %}
+{% set inactiveads = 0 %}
 
-       
+{% for ad in ads %}
+
+  {% if ad.active %}
+    {% set activeads = activeads + 1 %}
+  {% else %}
+    {% set inactiveads = inactiveads + 1 %}
+  {% endif %}
+
+{% endfor %}
+<div class="container">
+  {% if interestingAds %}        
+        <div class="row row-centered">
+        <div class="col-md-12 col-sm-6 text-center">
+        <h4 class="section-subheading">Annonser du har visat intresse för</h4>
         {% for ad in interestingAds %}
+
           <div class="col-md-3 col-sm-6 portfolio-item col-centered">
                 <a href="/ads/?id={{ad.id}}" class="portfolio-link" data-toggle="modal">
                   <div class="portfolio-hover">
@@ -21,13 +32,15 @@
                 </div>
               </div>
         {% endfor %}  
-    
         </div>
+      </div>
+      {% endif %}
+
+        {% if activeads > 0 %}
         <div class="row row-centered">
-          
+          <h4 class="section-subheading">Dina aktiva annonser</h4>
           {% for ad in ads %}
-            {% if ad.active %}
-              <h3 class="section-subheading">Dina aktiva annonser</h3>
+          {% if ad.active %}
               <div class="col-md-4 col-sm-12 portfolio-item">
                 <a href="/ads/?id={{ad.id}}" class="portfolio-link normal-size" data-toggle="modal">
 
@@ -44,17 +57,17 @@
                     <p>Bäst före: {{ad.dateExpire}}</p>
   						      <a href="/ads/editadform/?id={{ad.id}}" class="btn btn-primary btn-sm">Redigera</a> <a href="/ads/inactivatead/?id={{ad.id}}" class="btn btn-primary btn-sm">Inaktivera</a>
                   </div>
-                  
                 </div>
             {% endif %}
 				  {% endfor %}
-
     </div>
+{% endif %}
+
+{% if inactiveads > 0 %}
     <div class="row row-centered">
+      <h4 class="section-subheading">Dina inaktiva annonser</h4>
           {% for ad in ads %}
             {% if not ad.active %}
-              <h3 class="section-subheading">Dina inaktiva annonser</h3>
-
               <div class="col-md-4 col-sm-12 portfolio-item">
                 <a href="/ads/?id={{ad.id}}" class="portfolio-link normal-size" data-toggle="modal">
 
@@ -80,6 +93,8 @@
             {% endif %}
           {% endfor %}
         </div>
+{% endif %}
+
       </div>
     </div>
 </div>
