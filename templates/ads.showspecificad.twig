@@ -27,7 +27,11 @@
 							{% else %}
 								för {{ad.createdDaysAgo}} dagar sedan
 							{% endif %}
-							av <a href="/user/userprofile?id={{ad.userId}}">{{ad.userFirstname}}</a>
+							av 
+							{% if user.id %}
+							<a href="/user/userprofile?id={{ad.userId}}">{{ad.userFirstname}}</a>. 
+							{% else %} {{ad.userFirstname}}	
+							{% endif %}
 						</h5>
 					</li>
 					<li>

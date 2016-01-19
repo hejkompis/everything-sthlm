@@ -1,8 +1,19 @@
+  {% set lastletter = FALSE %}
+  {% if user.firstname|last == 's' %}
+    {% set lastletter = TRUE %}
+  {% endif %}
+
    <section id="portfolio" class="bg-darkest-gray">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 text-center">
-                    <h2 class="section-heading heading-white">Alla {{user.firstname}} annonser</h2>
+                    {% if lastletter %}
+                    <h2 class="section-heading heading-white">Alla 
+                    {{user.firstname}} annonser</h2>
+                    {% else %}
+                    <h2 class="section-heading heading-white">Alla 
+                    {{user.firstname}}s annonser</h2>
+                    {% endif %}
                  </div>
             </div>
 
