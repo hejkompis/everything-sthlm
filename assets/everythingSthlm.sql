@@ -27,16 +27,17 @@ CREATE TABLE `ads` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 INSERT INTO `ads` (`id`, `title`, `content`, `address_street`, `address_zip`, `address_city`, `date_created`, `date_updated`, `date_expire`, `user_id`, `ad_type`, `payment`, `active`, `image`, `latitude`, `longitude`) VALUES
-(3,	'Test ad 3',	'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ornare lacinia sapien sed congue. Suspendisse dignissim eros non nisl rhoncus convallis. Sed consequat venenatis lobortis. Sed luctus auctor nisl ut posuere. Mauris tincidunt maximus risus, ac dignissim ipsum dignissim eu. Integer pharetra leo nec luctus cursus. Nunc ut lobortis nulla, ac pulvinar massa. Phasellus sit amet arcu a metus accumsan egestas id non ante. Aenean at massa dapibus, convallis quam in, cursus metus. Nunc venenatis ante eu congue porta. Praesent ac velit a massa viverra sollicitudin. Sed accumsan dolor sed turpis tincidunt facilisis. Phasellus ut rutrum tortor, quis volutpat odio. Donec porta purus nunc, in faucibus sem hendrerit eu.',	'',	0,	'',	0,	0,	0,	2,	0,	'',	1,	'',	'',	''),
-(6,	'Weekend trading',	'Nu tar jag helg. JorÃ¥satte.',	'Pelargatan 4',	12147,	'Johanneshov',	0,	0,	1454630400,	1,	2,	'GÃ¤rna en chokladkaka.',	1,	'',	'59.2953531',	'18.0866078'),
-(7,	'Hannah Ã¤r smart',	'She apparently grew a brain at last',	'',	0,	'',	0,	0,	1452902400,	1,	1,	'Amanda',	0,	'',	'',	''),
-(8,	'Kaffekopp sökes',	'Jag är kaffesugen och behöver mer koffein. Helst för en halvtimme sedan. ',	'Båtvägen 1',	68432,	'Munkfors',	0,	1453051459,	1453656259,	1,	1,	'',	1,	'71ETlOSCNlL._SL1500__1453053219.jpg',	'59.820034',	'13.5178342'),
-(9,	'Ã„nnu en annons',	'hej hej hej hej hej',	'Pelargatan 4',	68432,	'Munkfors',	0,	0,	1455148800,	1,	0,	'',	1,	'',	'',	''),
-(10,	'hejhej',	'hejehjeheejjej jkjkj',	'Pelargatan 4',	68432,	'Munkfors',	0,	0,	1455235200,	1,	0,	'',	0,	'',	'',	''),
-(12,	'testar dropdown',	'hej hej hello',	'Pelargatan 4',	68432,	'Munkfors',	1451992722,	0,	1452556800,	1,	0,	'',	0,	'',	'',	''),
-(14,	'testar igen',	'hej hej hej hej hej hej hej hej hej hej hej hej hej hej hej hej hej hej hej hej hej hej hej hej hej hej hej hej och sÃ¥ vidare',	'Pelargatan 4',	68432,	'Munkfors',	1452075801,	0,	1452556800,	1,	0,	'',	0,	'',	'',	''),
-(15,	'Litet test igen',	'Teeest test test Teeest test test Teeest test test Teeest test test Teeest test test Teeest test test Teeest test test Teeest test test Teeest test test Teeest test test Teeest test test .',	'Pelargatan 4',	68432,	'Munkfors',	1452092204,	0,	1452643200,	1,	3,	'',	0,	'',	'',	''),
-(17,	'Kaffe bytes',	'hjhjs ashdjashdjasd askasjdhjsad \r\nhej hej',	'PingstvÃ¤gen 34',	12636,	'HÃ¤gersten',	1452250035,	0,	1453248000,	3,	3,	'Te',	1,	'',	'',	'');
+(18,	'Sparhund',	'Jag lånar ut min Sparhund då jag åker på Semester under en längre tid',	'Varvsgatan 21',	11729,	'Stockholm',	1453200156,	1453200156,	1453804956,	8,	0,	'Va bara försiktig med Hunden',	1,	'sparhund_amanda_1453200156.jpg',	'59.3172717',	'18.040543'),
+(19,	'Prydnadsgiraff',	'Jag byter gärna mina prydnadsgiraffer mot någon annan trevlig prydnad.',	'Varvsgatan 21',	11729,	'Stockholm',	1453200335,	1453200335,	1453805135,	8,	3,	'Trevlig prydnad',	1,	'giraff_1453200335.jpg',	'59.3172717',	'18.040543'),
+(20,	'Ananas',	'Ananas bortskänkes. Köpte ett stort parti och kommer inte hinna äta allt innan det ruttnar.',	'Borgargatan 8',	11734,	'Stockholm',	1453202585,	1453202585,	1453807385,	9,	0,	'Kramar',	1,	'hanna_annanas_1453202585.jpg',	'59.3173177',	'18.0343781'),
+(21,	'Lysande Jordglob',	'Lysande jordglob bytes mot annan lampa. Fick två stycken likadan i julklapp',	'Borgargatan 8',	11734,	'Stockholm',	1453202890,	1453202890,	1453807690,	9,	0,	'Golvlampa',	1,	'glob_1453202890.jpg',	'59.3173177',	'18.0343781'),
+(22,	'Döende Växt',	'Döende växt lånas ut till någon med gröna fingrar. Jag vet inte vad jag ska göra, vill inte att den ska dö!',	'Pelargatan 4',	12147,	'Johanneshov',	1453202996,	1453202996,	1453807796,	12,	0,	'Betalar den ersättning som efterfrågas',	1,	'per_växt_1453202996.jpg',	'59.2953531',	'18.0866078'),
+(24,	'Snowjogger',	'Jag efterlyser min andra Snowjogger!  Kom bor runt Stureplan förra helgen. Snälla hjälp!',	'Pelargatan 4',	12147,	'Johanneshov',	1453203076,	1453203076,	1453807876,	12,	0,	'Hittelön utbetalas',	1,	'per_snowjogger_1453203076.jpg',	'59.2953531',	'18.0866078'),
+(25,	'Pizzakartong',	'Orginal Pizzakartong från 1994 bortskänkes till fanatisk pizzakartongsamlare',	'Pelargatan 4',	12147,	'Johanneshov',	1453203242,	1453203242,	1453808042,	12,	0,	'Pizzakartong från 2001',	1,	'per_pizza_1453203242.jpg',	'59.2953531',	'18.0866078'),
+(26,	'Random Poster',	'Random poster bytes mot annan radom pposter i grön/blå nyans.',	'Pingstvägen 34',	12636,	'Hägersten',	1453203404,	1453203404,	1453808204,	11,	0,	'Annan random poster',	1,	'sara_poster_1453203404.jpg',	'59.3017509',	'17.9973865'),
+(27,	'Kasse full med mat',	'Icakasse full med mat bortskänks till en hungrig',	'Pingstvägen 34',	12636,	'Hägersten',	1453203467,	1453203467,	1453808267,	11,	4,	'En kram',	1,	'sara_ica_1453203468.jpg',	'59.3017509',	'17.9973865'),
+(28,	'Surfbräda',	'Surfbräda bytes mot strykbräda då jag nyligen flyttat hem till Sverige från Bali och inte kommer ha så mycket tid till surfen',	'Komunalvägen 14',	14161,	'Huddinge',	1453203575,	1453203575,	1453808375,	10,	3,	'Strykbräda',	1,	'thomas_surf_1453203575.jpg',	'',	''),
+(29,	'Bollar till ljusslinga',	'Efterlyser bollar till min ljusslinga. Gärna i linkande kulörer.',	'Komunalvägen 14',	14161,	'Huddinge',	1453203715,	1453203715,	1453808515,	10,	0,	'Pengar',	1,	'ljusslinga_bollar_1453203715.jpg',	'',	'');
 
 DROP TABLE IF EXISTS `ad_has_tag`;
 CREATE TABLE `ad_has_tag` (
@@ -55,7 +56,21 @@ INSERT INTO `ad_has_tag` (`ad_id`, `tag_id`) VALUES
 (18,	5),
 (8,	6),
 (8,	3),
-(8,	5);
+(8,	5),
+(18,	5),
+(19,	3),
+(20,	2),
+(21,	6),
+(22,	2),
+(23,	3),
+(23,	1),
+(24,	3),
+(24,	1),
+(25,	4),
+(26,	3),
+(27,	5),
+(28,	1),
+(29,	5);
 
 DROP TABLE IF EXISTS `ad_types`;
 CREATE TABLE `ad_types` (
@@ -117,12 +132,11 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 INSERT INTO `user` (`id`, `firstname`, `lastname`, `address_city`, `address_street`, `address_zip`, `email`, `phone`, `password`, `premium`) VALUES
-(1,	'Per',	'i Hagen',	'Johanneshov',	'Pelargatan 4',	12147,	'nacho@taco.com',	0,	'58ecff21ea6428c821b117958339a14fcfe63320',	0),
-(3,	'Sara',	'Holm',	'HÃ¤gersten',	'PingstvÃ¤gen 34',	12636,	'saraholm82@yahoo.se',	0,	'831a86811ae88b637ac51e8769e4d2b52e537405',	0),
-(4,	'',	'',	'',	'',	0,	'',	0,	'c8d5a74c897c8d7406c1c3c01c657b5c12515b52',	0),
-(5,	'Thomas',	'Kjellberg',	'Jönköping',	'Skuggaliden 1',	55312,	'thomas.kjellberg@gmail.com',	0,	'831a86811ae88b637ac51e8769e4d2b52e537405',	0),
-(6,	'Hannahnas',	'Bananas',	'Stockholm',	'Borgargatan 8',	11734,	'hannahnas@bananas.com',	0,	'831a86811ae88b637ac51e8769e4d2b52e537405',	0),
-(7,	'Bajs-Mandish',	'Kokobeng',	'Skarpis',	'Cannabisvägen 14',	66666,	'bajs-mandish.cannabisforever@freespirit.com',	0,	'831a86811ae88b637ac51e8769e4d2b52e537405',	0);
+(8,	'Amanda',	'Bouveng',	'Stockholm',	'Varvsgatan 21',	11729,	'amanda@email.com',	0,	'3eecd40389b27dbe4e3217a306a7f38d4174794b',	0),
+(9,	'Hannah',	'Kansell',	'Stockholm',	'Borgargatan 8',	11734,	'hannah@email.com',	0,	'7af9d127e3927984301d8dfba6db7bee9e142523',	0),
+(10,	'Thomas',	'Kjellberg',	'Huddinge',	'Kommunalvägen 14',	14161,	'thomas@email.com',	0,	'5d61992a3897940d030b93cca019c4128f9fc310',	0),
+(11,	'Sara',	'Holm',	'Hägersten',	'Pingstvägen 34',	12636,	'sara@email.com',	0,	'fb8dd15f2d73264367e6f04f6ffaf121b0ba90dd',	0),
+(12,	'Per',	'Olsson',	'Johanneshov',	'Pelargatan 4',	12147,	'per@email.com',	0,	'dd0f3163b0cd70e0e3fc4d49fa9e27a479663abf',	0);
 
 DROP TABLE IF EXISTS `user_has_created_ads`;
 CREATE TABLE `user_has_created_ads` (
@@ -132,7 +146,16 @@ CREATE TABLE `user_has_created_ads` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 INSERT INTO `user_has_created_ads` (`user_id`, `ad_id`, `date`) VALUES
-(1,	17,	0);
+(8,	18,	1453200156),
+(8,	19,	1453200335),
+(9,	20,	1453202585),
+(9,	21,	1453202890),
+(12,	22,	1453202996),
+(12,	25,	1453203242),
+(11,	26,	1453203404),
+(11,	27,	1453203467),
+(10,	28,	1453203575),
+(10,	29,	1453203715);
 
 DROP TABLE IF EXISTS `user_interested_in_ad`;
 CREATE TABLE `user_interested_in_ad` (
@@ -143,11 +166,9 @@ CREATE TABLE `user_interested_in_ad` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 INSERT INTO `user_interested_in_ad` (`ad_id`, `user_id`, `date`, `denied`) VALUES
-(7,	1,	1452781023,	0),
-(6,	1,	1452782475,	0),
-(6,	3,	1452782475,	0),
-(6,	5,	1452782475,	0),
-(6,	7,	1452782475,	0),
-(6,	6,	1452782475,	0);
+(22,	10,	1453203756,	0),
+(27,	10,	1453203778,	0),
+(28,	11,	1453203809,	0),
+(22,	11,	1453203827,	0);
 
--- 2016-01-19 09:49:57
+-- 2016-01-19 12:31:03
