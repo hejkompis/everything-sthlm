@@ -44,6 +44,7 @@
 		static private function latestUploadedAd() {
 			$sql = "SELECT title as title, id
 					FROM ads
+					WHERE active = 1
 					ORDER by date_created DESC
 					LIMIT 1
 			";

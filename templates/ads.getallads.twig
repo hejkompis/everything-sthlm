@@ -73,7 +73,7 @@
 			</div>
 		</div>
 		<div class="row">
-    	 	{% for ad in ads %}
+    	 	{% for ad in ads if ad.active %}
     	 		<div class="col-md-4 col-sm-6 portfolio-item">
             		<a href="/ads/?id={{ad.id}}" class="portfolio-link normal-size" data-toggle="modal">
                     	<div class="portfolio-hover">
