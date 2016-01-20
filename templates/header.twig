@@ -68,7 +68,7 @@
                             <a class="" href="/ads">Annonser</a>
                         </li>
                         <li>
-                            <a class="page-scroll" href="/user">Konto</a>
+                            <a class="page-scroll" href="/user">Konto {% if newInterests %} <span class="badge">{{ newInterests|length }}</span>{% endif %}</a>
                         </li>
                         <li>
                             <a class="page-scroll" href="#">Premium</a>
