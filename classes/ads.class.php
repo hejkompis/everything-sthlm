@@ -269,6 +269,7 @@ class Ads {
 
 		}
 
+
 		$output = [
 		'ad' 			=> $ad,
 		'page' 			=> 'ads.showspecificad.twig',
@@ -688,13 +689,6 @@ class Ads {
 		if ($user) {
 
 			$userId = $user->id;
-
-			if (is_array($input)) {
-				$cleanAdId = DB::clean($input['id']);
-			}
-			else {
-				$cleanAdId 	= DB::clean($input);
-			}
 
 			// Kolla så att inte den som gör intresseanmälan är den som gjort annonsen
 			$sql = "SELECT user_id FROM ads WHERE id = ".$cleanAdId;
