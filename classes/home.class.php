@@ -57,7 +57,10 @@
 
 		static public function premiumPage () {
 
+			$user = User::checkLoginStatus(false);
+
 			$output = [
+			'user' => $user,
 			'page' => 'premium.twig', 
 			'browserTitle' => 'Bli premiumanvändare'
 			];

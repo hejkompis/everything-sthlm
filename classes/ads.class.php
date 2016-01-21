@@ -252,18 +252,22 @@ class Ads {
 
 	//Skickar getSpecificAd return till Twig 
 	public static function showSpecificAd($input) {
+		
 		$user = User::checkLoginStatus(FALSE);
 		$ad = self::getSpecificAd($input);
 
-		$sql = "UPDATE user_interested_in_ad 
-				INNER JOIN ads
-				ON user_interested_in_ad.ad_id = ads.id
-				SET new = '0'
-				WHERE user_interested_in_ad.ad_id = ".$ad->id."
-				AND user_interested_in_ad.user_id != ".$user->id."
-				AND ads.user_id = ".$user->id;
+		if($user) {
 
-		DB::query($sql);
+			$sql = "UPDATE user_interested_in_ad 
+					INNER JOIN ads
+					ON user_interested_in_ad.ad_id = ads.id
+					SET new = '0'
+					WHERE user_interested_in_ad.ad_id = ".$ad->id."
+					AND ads.user_id = ".$user->id;
+
+			DB::query($sql);
+
+		}
 
 		$output = [
 		'ad' 			=> $ad,
