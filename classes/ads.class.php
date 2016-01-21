@@ -915,7 +915,7 @@ class Ads {
 	}
 
 	private static function getDistance($meters){
-		$kilometers = round($meters / 1000);
+		$kilometers = round(($meters / 1000),1);
 
 			if ($kilometers >= 10) {
 				$output = round($meters / 10000)." mil";
