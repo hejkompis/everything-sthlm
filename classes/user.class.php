@@ -11,7 +11,8 @@ class User {
 			$latitude, 
 			$longitude,
 			$premium = FALSE,
-			$noOfAds;
+			$noOfAds,
+			$interests;
 
 	private static $user = FALSE;
 
@@ -40,7 +41,14 @@ class User {
 		if($data['premium'] == 1) {
 			$this->premium = TRUE;
 		}
-	
+
+		$sql = "SELECT count(user_id) AS amount
+				FROM user_interested_in_ad
+				WHERE user_id = ".$this->id;
+
+		$data = DB::query($sql, TRUE);
+
+		$this->interests = $data['amount'];
 	}
 
 	//Om man inte har angett en metod i URL körs fallback-metoden.

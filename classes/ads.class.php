@@ -255,15 +255,17 @@ class Ads {
 		$user = User::checkLoginStatus(FALSE);
 		$ad = self::getSpecificAd($input);
 
-		$sql = "UPDATE user_interested_in_ad 
-				INNER JOIN ads
-				ON user_interested_in_ad.ad_id = ads.id
-				SET new = '0'
-				WHERE user_interested_in_ad.ad_id = ".$ad->id."
-				AND user_interested_in_ad.user_id != ".$user->id."
-				AND ads.user_id = ".$user->id;
+		if ($user) {
+			$sql = "UPDATE user_interested_in_ad 
+			INNER JOIN ads
+			ON user_interested_in_ad.ad_id = ads.id
+			SET new = '0'
+			WHERE user_interested_in_ad.ad_id = ".$ad->id."
+			AND user_interested_in_ad.user_id != ".$user->id."
+			AND ads.user_id = ".$user->id;
 
-		DB::query($sql);
+			DB::query($sql);
+		}		
 
 		$output = [
 		'ad' 			=> $ad,
@@ -684,13 +686,6 @@ class Ads {
 		if ($user) {
 
 			$userId = $user->id;
-
-			if (is_array($input)) {
-				$cleanAdId = DB::clean($input['id']);
-			}
-			else {
-				$cleanAdId 	= DB::clean($input);
-			}
 
 			// Kolla så att inte den som gör intresseanmälan är den som gjort annonsen
 			$sql = "SELECT user_id FROM ads WHERE id = ".$cleanAdId;
