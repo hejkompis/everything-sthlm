@@ -83,7 +83,7 @@
                                 <a class="page-scroll" href="/user/edituserform">Uppdatera profil</a>
                             </li>
                             <li class="dropdown hidden-xs">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true"><b>Ditt konto</b> <span class="caret"></span></a>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true"><b>Konto</b> {% if newInterests %} <span class="badge">{{ newInterests|length }}</span>{% endif %}<span class="caret"></span></a>
                                 <ul id="user-dp" class="dropdown-menu">
                                     <li>
                                         <a class="page-scroll" href="/user/" style="color: #222222;">Din sida</a>

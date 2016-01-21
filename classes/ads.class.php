@@ -719,9 +719,9 @@ class Ads {
 				else {
 
 					$sql = "INSERT INTO user_interested_in_ad
-							(ad_id, user_id, date)
+							(ad_id, user_id, date, new)
 							VALUES
-							($cleanAdId, $userId, $date)";
+							($cleanAdId, $userId, $date, 1)";
 
 					$data = DB::query($sql);
 					
