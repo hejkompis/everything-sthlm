@@ -675,8 +675,6 @@ class Ads {
 
 	public static function setUserInterest($input){
 
-		// Skickar med FALSE för att inte skicka användaren till 
-		// inloggningsformuläret
 		if (is_array($input)) {
 			$cleanAdId = DB::clean($input['id']);
 		}
@@ -714,7 +712,6 @@ class Ads {
 							AND user_id = $userId";
 
 					$data = DB::query($sql);
-					$output = ['redirect_url'=>'/ads/?id='.$cleanAdId];
 
 				} 
 
@@ -727,20 +724,14 @@ class Ads {
 							($cleanAdId, $userId, $date)";
 
 					$data = DB::query($sql);
-					$output = ['redirect_url'=>'/ads/?id='.$cleanAdId];
 					
 				}
 
 			}
 
-			else {
-
-				$output = $output = ['redirect_url'=>'/ads/?id='.$cleanAdId];
-				
-			}
-
 		}
 
+		$output = ['redirect_url'=>'/ads/?id='.$cleanAdId];
 		return $output;
 
 	}
