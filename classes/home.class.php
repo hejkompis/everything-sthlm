@@ -54,4 +54,14 @@
 			return $output;
 		}
 
+		static public function premiumPage () {
+
+			$output = [
+			'page' => 'premium.twig', 
+			'browserTitle' => 'Bli premiumanvändare'
+			];
+
+			return $output;
+		}
+
 	}
