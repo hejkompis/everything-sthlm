@@ -7,9 +7,9 @@ class User {
 			$lastname, 
 			$email, 
 			$phone, 
-			$addressStreet, 
-			$addressZip, 
-			$addressCity,
+			$address, 
+			$latitude, 
+			$longitude,
 			$premium = FALSE,
 			$noOfAds;
 
@@ -18,7 +18,7 @@ class User {
 	function __construct($id){
 		//$cleadId tvättas via clean() i DB-klassen. 
 		$cleanId = DB::clean($id);
-		$sql = "SELECT firstname, lastname, email, phone, address_street, address_zip, address_city, premium
+		$sql = "SELECT firstname, lastname, email, phone, address, latitude, longitude, premium
 				FROM user
 				WHERE id = ".$cleanId;
 
@@ -32,9 +32,9 @@ class User {
 		$this->lastname 		= $data["lastname"];
 		$this->email 			= $data["email"];
 		$this->phone 			= $data["phone"];
-		$this->addressStreet 	= $data["address_street"];
-		$this->addressZip 		= $data["address_zip"];
-		$this->addressCity 		= $data["address_city"];
+		$this->address 		 	= $data["address"];
+		$this->latitude 		= $data["latitude"];
+		$this->longitude 		= $data["longitude"];
 		$this->noOfAds			= self::countUserAds($this->id);
 
 		if($data['premium'] == 1) {
@@ -70,22 +70,37 @@ class User {
 		return $output;
 	}
 
+	//Skriver ut formulär för att skapa ny användare
+	public static function editUserForm() {
+		
+		$user = self::checkLoginStatus(false);
+
+		$output = [
+		'user' => $user,
+		'browserTitle' => 'Redigera användare', 
+		'page' => 'user.edituserform.twig'
+		];
+
+		return $output;
+	}
+
 	//$input kommer från POST-fälten i user.newuserform.twig.
 	public static function saveNewUser($input) {
+		
 		$cleanInput = DB::clean($input);
 
 		$firstname 		= $cleanInput['firstname'];
 		$lastname 		= $cleanInput['lastname'];
-		$addressStreet  = $cleanInput['address_street'];
-		$addressZip 	= preg_replace("/[^0-9]/", "", $cleanInput['address_zip']);
-		$addressCity 	= $cleanInput['address_city'];
+		$address 		= $cleanInput['address'];
+		$latitude 	 	= $cleanInput['latitude'];
+		$longitude 	 	= $cleanInput['longitude'];
 		$email 			= $cleanInput['email'];
 		$scrambledPassword = hash_hmac("sha1", $cleanInput["password"], "dont put baby in the corner");
 		
 		$sql = "INSERT INTO user 
-				(firstname, lastname, address_city, address_zip, address_street, email, password)
+				(firstname, lastname, address, latitude, longitude, email, password)
 				VALUES
-				('$firstname', '$lastname', '$addressCity', '$addressZip', '$addressStreet', '$email', '$scrambledPassword')
+				('$firstname', '$lastname', '$address', '$latitude', '$longitude', '$email', '$scrambledPassword')
 		";
 
 		$data = DB::query($sql);
@@ -93,11 +108,54 @@ class User {
 		//Om vi har lyckats skapa en användare (lägga in denna i databasen) returneras $data som TRUE och 
 		//användaren skickas till /user annars visas databaserror. 
 		if($data) {
-			header('Location: //'.ROOT.'/user');	
+			$output	= ['redirect_url' => '/user'];
 		}
+
+		return $output;
+
+	}
+
+	public static function updateUser($input) { 
+		//Kollar först om användaren är inloggad.
+		$user = User::checkLoginStatus();
+		
+		$cleanInput = DB::clean($input);
+
+		$firstname 		= $cleanInput['firstname'];
+		$lastname 		= $cleanInput['lastname'];
+		$address 		= $cleanInput['address'];
+		$latitude 	 	= $cleanInput['latitude'];
+		$longitude 	 	= $cleanInput['longitude'];
+		$email 			= $cleanInput['email'];
+
+		// samma som ovan
+		// $tags = isset($cleanInput['tags']) ? $cleanInput['tags'] : [];
+
+		$sql = 	"UPDATE user SET
+				firstname 	= '$firstname', 
+				lastname 	= '$lastname',
+				address 	= '$address',
+				latitude	= '$latitude',
+				longitude	= '$longitude',
+				email		= '$email'
+				WHERE id = ".$user->id;
+
+		$data = DB::query($sql);
+
+		if($data) {
+
+			$output = ['redirect_url' => '/user'];
+				
+		} 
+
+		return $output;
 	}
 
 	public static function login($input){
+
+		if(!isset($_SESSION['everythingSthlm']['ref_url'])) {
+			$_SESSION['everythingSthlm']['ref_url'] = $_SERVER['HTTP_REFERER'];
+		}
 
 		$cleanInput = DB::clean($input);
 		$scrambledPassword = hash_hmac("sha1", $cleanInput["password"], "dont put baby in the corner");
@@ -113,13 +171,18 @@ class User {
 			$_SESSION["everythingSthlm"]["userId"] = $data["id"];
 			//Skapa en instans av User-klassen. Constructorn körs och hämtar info om användaren. 
 			self::$user = new User($data["id"]);
+
+			$output = ['redirect_url' => $_SESSION['everythingSthlm']['ref_url']];
+			unset($_SESSION['everythingSthlm']['ref_url']);
+			
 		}
 
-		//Detta görs för att vi måste ta vägen någonstans när vi har loggat in.
-		// IF isset $_SESSION['everythingSthlm']['ref_url']
-		// $output = ['redirect_url' => $_SESSION['everythingSthlm']['...']];
-		// ELSE 
-		header('Location: //'.ROOT.'/user'); 
+		else {
+			$output = ['redirect_url' => '/user/loginform/'];
+		}
+
+		return $output;
+
 	}
 
 	//Kollar om användaren är inloggad eller inte. Om man är inloggad finns möjlighet att plocka ut 
@@ -129,7 +192,7 @@ class User {
 
 		//Finns ingen användare och vi vill skicka anv. till login-form:
 		if(!isset($_SESSION["everythingSthlm"]["userId"]) && $sendToLogin) {
-			// $_SESSION['everythingSthlm']['ref_url'] = $_SERVER['HTTP_REFERRAL']
+			$_SESSION['everythingSthlm']['ref_url'] = $_SERVER['REQUEST_URI'];
 			//$output = ['redirect_url' => '/user/loginform'];
 			header('Location: /user/loginform');
 		} 
@@ -150,6 +213,10 @@ class User {
 	
 	//Skickar info så vi kan skriva ut loginformuläret.
 	public static function loginForm() {
+		
+		if(!isset($_SESSION['everythingSthlm']['ref_url'])) {
+			$_SESSION['everythingSthlm']['ref_url'] = $_SERVER['HTTP_REFERER'];
+		}
 		$output = ['browserTitle' => 'Logga in', 'page' => 'user.loginform.twig'];
 
 		return $output;
@@ -185,7 +252,7 @@ class User {
  		session_destroy();
  		self::$user = FALSE;
 
- 		header('Location: //'.ROOT); 
+ 		return ['redirect_url' => '//'.ROOT];
  	}
 
  	private static function countUserAds($userId) {
@@ -237,9 +304,7 @@ class User {
 		self::checkLoginStatus(false);
 
 		if(self::$user) {
-			$output['street'] = self::$user->addressStreet;
-			$output['zip'] = self::$user->addressZip;
-			$output['city'] = self::$user->addressCity;
+			$output['address'] = self::$user->address;
 		}
 		else {
 			$output = false;

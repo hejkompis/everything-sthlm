@@ -189,3 +189,9 @@ footer p a .footer-links {
      list-style: none;
      margin-left: -40px;
 }
+
+#gmap {
+    width:100% !important;
+    height:300px !important;
+    background-color:#ffcc00;
+}
