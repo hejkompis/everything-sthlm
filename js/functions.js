@@ -16,19 +16,32 @@ $(document).ready(function() {
 
 	$(function() {
 
+		if($('#distance').val() != '') {
+			val = $('#distance').val();
+		}
+		else {
+			val = 10000;
+		}
+
 		$( "#search-distance" ).slider({
 			range: "min",
 			min: 100,
 			max: 10000,
-			value: 10000,
+			value: val,
 			slide: function( event, ui ) {
-				$( "#search-distance-input" ).val( ui.value );
+				if(ui.value == 10000) {
+					new_val = '';
+				}
+				else {
+					new_val = ui.value
+				}
+				$( "#distance" ).val( new_val );
 				distance = distancePrinter(ui.value);
 				$( "#search-distance-text" ).text( distance );
 			}
 		});
 
-		$( "#search-distance-input" ).val( $( "#search-distance" ).slider( "value" ) );
+		//$( "#search-distance-input" ).val( $( "#search-distance" ).slider( "value" ) );
 
 	});
 

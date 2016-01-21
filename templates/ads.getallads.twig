@@ -15,12 +15,24 @@
 						<label for="search"><h4>Sök på fritext</h4></label>
 						<input type="text" id="search" class="form-control" name="search" value="{{search}}">
 					</div>
-					<div class="form-group">
-						<label><h4>Avstånd</h4></label><br />
-						<div id="search-distance"></div>
-						<input type="hidden" id="search-distance-input" name="search-distance-input">
-						<p id="search-distance-text">Ingen begränsning</p>
-					</div>
+					{% if user %}
+						<div class="form-group">
+							<label><h4>Avstånd<span class="hidden-xs"> - Baseras på din angivna adress</span></h4></label><br />
+							<div id="search-distance"></div>
+							<input type="hidden" id="distance" name="distance" value="{{distance}}">
+							<p id="search-distance-text">
+								{% if distance == 10000 %}
+									Ingen begränsning
+								{% elseif not distance %}
+									Ingen begränsning
+								{% elseif distance < 10000 and distance > 999 %}
+									{{ (distance/1000)|number_format(1,'.') }} kilometer
+								{% else %}
+									{{distance}} meter
+								{% endif %}
+							</p>
+						</div>
+					{% endif %}
 					<div class="form-group">
 						<label><h4>Taggar</h4></label><br />
 						{% for tag in tags %}

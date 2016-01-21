@@ -169,7 +169,7 @@ class Ads {
 			$sqlAdType = "";
 		}
 
-		if(isset($input['distance'])) {
+		if(isset($input['distance']) && $input['distance'] != '') {
 			$searchDistance = DB::clean($input['distance']);
 			$sqlSearchDistance = " HAVING distance <= $searchDistance ";
 		} else {
@@ -930,6 +930,7 @@ class Ads {
 			}
 			return $output;
 	}
+
 }
 
 
