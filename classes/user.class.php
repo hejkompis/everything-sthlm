@@ -164,6 +164,12 @@ class User {
 		if(!isset($_SESSION['everythingSthlm']['ref_url'])) {
 			$_SESSION['everythingSthlm']['ref_url'] = $_SERVER['HTTP_REFERER'];
 		}
+		elseif(isset($input['redirect_here'])) {
+			$_SESSION['everythingSthlm']['ref_url'] = $_SERVER['REQUEST_URI'];
+		}
+		elseif($_SESSION['everythingSthlm']['ref_url'] = '/user/loginform/') {
+			$_SESSION['everythingSthlm']['ref_url'] = '/user/';
+		}
 
 		$cleanInput = DB::clean($input);
 		$scrambledPassword = hash_hmac("sha1", $cleanInput["password"], "dont put baby in the corner");
@@ -200,7 +206,7 @@ class User {
 
 		//Finns ingen användare och vi vill skicka anv. till login-form:
 		if(!isset($_SESSION["everythingSthlm"]["userId"]) && $sendToLogin) {
-			$_SESSION['everythingSthlm']['ref_url'] = $_SERVER['HTTP_REFERER'];
+			$_SESSION['everythingSthlm']['ref_url'] = $_SERVER['REQUEST_URI'];
 			//$output = ['redirect_url' => '/user/loginform'];
 			header('Location: /user/loginform');
 		} 
@@ -222,9 +228,6 @@ class User {
 	//Skickar info så vi kan skriva ut loginformuläret.
 	public static function loginForm() {
 		
-		if(!isset($_SESSION['everythingSthlm']['ref_url'])) {
-			$_SESSION['everythingSthlm']['ref_url'] = $_SERVER['HTTP_REFERER'];
-		}
 		$output = ['browserTitle' => 'Logga in', 'page' => 'user.loginform.twig'];
 
 		return $output;
@@ -260,7 +263,8 @@ class User {
  		session_destroy();
  		self::$user = FALSE;
 
- 		return ['redirect_url' => '//'.ROOT];
+ 		$output = ['redirect_url' => '//'.ROOT];
+ 		return $output;
  	}
 
  	private static function countUserAds($userId) {

@@ -165,5 +165,3 @@
     // behöver vi ytterligare twig-filer så får metoden säga till om det, och de hämtas in via $twig_data
     $page = new Twig($twig_data);
     echo $page->render('index.twig');
-
-    unset($_SESSION['everythingSthlm']['ref_url']);
