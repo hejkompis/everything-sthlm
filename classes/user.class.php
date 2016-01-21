@@ -268,6 +268,9 @@ class User {
 
  	//Skriver ut formulär för att skapa ny användare
 	public static function premiumForm() {
+
+		self::checkLoginStatus();
+
 		$output = [
 					'browserTitle' => 'Uppgradera till Premium', 
 					'page' => 'user.premiumform.twig'
