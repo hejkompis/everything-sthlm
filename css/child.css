@@ -46,6 +46,10 @@ header .intro-text {
     margin-top:15px;
 }
 
+.half-margin-bottom {
+    margin-bottom:15px;
+}
+
 .inline-block {
     display: inline-block;
 }

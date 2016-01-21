@@ -21,8 +21,17 @@
 						</div>
 						
 						<h4>Ange din adress</h4>
-						<p class="small">Detta gör du genom att högerklicka på din adress på kartan och välja "Placera markör"</p>
-						<div class="gmap" id="gmap"></div>
+						<p class="small">Du kan välja din adress genom att använda sökfältet här nedan, leta dig fram och högerklicka på en position på kartan, eller låta oss identifiera din position genom att klicka på knappen nedan.</p>
+
+						<div class="form-group">
+							<input type="text" class="form-control half-margin-bottom" id="searchLocationInput" />
+							<button id="searchLocationBtn" class="btn btn-primary btn-lg half-margin-bottom">Sök plats</button>
+
+							<button id="getLocationBtn" class="btn btn-primary btn-lg half-margin-bottom">Hitta min plats automatiskt</button>
+
+						</div>
+
+						<div class="gmap hidden-xs" id="gmap"></div>
 						<div class="form-group">
 
 							<label>Angiven adress</label>

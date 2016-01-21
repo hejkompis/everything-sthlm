@@ -33,6 +33,133 @@
 
 		}
 
+		$(document).on('click', '#searchLocationBtn', function(e) {
+
+			e.preventDefault();
+
+			GMaps.geocode({
+				address: $('#searchLocationInput').val(),
+				callback: function(results, status) {
+				if (status == 'OK') {
+					
+					var latlng = results[0].geometry.location;
+      				map.setCenter(latlng.lat(), latlng.lng());
+
+      				lat = latlng.lat();
+      				lng = latlng.lng();
+
+      				map.setZoom(16);
+      
+      				if(map.markers.length == 0) {
+
+						map.addMarker({
+							lat: lat,
+							lng: lng,
+						});
+						
+						$('#latitude').val(lat);
+						$('#longitude').val(lng);
+					
+					}
+					
+					else {
+									
+						var latlng = new google.maps.LatLng(lat, lng);
+						map.markers[0].setPosition(latlng);
+						$('#latitude').val(lat);
+						$('#longitude').val(lng);
+		
+					}
+						
+					$('#latitude').val(lat);
+					$('#longitude').val(lng);
+
+					var opt = {
+						lat : lat,
+						lng : lng,
+						callback : function(results, status) {
+							if (status == google.maps.GeocoderStatus.OK) {
+								$('#gmaps_address').text(results[0].formatted_address);
+								$('input#address').val(results[0].formatted_address);
+							}
+						}
+					}
+					
+					GMaps.geocode(opt);
+    
+    				}
+
+  				}
+
+			});
+
+		});
+
+		$(document).on('click', '#getLocationBtn', function(e) {
+
+			e.preventDefault();
+
+			GMaps.geolocate({
+  				success: function(position) {
+	    			
+	    			map.setCenter(position.coords.latitude, position.coords.longitude);
+
+	    			lat = position.coords.latitude;
+	    			lng = position.coords.longitude;
+
+	    			map.setZoom(16);
+
+	    			if(map.markers.length == 0) {
+
+						map.addMarker({
+							lat: lat,
+							lng: lng,
+						});
+						
+						$('#latitude').val(lat);
+						$('#longitude').val(lng);
+					
+					}
+					
+					else {
+									
+						var latlng = new google.maps.LatLng(lat, lng);
+						map.markers[0].setPosition(latlng);
+						$('#latitude').val(lat);
+						$('#longitude').val(lng);
+		
+					}
+						
+					$('#latitude').val(lat);
+					$('#longitude').val(lng);
+
+					var opt = {
+						lat : lat,
+						lng : lng,
+						callback : function(results, status) {
+							if (status == google.maps.GeocoderStatus.OK) {
+								$('#gmaps_address').text(results[0].formatted_address);
+								$('input#address').val(results[0].formatted_address);
+							}
+						}
+					}
+					
+					GMaps.geocode(opt);
+
+	  			},
+	  			error: function(error) {
+	    			alert(error.message);
+	  			},
+	  			not_supported: function() {
+	    			alert("Din webbläsare stödjer inte den här funktionen.");
+				},
+				always: function() {
+					//alert("Done!");
+				}
+			});
+
+		});
+
 		map.setContextMenu({
 			control: 'map',
 			options: [{
@@ -46,13 +173,6 @@
 						map.addMarker({
 							lat: lat,
 							lng: lng,
-							draggable: true
-							//fences: [polygon],
-							//outside: function(marker, fence) {
-							//	alert('Utanför vårt angivna område');
-							//}
-							//title: 'Marker #' + index
-							
 						});
 						
 						$('#latitude').val(lat);
