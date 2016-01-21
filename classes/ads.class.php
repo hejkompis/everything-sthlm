@@ -212,7 +212,8 @@ class Ads {
 		'searchTags'	=> $searchTags,
 		'adTypes'		=> self::getAllAdTypes(),
 		'user'			=> User::checkLoginStatus(FALSE),
-		'distance'		=> $searchDistance
+		'distance'		=> $searchDistance,
+		'newInterests'	=> User::getNewInterests()
 		];
 
 		return $output;
@@ -251,15 +252,25 @@ class Ads {
 
 	//Skickar getSpecificAd return till Twig 
 	public static function showSpecificAd($input) {
-
+		$user = User::checkLoginStatus(FALSE);
 		$ad = self::getSpecificAd($input);
+
+		$sql = "UPDATE user_interested_in_ad 
+				INNER JOIN ads
+				ON user_interested_in_ad.ad_id = ads.id
+				SET new = '0'
+				WHERE user_interested_in_ad.ad_id = ".$ad->id."
+				AND user_interested_in_ad.user_id != ".$user->id."
+				AND ads.user_id = ".$user->id;
+
+		DB::query($sql);
 
 		$output = [
 		'ad' 			=> $ad,
 		'page' 			=> 'ads.showspecificad.twig',
 		'browserTitle'	=> $ad->title,
 		'tags'			=> self::getAllTags(),
-		'user'			=> User::checkLoginStatus(FALSE),
+		'user'			=> $user,
 		'userInterest' 	=> self::checkInterest($ad->id, FALSE),
 		'countInterest' => self::countUserInterest($ad->id)
 		];
@@ -725,9 +736,9 @@ class Ads {
 				// Om vi inte har någon rad och $toggle INTE är satt till FALSE ska vi lägga till en rad i databasen
 				if($toggle) {
 					$sql = "INSERT INTO user_interested_in_ad
-							(ad_id, user_id, date)
+							(ad_id, user_id, date, denied, new)
 							VALUES
-							($cleanAdId, $userId, $date)";
+							($cleanAdId, $userId, $date, '0', '1')";
 
 					$data = DB::query($sql);
 					$output = ['redirect_url'=>'/ads/?id='.$cleanAdId];
@@ -839,6 +850,8 @@ class Ads {
 
 		return $output;
 	}
+
+	
 
 	private static function uploadFile($tmpFile, $adId) {
 

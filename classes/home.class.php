@@ -9,7 +9,8 @@
 				'user' 				=> User::checkLoginStatus(FALSE),
 				'activeAdsAmount' 	=> self::getActiveAds(),
 				'usersAmount' 		=> self::getUsers(),
-				'latestUpload'		=> self::latestUploadedAd()
+				'latestUpload'		=> self::latestUploadedAd(),
+				'newInterests'		=> User::getNewInterests()
 			];
 
 			return $output;
@@ -50,6 +51,16 @@
 			
 			$data = DB::query($sql, TRUE);
 			$output = $data;
+
+			return $output;
+		}
+
+		static public function premiumPage () {
+
+			$output = [
+			'page' => 'premium.twig', 
+			'browserTitle' => 'Bli premiumanvändare'
+			];
 
 			return $output;
 		}
