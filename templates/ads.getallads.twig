@@ -16,6 +16,12 @@
 						<input type="text" id="search" class="form-control" name="search" value="{{search}}">
 					</div>
 					<div class="form-group">
+						<label><h4>Avstånd</h4></label><br />
+						<div id="search-distance"></div>
+						<input type="hidden" id="search-distance-input" name="search-distance-input">
+						<p id="search-distance-text"></p>
+					</div>
+					<div class="form-group">
 						<label><h4>Taggar</h4></label><br />
 						{% for tag in tags %}
 							<div class="checkbox-inline">
