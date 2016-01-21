@@ -277,7 +277,8 @@ class Ads {
 		'tags'			=> self::getAllTags(),
 		'user'			=> $user,
 		'userInterest' 	=> self::getUserInterest($ad->id, FALSE),
-		'countInterest' => self::countUserInterest($ad->id)
+		'countInterest' => self::countUserInterest($ad->id),
+		'newInterests'	=> User::getNewInterests()
 		];
 		
 		return $output;
