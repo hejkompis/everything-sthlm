@@ -64,7 +64,7 @@
 						<a href="/ads/setuserinterest/?id={{ad.id}}"> <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-check"></i> Visa intresse </button></a>
 					{% elseif user and userInterest and user.id != ad.userId %}	
 						<a href="/ads/setuserinterest/?id={{ad.id}}"><button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Ångra intresse </button></a>
-					{% elseif user and not userInterest and user.id != ad.userId and user.interests > 0 or not user.premium %}
+					{% elseif user and not userInterest and user.id != ad.userId and (user.interests > 0 or not user.premium) %}
 						<p>Låter detta intressant? Uppgradera ditt konto till premium för att visa intresse för fler än en annons åt gången.</p>
 						<a href="/user/premiumform"><button type="button" class="btn btn-primary" data-dismiss="modal"> Uppgradera till Premium </button></a>
 
