@@ -185,6 +185,17 @@ footer p a .footer-links {
 
 }
 
+.list-nobullet{
+    list-style-type: none;
+    margin-left: -40px;
+}
+
+#gmap {
+    width:100% !important;
+    height:300px !important;
+    background-color:#ffcc00;
+}
+
 /*PREMIUM STYLE*/
 .list-header {
     color: white;
@@ -202,6 +213,11 @@ footer p a .footer-links {
 .premium-list li{
     padding-top: 10px;
     padding-bottom: 10px;
+}
+
+.premium-list li:last-child {
+    border-bottom-left-radius:10px;
+    border-bottom-right-radius:10px;
 }
 
 .premium-list li:nth-of-type(2n+1) {
@@ -222,8 +238,9 @@ footer p a .footer-links {
     background-color: black;
   }
 
-#gmap {
-    width:100% !important;
-    height:300px !important;
-    background-color:#ffcc00;
-}
+  .premium-container {
+    margin-top: 50px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+/*END PREMIUM*/

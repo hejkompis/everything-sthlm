@@ -4,6 +4,7 @@
 
     // vi aktiverar session_start så att vi kan använda oss av $_SESSION om vi vill
     session_start();
+
     # -- 2
 
     // skapa en konstant som heter ROOT. På så sätt kan vi alltid veta vilken som är vår huvudadress, exempelvis 192.168.1.33 eller everythingsthlm.se
@@ -164,3 +165,5 @@
     // behöver vi ytterligare twig-filer så får metoden säga till om det, och de hämtas in via $twig_data
     $page = new Twig($twig_data);
     echo $page->render('index.twig');
+
+    unset($_SESSION['everythingSthlm']['ref_url']);
