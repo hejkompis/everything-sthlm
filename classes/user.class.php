@@ -200,7 +200,7 @@ class User {
 
 		//Finns ingen användare och vi vill skicka anv. till login-form:
 		if(!isset($_SESSION["everythingSthlm"]["userId"]) && $sendToLogin) {
-			$_SESSION['everythingSthlm']['ref_url'] = $_SERVER['REQUEST_URI'];
+			$_SESSION['everythingSthlm']['ref_url'] = $_SERVER['HTTP_REFERER'];
 			//$output = ['redirect_url' => '/user/loginform'];
 			header('Location: /user/loginform');
 		} 

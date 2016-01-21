@@ -3,12 +3,34 @@
     height: 100px;
 }*/
 
+header .intro-text {
+    padding:0;
+    margin:0;
+    display:table;
+    height:100vh;
+    width:100%;
+    text-align: center;
+}
+
+.intro-content {
+    display: table-cell;
+    vertical-align: middle;
+}
+
 .margin {
     margin-top: 500px;
 }
 
 .navbar {
     margin: 0px;
+}
+
+.navbar-default {
+    padding:0 !important;
+}
+
+.navbar-right .dropdown-menu {
+    right: -1px !important;
 }
 
 .nav-loginform {
