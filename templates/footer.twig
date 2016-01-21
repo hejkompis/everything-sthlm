@@ -27,8 +27,8 @@
                         <ul class="list-inline quicklinks">
                             <li>{% if user.premium %}
                                 <a href="/user/unsetuserpremium" data-type="confirm" data-message="Vill du verkligen avsluta?">Avaktivera premiumkonto</a>
-                                {% else %}
-                                    <a href="premiumform">Aktivera premiumkonto</a>
+                                {% elseif user and user.premium == false %}
+                                    <a href="/user/premiumform">Aktivera premiumkonto</a>
                                 {% endif %}
                             </li> 
                         </ul>
