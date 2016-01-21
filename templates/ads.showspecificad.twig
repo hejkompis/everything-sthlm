@@ -60,7 +60,7 @@
 					{% elseif user and countInterest == 1 %}
 						Det är en annan person som har visat intresse för denna annons.
 					{% endif %}
-					{% if user and not userInterest and user.id != ad.userId and user.interests == 0 or user.premium %}
+					{% if user and not userInterest and user.id != ad.userId and (user.interests == 0 or user.premium) %}
 						<a href="/ads/setuserinterest/?id={{ad.id}}"> <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-check"></i> Visa intresse </button></a>
 					{% elseif user and userInterest and user.id != ad.userId %}	
 						<a href="/ads/setuserinterest/?id={{ad.id}}"><button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Ångra intresse </button></a>
