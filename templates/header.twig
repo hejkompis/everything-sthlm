@@ -19,7 +19,12 @@
         <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
         <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
         <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
-        <script type="text/javascript"> $('.dropdown-toggle').dropdown() $().dropdown('toggle') </script>
+        <!-- jQuery -->
+        <script src="/../js/jquery.js"></script>
+        <!-- Bootstrap Core JavaScript -->
+        <script src="/../js/bootstrap.min.js"></script>
+        <script src="//maps.google.com/maps/api/js"></script>
+        <script type="text/javascript"> $('.dropdown-toggle').dropdown() </script>
 	</head>
 	<body id="page-top" class="index">
 	<!-- Navigation 
@@ -68,11 +73,31 @@
                             <a class="" href="/ads">Annonser</a>
                         </li>
                         <li>
-                            <a class="page-scroll" href="/user">Konto {% if newInterests %} <span class="badge">{{ newInterests|length }}</span>{% endif %}</a>
-                        </li>
-                        <li>
                             <a class="page-scroll" href="/home/premiumpage">Premium</a>
                         </li>
+                        {% if user %}
+                            <li class="hidden-sm hidden-md hidden-lg">
+                                <a class="page-scroll" href="/user/">Din sida</a>
+                            </li>
+                            <li class="hidden-sm hidden-md hidden-lg">
+                                <a class="page-scroll" href="/user/edituserform">Uppdatera profil</a>
+                            </li>
+                            <li class="dropdown hidden-xs">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true"><b>Ditt konto</b> <span class="caret"></span></a>
+                                <ul id="user-dp" class="dropdown-menu">
+                                    <li>
+                                        <a class="page-scroll" href="/user/" style="color: #222222;">Din sida</a>
+                                    </li>
+                                    <li>
+                                        <a class="page-scroll" href="/user/edituserform" style="color: #222222;">Uppdatera profil</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        {% else %}
+                            <li>
+                            <a class="page-scroll" href="/user">Din sida {% if newInterests %} <span class="badge">{{ newInterests|length }}</span>{% endif %}</a>
+                        </li>
+                        {% endif %}
                         {% if not user %}
                             <li class="hidden-sm hidden-md hidden-lg">
                                 <a class="page-scroll" href="/user/loginform">Logga in</a>
@@ -103,8 +128,8 @@
                                              </div>
                                     </li>
                                 </ul>
-                        </li>
-                    {% else %}
+                            </li>
+                        {% else %}
             <li>
                 <a class="page-scroll" href="/user/logout">Logga ut</a>
             </li>

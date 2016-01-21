@@ -14,9 +14,9 @@ class Ads {
 				$tags, 
 				$typeName,
 				$typeId,
-				$addressStreet,
-				$addressZip,
-				$addressCity,
+				$address,
+				$latitude,
+				$longitude,
 				$payment,
 				$interestedUsers,
 				$expireTimestamp,
@@ -40,9 +40,9 @@ class Ads {
 		$this->userFirstname	= $input['user_firstname'];
 		$this->typeId 			= $input['ad_type'];
 		$this->typeName			= self::getSpecificAdType($this->id);
-		$this->addressStreet 	= $input['address_street'];
-		$this->addressZip 		= $input['address_zip'];
-		$this->addressCity  	= $input['address_city'];
+		$this->address 		 	= $input['address'];
+		$this->latitude 		= $input['latitude'];
+		$this->longitude	  	= $input['longitude'];
 		$this->tags 			= self::getSpecificTags($this->id);
 		$this->createdDaysAgo	= round((time()-$input['date_created'])/60/60/24);
 		$this->payment			= $input['payment'];
@@ -115,12 +115,12 @@ class Ads {
 		$myaddress = User::getAddress();
 
 		if($myaddress) {
-			$mylocation = self::getLatLng($myaddress['zip'], $myaddress['street'], $myaddress['city']);
+			$user = User::checkLoginStatus(false);
 			$earthRadius = 6371000;
 			$sqlReturnDistance = " ROUND(
 				".$earthRadius." * ACOS(  
-					SIN( ".$mylocation['latitude']."*PI()/180 ) * SIN( ads.latitude*PI()/180 )
-					+ COS( ".$mylocation['latitude']."*PI()/180 ) * COS( ads.latitude*PI()/180 )  *  COS( (ads.longitude*PI()/180) - (".$mylocation['longitude']."*PI()/180) )   
+					SIN( ".$user->latitude."*PI()/180 ) * SIN( ads.latitude*PI()/180 )
+					+ COS( ".$user->latitude."*PI()/180 ) * COS( ads.latitude*PI()/180 )  *  COS( (ads.longitude*PI()/180) - (".$user->longitude."*PI()/180) )   
 				) 
 			, 0) AS distance, ";
 		}
@@ -185,9 +185,9 @@ class Ads {
 				ads.date_expire 	as date_expire, 
 				ads.user_id 		as user_id, 
 				user.firstname 		as user_firstname,
-				ads.address_street 	as address_street, 
-				ads.address_zip 	as address_zip, 
-				ads.address_city 	as address_city, 
+				ads.address 	 	as address, 
+				ads.latitude 		as latitude, 
+				ads.longitude 	 	as longitude, 
 				ads.ad_type 		as ad_type,
 				ads.payment 		as payment,
 				ads.active 			as active,
@@ -231,9 +231,9 @@ class Ads {
 				ads.date_expire 	as date_expire, 
 				user.id 			as user_id,
 				user.firstname 		as user_firstname, 
-				ads.address_street 	as address_street, 
-				ads.address_zip 	as address_zip, 
-				ads.address_city 	as address_city, 
+				ads.address 	 	as address, 
+				ads.latitude	  	as latitude, 
+				ads.longitude 	 	as longitude, 
 				ads.ad_type 		as ad_type, 
 				ads.payment 		as payment,
 				ads.active 			as active,
@@ -271,7 +271,7 @@ class Ads {
 		'browserTitle'	=> $ad->title,
 		'tags'			=> self::getAllTags(),
 		'user'			=> $user,
-		'userInterest' 	=> self::checkInterest($ad->id, FALSE),
+		'userInterest' 	=> self::getUserInterest($ad->id, FALSE),
 		'countInterest' => self::countUserInterest($ad->id)
 		];
 		
@@ -298,9 +298,9 @@ class Ads {
 				ads.date_created 	as date_created, 
 				ads.date_expire 	as date_expire, 
 				ads.user_id 		as user_id, 
-				ads.address_street 	as address_street, 
-				ads.address_zip 	as address_zip, 
-				ads.address_city 	as address_city, 
+				ads.address 	 	as address, 
+				ads.latitude	  	as longitude, 
+				ads.longitude 	 	as latitude, 
 				ads.ad_type 		as ad_type, 
 				ads.payment 		as payment, 
 				ads.active 			as active, 
@@ -383,18 +383,15 @@ class Ads {
 
 		$title 			= $cleanInput['title'];
 		$content 		= $cleanInput['content'];
-		$addressStreet 	= $cleanInput['address_street'];
-		$addressZip 	= preg_replace("/[^0-9]/", "", $cleanInput['address_zip']);
-		$addressCity 	= $cleanInput['address_city'];
+		$address 	 	= $cleanInput['address'];
 		$dateExpire 	= time()+(60*60*24*self::$daysForward);
 		$userId 		= $user->id;
 		$adTypes		= $cleanInput['ad_type'];
 		$dateCreated	= time();
 		$payment		= $cleanInput['payment'];
 		$active 		= '1';
-		$latLng 		= self::getLatLng($addressZip, $addressStreet, $addressCity);
-		$latitude 		= $latLng['latitude'];
-		$longitude 		= $latLng['longitude'];
+		$latitude 		= $cleanInput['latitude'];
+		$longitude 		= $cleanInput['longitude'];
 	
 
 		if(!isset($cleanInput['tags'])) {
@@ -407,9 +404,7 @@ class Ads {
 				(title, 
 				content, 
 				user_id, 
-				address_street, 
-				address_zip, 
-				address_city, 
+				address, 
 				date_expire, 
 				date_created, 
 				date_updated, 
@@ -422,9 +417,7 @@ class Ads {
 				('$title', 
 				'$content',
 				'$userId',
-				'$addressStreet',
-				'$addressZip',
-				'$addressCity',
+				'$address',
 				'$dateExpire',
 				'$dateCreated',
 				'$dateCreated',
@@ -483,15 +476,12 @@ class Ads {
 		$adId 			= $cleanInput['id'];
 		$title 			= $cleanInput['title'];
 		$content 		= $cleanInput['content'];
-		$addressStreet 	= $cleanInput['address_street'];
-		$addressZip 	= preg_replace("/[^0-9]/", "", $cleanInput['address_zip']);
-		$addressCity 	= $cleanInput['address_city'];
+		$address 	 	= $cleanInput['address'];
 		$userId 		= $user->id;
 		$adType			= $cleanInput['ad_type'];
 		$payment		= $cleanInput['payment'];
-		$latLng 		= self::getLatLng($addressZip, $addressStreet, $addressCity);
-		$latitude 		= $latLng['latitude'];
-		$longitude 		= $latLng['longitude'];
+		$latitude 		= $cleanInput['latitude'];
+		$longitude 		= $cleanInput['longitude'];
 
 		if(!isset($cleanInput['tags'])) {
 			$tags = [];
@@ -505,9 +495,7 @@ class Ads {
 		$sql = 	"UPDATE ads SET
 				title 			= '$title', 
 				content 		= '$content',
-				address_street 	= '$addressStreet',
-				address_zip 	= '$addressZip',
-				address_city 	= '$addressCity',
+				address 	 	= '$address',
 				ad_type 		= '$adType',
 				payment			= '$payment',
 				latitude		= '$latitude',
@@ -680,17 +668,93 @@ class Ads {
 		return $output;
 	}
 
-	// Metod för att kolla om en användare redan har intresse i en annons
-	// För att en förändring inte ska ske i databasen utan att vi bara ska få tillbaka ett ja/nej
-	// måste man ange FALSE-värde inom parenteserna, checkInterest($input, FALSE) annars kommer
-	// metoden automatiskt att lägga till eller ta bort i databasen
-	public static function checkInterest($input, $toggle = TRUE){
+	public static function setUserInterest($input){
+
+		// Skickar med FALSE för att inte skicka användaren till 
+		// inloggningsformuläret
+		if (is_array($input)) {
+			$cleanAdId = DB::clean($input['id']);
+		}
+		else {
+			$cleanAdId 	= DB::clean($input);
+		}
+
+		$user = User::checkLoginStatus();
+
+		if ($user) {
+
+			$userId = $user->id;
+
+			if (is_array($input)) {
+				$cleanAdId = DB::clean($input['id']);
+			}
+			else {
+				$cleanAdId 	= DB::clean($input);
+			}
+
+			// Kolla så att inte den som gör intresseanmälan är den som gjort annonsen
+			$sql = "SELECT user_id FROM ads WHERE id = ".$cleanAdId;
+			$data = DB::query($sql, TRUE);
+
+			if($data['user_id'] != $userId) {
+
+				$date 			= time();
+
+				$sql = "SELECT * 
+						FROM user_interested_in_ad
+						WHERE ad_id = $cleanAdId
+						AND user_id = $userId";
+
+				$data = DB::query($sql, TRUE);
+
+				// Om vi får tillbaka en rad från databasen (vilket gör $data till TRUE)
+				if ($data) {
+
+					$sql = "DELETE 
+							FROM user_interested_in_ad
+							WHERE ad_id = $cleanAdId
+							AND user_id = $userId";
+
+					$data = DB::query($sql);
+					$output = ['redirect_url'=>'/ads/?id='.$cleanAdId];
+
+				} 
+
+				// Om vi inte får tillbaka någon rad från databasen, dvs användaren har inte visat intresse för en specifik annons
+				else {
+
+					$sql = "INSERT INTO user_interested_in_ad
+							(ad_id, user_id, date)
+							VALUES
+							($cleanAdId, $userId, $date)";
+
+					$data = DB::query($sql);
+					$output = ['redirect_url'=>'/ads/?id='.$cleanAdId];
+					
+				}
+
+			}
+
+			else {
+
+				$output = $output = ['redirect_url'=>'/ads/?id='.$cleanAdId];
+				
+			}
+
+		}
+
+		return $output;
+
+	}
+
+	public static function getUserInterest($input){
 
 		// Skickar med FALSE för att inte skicka användaren till 
 		// inloggningsformuläret
 		$user = User::checkLoginStatus(FALSE);
 
 		if ($user) {
+			
 			if (is_array($input)) {
 				$cleanAdId = DB::clean($input['id']);
 			}
@@ -711,48 +775,22 @@ class Ads {
 			// Om vi får tillbaka en rad från databasen (vilket gör $data till TRUE)
 			if ($data) {
 
-				// Om vi en rad från databasen och $toggle INTE är satt till FALSE
-				if($toggle) {
-					$sql = "DELETE 
-							FROM user_interested_in_ad
-							WHERE ad_id = $cleanAdId
-							AND user_id = $userId";
-
-					$data = DB::query($sql);
-					$output = ['redirect_url'=>'/ads/?id='.$cleanAdId];
-				} 
-
-				// Om vi har en rad från databasen och $toggle MANUELLT är satt till FALSE
-				// self::checkInterest($ad_id, FALSE)
-				else {
-					$output = TRUE;
-				}
+				$output = TRUE;
 
 			} 
 
 			// Om vi inte får tillbaka någon rad från databasen, dvs användaren har inte visat intresse för en specifik annons
 			else {
 
-				// Om vi inte har någon rad och $toggle INTE är satt till FALSE ska vi lägga till en rad i databasen
-				if($toggle) {
-					$sql = "INSERT INTO user_interested_in_ad
-							(ad_id, user_id, date, denied, new)
-							VALUES
-							($cleanAdId, $userId, $date, '0', '1')";
-
-					$data = DB::query($sql);
-					$output = ['redirect_url'=>'/ads/?id='.$cleanAdId];
-				} 
-
-				// Om vi inte har någon rad och $toggle ÄR SATT till FALSE
-				else {
-					$output = FALSE;
-				}
+				$output = FALSE;
+				
 			}
 		}
 
 		else {
+
 			$output = FALSE;
+		
 		}
 
 		return $output;
@@ -793,9 +831,9 @@ class Ads {
 				ads.date_created 	as date_created, 
 				ads.date_expire 	as date_expire, 
 				ads.user_id 		as user_id, 
-				ads.address_street 	as address_street, 
-				ads.address_zip 	as address_zip, 
-				ads.address_city 	as address_city, 
+				ads.address 	 	as address, 
+				ads.latitude	  	as longitude, 
+				ads.longitude 	 	as latitude, 
 				ads.ad_type 		as ad_type, 
 				ads.payment 		as payment, 
 				ads.active 			as active, 
@@ -851,8 +889,6 @@ class Ads {
 		return $output;
 	}
 
-	
-
 	private static function uploadFile($tmpFile, $adId) {
 
 		$directory = 'uploads/';
@@ -886,29 +922,6 @@ class Ads {
 			echo 'Det här gick snett!'; exit;
 		}
 
-	}
-
-	public static function getLatLng($postcode = '', $address = '', $city = '', $country = 'SWEDEN') {
-
-		$fullAddress = $address.'+'.$postcode.'+'.$city.'+'.$country;
-		$prepAddr = str_replace(' ','%20',$fullAddress);
-		$geocode = file_get_contents('http://maps.google.com/maps/api/geocode/json?address='.$prepAddr.'&sensor=false');
-		
-		$data = json_decode($geocode);
-		
-		$output['latitude']		= $data->results[0]->geometry->location->lat;
-		$output['longitude'] 	= $data->results[0]->geometry->location->lng;
-		
-
-		if(!isset($data->results[0]->partial_match) && $data->results[0]->types[0] == 'street_address') {
-			return $output;
-		}
-		else {
-			/*echo '<strong>Något gick fel</strong><br />';
-			echo '<pre>';
-				print_r($data); exit;
-			echo '</pre>';*/
-		}				
 	}
 
 	private static function getDistance($meters){

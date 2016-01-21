@@ -185,7 +185,6 @@ footer p a .footer-links {
 
 }
 
-
 /*PREMIUM STYLE*/
 .list-header {
     color: white;
@@ -228,6 +227,7 @@ footer p a .footer-links {
     background-color: black;
   }
 
+<<<<<<< HEAD
   .premium-container {
     margin-top: 50px;
     border-top-left-radius: 10px;
@@ -235,3 +235,10 @@ footer p a .footer-links {
   }
 
 
+=======
+#gmap {
+    width:100% !important;
+    height:300px !important;
+    background-color:#ffcc00;
+}
+>>>>>>> 6990df202669352b9b6874bf0d7e981d62516a15
