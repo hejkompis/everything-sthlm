@@ -185,6 +185,11 @@ footer p a .footer-links {
 
 }
 
+.list-nobullet{
+    list-style-type: none;
+    margin-left: -40px;
+}
+
 #gmap {
     width:100% !important;
     height:300px !important;

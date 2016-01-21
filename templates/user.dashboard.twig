@@ -22,13 +22,13 @@
                     %}
 
                     {% if user.noOfAds == 0 %}
-                        <p class="light-gray heading-white">Du har inte publicerat någon annons än.</p>
+                        <h3 class="section-subheading text-muted">Du har inte publicerat någon annons än.</h3>
                     {% elseif user.noOfAds == 1 %}
-                        <p class="light-gray heading-white">Du har publicerat en annons sedan du startade ditt konto.</p>
+                        <h3 class="section-subheading text-muted">Du har publicerat en annons sedan du startade ditt konto.</h3>
                     {% elseif user.noOfAds > 1 and user.noOfAds <= 12 %}
-                        <p class="light-gray heading-white">Du har publicerat {{correctNumbers[user.noOfAds]}} annonser sedan du startade ditt konto.</p>
+                        <h3 class="section-subheading text-muted">Du har publicerat {{correctNumbers[user.noOfAds]}} annonser sedan du startade ditt konto.</h3>
                     {% elseif user.noOfAds > 11 %}
-                        <p class="light-gray heading-white">Du har publicerat {{user.noOfAds}} annonser sedan du startade ditt konto.</p>
+                        <h3 class="section-subheading text-muted">Du har publicerat {{user.noOfAds}} annonser sedan du startade ditt konto.</h3>
 
                     {% endif %}
 
