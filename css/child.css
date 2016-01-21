@@ -185,10 +185,42 @@ footer p a .footer-links {
 
 }
 
-.list-nobullet {
-     list-style: none;
-     margin-left: -40px;
+/*PREMIUM STYLE*/
+.list-header {
+    color: white;
+    padding-bottom: 10px;
 }
+
+.list-header__premium{
+    background-color: #fed136;
+}
+
+.list-header__freemium{
+    background-color: #222222;
+}
+
+.premium-list li{
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.premium-list li:nth-of-type(2n+1) {
+    background-color: rgba(23, 61, 80, 0.06);
+  }
+
+  .btn-secoundary {
+    color: #fff;
+    background-color: #222222;
+    border-color: #222222;
+    font-family: Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    text-transform: uppercase;
+    font-weight: 700
+  }
+
+  .btn-secoundary:hover{
+    color:white;
+    background-color: black;
+  }
 
 #gmap {
     width:100% !important;

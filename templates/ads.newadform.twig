@@ -40,6 +40,7 @@
 				<div class="form-group">
 					<label for="ad_type"><h4>Typ av annons</h4></label>
 					<select class="form-control" name="ad_type">
+						<option value="{{adType.id}}" selected>Välj annonstyp</option>
 						{% for adType in adTypes %}
 						<option value="{{adType.id}}">{{adType.name}}</option>
 						{% endfor %}
