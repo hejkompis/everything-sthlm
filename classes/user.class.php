@@ -165,7 +165,8 @@ class User {
 			'page' 				=> 'user.dashboard.twig',
 			'user' 				=> $user,
 			'ads' 				=> Ads::getUserAds(),
-			'interestingAds' 	=> Ads::getInterestingAds()
+			'interestingAds' 	=> Ads::getInterestingAds(),
+			'newInterests'		=> self::getNewInterests()
 			];
 		}
 		else {
@@ -251,6 +252,30 @@ class User {
 		$id = $cleanInput;
 
 		$output = new User($id);
+
+		return $output;
+	}
+
+	public static function getNewInterests() {
+		$user = User::checkLoginStatus(FALSE);
+
+		if ($user) {
+			$sql = "SELECT user2.firstname, ads.title
+				FROM user, ads, user_interested_in_ad, user as user2
+				WHERE user2.id = user_interested_in_ad.user_id
+				AND user_interested_in_ad.ad_id = ads.id
+				AND user.id = ads.user_id 
+				AND ads.user_id = ".$user->id."
+				AND user_interested_in_ad.new = 1";
+
+			$data = DB::query($sql);
+
+			$output = $data;
+		}
+		else {
+			$output = FALSE;
+		}
+		
 
 		return $output;
 	}

@@ -46,9 +46,29 @@
                             <a href="premiumform" class="btn btn-primary">Uppgradera ditt konto</a>
                         </div>
                     {% endif %}
+                    <div class="row">
+                        {% set titles = [] %}
+                        {% for interest in newInterests %}
+
+                        {% if interest.title not in titles %}
+                         
+                        <div class="col-lg-4">
+                            <p class="heading-white"><b>{{ interest.title }}</b></p>
+                            {% for interest2 in newInterests if interest.title == interest2.title %}
+                                
+                                 <p class="heading-white">{{ interest2.firstname }}</p>
+                                
+                            {% endfor %}
+                        </div>
+
+                        {% endif %}
+                        {% set titles = titles|merge([interest.title]) %} 
+                        {% endfor %}
+                        
+                    </div>
                  </div>
             </div>
-
+          
 		</div>
     </section>
     <section id="portfolio" class="bg-light-gray">
