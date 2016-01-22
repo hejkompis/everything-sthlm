@@ -7,8 +7,8 @@
 			$output = [
 				'page' 				=> 'home.twig',
 				'user' 				=> User::checkLoginStatus(FALSE),
-				'activeAdsAmount' 	=> self::getActiveAds(),
-				'usersAmount' 		=> self::getUsers(),
+				'activeAdsAmount' 	=> self::countActiveAds(),
+				'usersAmount' 		=> self::countUsers(),
 				'latestUpload'		=> self::latestUploadedAd(),
 				'newInterests'		=> User::getNewInterests()
 			];
@@ -17,7 +17,8 @@
 			
 		}
 
-		static private function getActiveAds() {
+		//Räknar antalet aktiva annonser
+		static private function countActiveAds() {
 			$sql = "SELECT COUNT(id) as count
 					FROM ads
 					WHERE active = 1
@@ -30,7 +31,8 @@
 			return $output;
 		}
 
-		static private function getUsers() {
+		//Räknar antalet användare
+		static private function countUsers() {
 			$sql = "SELECT COUNT(id) as count
 					FROM user
 			";
@@ -41,6 +43,7 @@
 			return $output;
 		}
 
+		//Hämtar senast uppladdade annons
 		static private function latestUploadedAd() {
 			$sql = "SELECT title as title, id
 					FROM ads
@@ -55,6 +58,7 @@
 			return $output;
 		}
 
+		//Printar Premium.twig
 		static public function premiumPage () {
 
 			$user = User::checkLoginStatus(false);
