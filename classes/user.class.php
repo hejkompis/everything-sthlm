@@ -37,18 +37,11 @@ class User {
 		$this->latitude 		= $data["latitude"];
 		$this->longitude 		= $data["longitude"];
 		$this->noOfAds			= self::countUserAds($this->id);
+		$this->interests 		= $this->getAmountOfInterests();
 
 		if($data['premium'] == 1) {
 			$this->premium = TRUE;
 		}
-
-		$sql = "SELECT count(user_id) AS amount
-				FROM user_interested_in_ad
-				WHERE user_id = ".$this->id;
-
-		$data = DB::query($sql, TRUE);
-
-		$this->interests = $data['amount'];
 	}
 
 	//Om man inte har angett en metod i URL körs fallback-metoden.
@@ -69,6 +62,19 @@ class User {
 			return TRUE; 
 		}
 		return FALSE; 
+	}
+
+	//Hämtar en användare totala antal intresseanmälningar
+	private function getAmountOfInterests() {
+		$sql = "SELECT count(user_id) AS amount
+				FROM user_interested_in_ad
+				WHERE user_id = ".$this->id;
+
+		$data = DB::query($sql, TRUE);
+
+		$output = $data['amount'];
+
+		return $output;
 	}
 
 	//Skriver ut formulär för att skapa ny användare
@@ -123,6 +129,7 @@ class User {
 
 	}
 
+	//Uppdaterar en användare i databasen
 	public static function updateUser($input) { 
 		//Kollar först om användaren är inloggad.
 		$user = User::checkLoginStatus();
@@ -159,6 +166,8 @@ class User {
 		return $output;
 	}
 
+
+	//Kollar om en användare får logga in och skapar en instans vid lyckad inloggning
 	public static function login($input){
 
 		if(!isset($_SESSION['everythingSthlm']['ref_url'])) {
@@ -267,6 +276,7 @@ class User {
  		return $output;
  	}
 
+ 	//Räknar antalet annonser skapade av specifik användare
  	private static function countUserAds($userId) {
 
  		$cleanUserId = DB::clean($userId);
@@ -291,7 +301,7 @@ class User {
 		return $output;
 	}
 
-
+	//Uppgraderar ett användarkonto till Premium
 	public static function setUserPremium() {
 
 		$user = self::checkLoginStatus();
@@ -303,6 +313,7 @@ class User {
 		return $output;
 	}
 
+	//Nedgraderar ett användarkonto från Premium
 	public static function unsetUserPremium() {
 
 		$user = self::checkLoginStatus();
@@ -314,6 +325,7 @@ class User {
 		return $output;
 	}
 
+	//Hämtar inloggad användares adress
 	public static function getAddress() {
 
 		self::checkLoginStatus(false);
@@ -327,6 +339,7 @@ class User {
 		return $output;
 	}
 
+	//Hämtar och skapar instans av specifik användare i databasen baserat på användarid
 	public static function getUser($input) {
 		$cleanInput = DB::clean($input);
 		$id = $cleanInput;
@@ -336,6 +349,7 @@ class User {
 		return $output;
 	}
 
+	//Hämtar nya intresseanmälningar från andra anmvändare för inloggad användare 
 	public static function getNewInterests() {
 		$user = User::checkLoginStatus(FALSE);
 
@@ -360,6 +374,8 @@ class User {
 		return $output;
 	}
 
+	//Printar användarprofil för en icke inloggad användare tillsammans med annonser 
+	//användaren äger
 	public static function userProfile($input) { 
 
 		$cleanInput = DB::clean($input); 

@@ -66,6 +66,10 @@
 			return $clean_data;
 		}
 
+
+		//Hanterar och returnerar resultat av query
+		//Returnerar antingen resultat(TRUE) eller FALSE
+		//Skicka med parameter TRUE om bara en rad förväntas tillbaka från databas
 		public static function query($query, $single = false) {
 			self::getInstance();
 

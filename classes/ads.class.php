@@ -24,7 +24,7 @@ class Ads {
 				$image,
 				$distance;
 
-	//Property för för förlängning av annons
+	//Property för förlängning av annons
 	private static $daysForward = 7;
 
 	//$input kommer från getAllAds, getSpecificAd eller getUserAds
@@ -88,6 +88,7 @@ class Ads {
 		}
 	}
 
+	//Kollar om en annons är aktiv eller ej
 	private function checkActive($active) {
 		if ($active) {
 			$output = TRUE;
@@ -365,6 +366,7 @@ class Ads {
 		return $output;
 	}
 
+	//Printar template för att aktivera annons
 	public static function activateAdForm($input) {
 		
 		$user = User::checkLoginStatus();
@@ -539,6 +541,7 @@ class Ads {
 		return $output;
 	}
 
+	//Uppdaterar annons till aktiv i databasen
 	public static function activateAd($input) {
 		$user = User::checkLoginStatus();
 
@@ -560,6 +563,8 @@ class Ads {
 						
 	}
 
+
+	//Tillåter en användare att någon annans intresse på sin egen annons
 	public static function denyUser($input) {
 		$user = User::checkLoginStatus();
 
@@ -581,6 +586,7 @@ class Ads {
 
 	}
 
+	//Inaktiverar annons i databas
 	public static function inactivateAd($input) {
 		$user = User::checkLoginStatus();
 
@@ -631,7 +637,7 @@ class Ads {
 		return $output;
 	}
 
-	//Är man inloggad kan 
+	//Är man inloggad kan ta bort sin egen annons
 	public static function deleteAd($input) {
 		$user = User::checkLoginStatus();
 		$cleanId = DB::clean($input['id']);
@@ -674,6 +680,8 @@ class Ads {
 		return $output;
 	}
 
+
+	//Metod för att anmäla sitt intresse för någon annans annons
 	public static function setUserInterest($input){
 
 		if (is_array($input)) {
@@ -737,6 +745,7 @@ class Ads {
 
 	}
 
+	//Hämtar status för intresse på specifik annons
 	public static function getUserInterest($input){
 
 		// Skickar med FALSE för att inte skicka användaren till 
@@ -787,6 +796,8 @@ class Ads {
 
 	}
 
+
+	//Räknar antal användare som är intresserade av specifik annons
 	private static function countUserInterest($adId) {
 		//Kollar om anv är inloggad + skickar med FALSE för att inte skickas
 		//direkt t loginformulär om man ej är det. 
@@ -811,6 +822,7 @@ class Ads {
 		return $output;
 	}
 
+	//Hämtar annonser man har visat intresse för
 	public static function getInterestingAds() {
 		$user = User::checkLoginStatus(); 
 
@@ -879,6 +891,7 @@ class Ads {
 		return $output;
 	}
 
+	//Laddar upp bild på servern
 	private static function uploadFile($tmpFile, $adId) {
 
 		$directory = 'uploads/';
@@ -914,6 +927,7 @@ class Ads {
 
 	}
 
+	//Hämtar distans
 	private static function getDistance($meters){
 		$kilometers = round(($meters / 1000),1);
 
