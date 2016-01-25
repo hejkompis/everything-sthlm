@@ -5,6 +5,7 @@
 		static public function fallback() {
 
 			$output = [
+				'browserTitle'		=> 'Byt och låna prylar nära dig',
 				'page' 				=> 'home.twig',
 				'user' 				=> User::checkLoginStatus(FALSE),
 				'activeAdsAmount' 	=> self::countActiveAds(),
@@ -67,6 +68,20 @@
 			'user' => $user,
 			'page' => 'premium.twig', 
 			'browserTitle' => 'Bli premiumanvändare'
+			];
+
+			return $output;
+		}
+
+		//Printar Premium.twig
+		static public function ohDearyMeQueueTheFourohfour () {
+
+			$user = User::checkLoginStatus(false);
+
+			$output = [
+			'user' => $user,
+			'page' => '404.twig', 
+			'browserTitle' => 'Sidan kan inte visas'
 			];
 
 			return $output;

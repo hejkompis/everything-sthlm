@@ -20,6 +20,10 @@ AddDefaultCharset utf-8
 # Force UTF-8 for a number of file formats
 AddCharset utf-8 .atom .css .js .json .rss .vtt .xml
 
+
+# 404
+# ErrorDocument 404 /templates/404.twig
+
 php_flag display_startup_errors on
 php_flag display_errors on
 php_flag html_errors on

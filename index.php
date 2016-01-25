@@ -7,7 +7,16 @@
 
    // autoload känner av att vi anropar klasser och laddar motsvarande fil. 
     function __autoload($class_name) {
-        require_once('classes/'.strtolower($class_name).'.class.php');
+
+        $class_file = 'classes/'.strtolower($class_name).'.class.php';
+
+        if(file_exists($class_file)) {
+            require_once($class_file);
+        }
+        else {
+            return false;
+        }
+
     }
 
     // Skapar en tom array utifall metoden som anropas inte skickar med någon data.
@@ -22,7 +31,6 @@
 		// Omvandlar $_GET['class'] till $class, samt plockar bort den ur $_GET-arrayen.
         $class = $_GET['class'];
         unset($_GET['class']);
-
 
         // Kollar om .htaccess har läst av något efter ett andra / (everythingsthlm.se/class/method)
         if(isset($_GET['method'])) {
@@ -64,7 +72,17 @@
     $class = ucfirst($class);
 
 	// Lägger in det som returneras från metoden i $twig_data som sedan läses in i Twig. 
-    $twig_data = $class::$method($data);
+    if(class_exists($class)) {
+        if(method_exists($class, $method)) {
+            $twig_data = $class::$method($data);
+        }
+        else {
+            $twig_data = Home::ohDearyMeQueueTheFourohfour();
+        }
+    }
+    else {
+        $twig_data = Home::ohDearyMeQueueTheFourohfour();
+    }
 
     if(isset($twig_data['redirect_url'])) { 
         header('Location: '.$twig_data['redirect_url']); 
@@ -72,6 +90,10 @@
 
     if(isset($twig_data['error'])) { 
         echo $twig_data['error']; 
+    }
+
+    if($twig_data) {
+        echo 'asså...';
     }
 
     // Nytt twig-objekt skapas. $page innehåller vår twig-data och vi renderar twig-filen index.twig som hanterar all vår data
