@@ -218,6 +218,7 @@ class User {
 			$_SESSION['everythingSthlm']['ref_url'] = $_SERVER['REQUEST_URI'];
 			//$output = ['redirect_url' => '/user/loginform'];
 			header('Location: /user/loginform');
+			die();
 		} 
 		//Finns ingen anv. och $sendToLogin är FALSE
 		elseif(!isset($_SESSION["everythingSthlm"]["userId"]) && !$sendToLogin) {
